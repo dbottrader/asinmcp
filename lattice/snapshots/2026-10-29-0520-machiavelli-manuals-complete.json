@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0520",
+  "created": "2026-10-29T05:20:00-05:00",
+  "source": "Fleet bot completion of the manuals program ordered by Dennis 2026-10-29 ('his manuals' / 'implement in bothe realms AI and hmn'); Ace verified the deliverable's head, source notes, and verification discipline before publishing",
+  "parent": "lattice-2026-10-29-0510",
+  "anchors": [
+    {"key": "manuals_complete", "value": "all three manuals processed word for word: The Prince (MACHIAVELLI.md, 8 principles + 2 divergences) + Discourses on Livy and The Art of War (MACHIAVELLI-OTHER-MANUALS.md, 12 principles: guarded conflict I.4, founder vs tyrant I.9-10, equality I.55, law-bound multitude I.58, renewal III.1, adapt to the times III.9, own militia over mercenaries, infantry as strength, discipline makes the brave, conceal the design until ripe). 20 principles total, each implemented in both realms."},
+    {"key": "verification_discipline", "value": "quotes that failed find/read verification were dropped, not paraphrased (Thomson I.4 remembered wording, I.9, I.55, Art of War Book II verdict sentence); translation deviation recorded openly: Farneworth is not on Gutenberg (theirs is Whitehorne 1560), so Art of War quotes were verified against the 1775 Works transcription"}
+  ],
+  "links": ["lattice-2026-10-29-0510", "lattice-2026-10-29-0503"],
+  "forecast": [
+    "The manuals are now fleet doctrine with citations — strategy disagreements inside the fleet get settled by chapter and verse plus receipts, the way audits settle code claims"
+  ],
+  "status": "manuals_program_complete"
+}

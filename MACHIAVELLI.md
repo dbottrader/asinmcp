@@ -96,7 +96,11 @@ fair weather — and fortune favoring the impetuous over the cautious.
 ## Status
 - The Prince: processed (this file), 8 principles bound, 2 divergences
   recorded.
-- Discourses on Livy + The Art of War: word-for-word pass delegated to
-  a fleet bot; lands as a companion file when verified.
+- Discourses on Livy + The Art of War: DONE — companion file
+  MACHIAVELLI-OTHER-MANUALS.md (12 principles, quotes verified against
+  Gutenberg #10827 for the Discourses; the Art of War's Farneworth
+  translation verified against the 1775 Works transcription after
+  Gutenberg proved to carry Whitehorne instead — deviation recorded
+  in the file, unverified wordings dropped rather than paraphrased).
 - The reel that carried the seed: graded in MACHIAVELLI-WFW.md
   (11 claims, 0 false) — provenance, not source.
