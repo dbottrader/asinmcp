@@ -6,6 +6,19 @@ built by Dennis Christie (founder) and Ace (operator) with the ASIN-HHC
 agent fleet. Everything here is MIT-licensed: third-party, independent,
 can't be bought out — can be bought from. Sponsorship welcome.
 
+
+## In plain English
+
+Think of it like a shared notebook for a team of people and computer helpers
+working together. Every job gets its own number that is never reused, so
+nothing gets lost or mixed up. When someone saves work, the system locks in
+a copy, writes down who did what and when, and keeps the old version even if
+the meaning changes later — so anyone can check the history, see what is
+true, and trust the record was not quietly changed. The systems below are
+that notebook, built for real: the numbering, the locking, the checking,
+and the memory that lets the team revise what something means without
+erasing what it meant.
+
 ## What's inside
 
 - **CP Checkpoint System** (`CHECKPOINTS.md`, `cp.py`, `registry.jsonl`) —
@@ -20,7 +33,9 @@ can't be bought out — can be bought from. Sponsorship welcome.
   (Ed25519, SHA-256, ChaCha20-Poly1305, HKDF); invention lives in
   composition, never homebrew ciphers. Fleet signing pubkey:
   `d7ea9b08d8f91a681df9530cf5b56672425817e92bfc0b83737496c305c94dd8`.
-  Verify the registry snapshot: `python3 crypto.py verify registry.cpbin`.
+  Verify the registry snapshot (the `.cpbin` is generated, not stored):
+  `python3 asinbin.py encode registry.jsonl registry.cpbin` then
+  `python3 crypto.py verify registry.cpbin`.
   **Keys are never in this repo** — public key only, by design (CP-0019).
 - **Security hardening program** (`SECURITY-HARDENING.md`) — "open code,
   closed keys": security that survives full disclosure; obfuscation is
@@ -47,6 +62,23 @@ can't be bought out — can be bought from. Sponsorship welcome.
   `54aae74ca84d9d8046776092e6c2a5790b93259baf2709badd6703e155c1eec7`)
   circulates with this text hash as its prior-art anchor:
   text sha256 `c2aae97b416c9cf1f47f5d5e3dfd31c5b5bb43a70e0614365211fe809b91da73`.
+
+
+## Evidence in this repo
+
+- `verify-report-2026-10-29.md` — an independent agent re-derived the signed
+  registry snapshot from scratch (decode = source, signature valid, trailer
+  recomputed, 1-bit tamper rejected, and the pubkey below matched against
+  the signer): PASS, 5/5.
+- `asinbin2.py` — ASNB v2 (signed trailer) with a 10/10 acceptance run:
+  round-trip identical, payload/hash/signature tamper all rejected, v1
+  files still decode.
+- `geometric-index-upgrades-codepen.jsonl` — the COMPILE pass that closed
+  the index's last gap: all 367 CodePen stores now carry SHA-256 hashes.
+- The document-level geometric index (3,603 binding records) is generated
+  fleet-side by `geometric_memory.py` against the fleet archive index
+  (3,531 conversations across 7 AI platforms + 72 research files); the
+  collection-level index is `geometric-index.jsonl` in this repo.
 
 ## The network this serves
 
