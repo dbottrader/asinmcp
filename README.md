@@ -21,6 +21,12 @@ produced and checked a tamper-evident, Ed25519-signed snapshot of the
 checkpoint registry. That loop — produce, sign, recompute, reject on
 mismatch — is the whole system in miniature.
 
+**Drift guard:** `python3 tools/check-snapshot.py` re-encodes
+`registry.jsonl` and fails loudly (exit 1) if the signed snapshot no
+longer matches it. (Added 2026-10-29 after a stranger test caught the
+published signature attesting a 41-record snapshot while the registry
+held 42 — the check now runs before every publish.)
+
 **What is live vs design:** the checkpoint registry, ASNB v1+v2, the crypto
 core, the lattice, and the geometric index are built and verified (see
 Evidence). The network task economy runs on the ASIN-HHC mesh today with
@@ -85,8 +91,34 @@ erasing what it meant.
   text sha256 `c2aae97b416c9cf1f47f5d5e3dfd31c5b5bb43a70e0614365211fe809b91da73`.
 
 
+## The app
+
+**ASINHHC — My Passage**: the downloadable app. It puts the holder's own
+passage in their pocket — on first run it generates *your own* Ed25519
+signing key on your device (no account, nothing leaves the device), lets
+you bind your own PNG artifacts with a signed provenance record embedded
+in the file, and verifies any bound PNG's content hash *and* signature
+on-device. It also carries the live bounty board and this record.
+
+- Download: `asinmcp-app-v1.zip` — attached to the
+  [app-v1 release](https://github.com/dbottrader/asinmcp/releases/tag/app-v1)
+  (SHA-256 `4c0641cf47b951687c1703a4043c911e65f9fcecd1f8e0eb2a8a8c87db82021f`).
+- Install: unzip, serve the folder over HTTPS (or
+  `python3 -m http.server` + localhost), open it in Chrome, choose
+  "Install app." A `README.txt` and a ready-bound `sample.png` are inside
+  the zip — verify the sample first and watch it work.
+- Live without installing: the same record is browsable at
+  https://dbottrader.github.io/asinmcp/console/.
+
 ## Evidence in this repo
 
+- `evidence/` — the 2026-10-27 mesh verification bundle, published in
+  full: the complete ledger export (`ledger-export.json`, 231 rows), the
+  recompute script (`verify-ledger.py` — run it; it prints
+  `rows=231 terminal=11d83f5e… fails=[]`), the settled-escrow accounting
+  with full untruncated receipt hashes (`test-escrow-accounting.json`),
+  and the gaps file that states what the bundle does *not* claim.
+  EXAMPLE.md §2 is built from these files.
 - `verify-report-2026-10-29.md` — an independent agent re-derived the signed
   registry snapshot from scratch (decode = source, signature valid, trailer
   recomputed, 1-bit tamper rejected, and the pubkey below matched against

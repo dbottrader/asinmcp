@@ -21,14 +21,15 @@ verbatim. Where the record is weak, the weakness is stated in place.
 (`registry.jsonl`), the registry is encoded to the ASNB binary format, and
 the snapshot is signed. Current snapshot, re-checked 2026-10-29:
 
-- 41 records in `registry.jsonl`
-- `registry.cpbin` SHA-256 `0f5545bc73a86b3603325efb72d1b9e9d3bbe030dcb2ea45b8fe995ac215f81e`
+- 42 records in `registry.jsonl`
+- `registry.cpbin` SHA-256 `058724feae7fcbd6bde0f81305789b6d5ff743312d0efb5c97947a6a237aeddc`
 - Signature record (`registry.cpbin.sig.json`): signed
-  `2026-10-29T08:21:20Z`, signer pubkey
+  `2026-10-29T12:00:30.894122+00:00`, signer pubkey
   `d7ea9b08d8f91a681df9530cf5b56672425817e92bfc0b83737496c305c94dd8`
 
-*(Source: `~/workspace/asinmcp/registry.jsonl`, `registry.cpbin.sig.json`;
-hashes recomputed during the writing of this document.)*
+*(Source: `registry.jsonl` and `registry.cpbin.sig.json` in this repo;
+hashes recomputed 2026-10-29. Drift guard: `python3 tools/check-snapshot.py`
+fails loudly if the registry and the signed snapshot ever disagree again.)*
 
 **Criteria.** Two independent checks must both pass, and the signer must be
 the pinned fleet key:
@@ -72,7 +73,7 @@ signature verified both via `crypto.py` and via a direct independent
 Ed25519 check, and the README pubkey matched the signer
 character-for-character. **Verdict: PASS, 5/5 checks.**
 *(Source: `verify-report-2026-10-29.md` in this repo, report SHA-256
-`9746df72…`. The registry has since grown to 41 records and been
+`9746df72…`. The registry has since grown to 42 records and been
 re-signed; the current snapshot re-verifies with the same commands, as
 shown above.)*
 
@@ -97,10 +98,10 @@ ledger.
 
 | kind | amount (HHC) | receipt |
 |---|---|---|
-| escrow_lock | −5.0 | `6a10b9dab3bdd816…` |
-| escrow_release (worker) | +4.5 | `ae84b2c722931149…` |
-| verifier_fee | +0.25 | `8819ec0f38ee20fe…` |
-| verifier_fee | +0.25 | `334073ccb22ea0c0…` |
+| escrow_lock | −5.0 | `6a10b9dab3bdd8161db7f2906ef729448dea1848ddc11f620b72c0629ccc4fe9` |
+| escrow_release (worker) | +4.5 | `ae84b2c722931149d162c5420687450c8472314b11dc3fa070746cc7d74c0b5d` |
+| verifier_fee | +0.25 | `8819ec0f38ee20fef33d5c06d20091a94083d2342a3db477dd2568a333a2d7d8` |
+| verifier_fee | +0.25 | `334073ccb22ea0c0e2474f94435d5149b54a0daf1b39012a27a19550f92abed0` |
 
 Sum of amounts: **0.0** — exact conservation (lock −5.0 + release 4.5 +
 fees 0.25 + 0.25). Escrow terminal state `TERMINAL_PAID`, terminal receipt
@@ -110,10 +111,14 @@ end: **231 rows, 231/231 prev-hash links consistent**, chain terminal hash
 `11d83f5e5964c93a544f0d793a407c4f9a0b18e7a1919ccde2d84a46099d6e9a`
 (kind `hhc_escrow_paid`).
 
-*(Source: `~/workspace/evidence/mesh-verification-2026-10-27/test-escrow-accounting.json`
-and `ledger-verify.json` in the same bundle; the recompute specs — v0 for
+*(Source: `evidence/test-escrow-accounting.json` and
+`evidence/ledger-verify.json` in this repo —
+https://github.com/dbottrader/asinmcp/tree/main/evidence — published from
+the 2026-10-27 mesh verification bundle; the recompute specs — v0 for
 seq 1–15, canon_v1 for seq 16–231 — are disclosed in `ledger-verify.json`,
-and `verify-ledger.py` in the bundle re-runs the check.)*
+and `verify-ledger.py` in the same folder re-runs the check:
+`cd evidence && python3 verify-ledger.py` prints
+`rows=231 terminal=11d83f5e5964c93a544f0d793a407c4f9a0b18e7a1919ccde2d84a46099d6e9a fails=[]`.)*
 
 **Stated limitations (from the same bundle, not buried):**
 
@@ -227,12 +232,13 @@ Three seams, none of which requires trusting us:
    (https://github.com/dbottrader/asinmcp): run the two commands in §1.
    The expected signer is printed in the README. Then flip one byte in a
    copy and run them again — the failure is the measurement.
-2. **Replay the ledger.** The evidence bundle
-   (`~/workspace/evidence/mesh-verification-2026-10-27/`) ships the full
-   export (`ledger-export.json`), the recompute specs for both chain
-   segments, and `verify-ledger.py`. Recompute the chain yourself and
-   compare against the terminal hash in §2. (What this proves is internal
-   consistency of the export; completeness is the OPEN item stated in §2.)
+2. **Replay the ledger.** The `evidence/` folder of this repo
+   (https://github.com/dbottrader/asinmcp/tree/main/evidence) ships the
+   full export (`ledger-export.json`), the recompute specs for both chain
+   segments, and `verify-ledger.py`. Run
+   `cd evidence && python3 verify-ledger.py` and compare against the
+   terminal hash in §2. (What this proves is internal consistency of the
+   export; completeness is the OPEN item stated in §2.)
 3. **Re-run the adjudication rules.** The escrow behavior in §2–§3a is
    not a policy document; it is `_adjudicate()` in
    `~/workspace/agent-mesh/v03-hhc/hhc_mesh.py` (lines 204–274 for both
