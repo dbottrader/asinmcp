@@ -1,0 +1,38 @@
+[
+ {
+  "publisher": "asinhhc-payroll",
+  "price": 3.0,
+  "title": "BOUNTY-01: Independent replay of settled escrow esc_d9090c9d0843",
+  "work_id": "work_62d42c7aa318",
+  "escrow_id": "esc_257121fbc3de",
+  "receipt": "4548744503e955868458bbf5f50fd8c047dac283367a49864254cb1aa9957ef9",
+  "ledger": "283af3b39cab2a36d1626d40f483e487d67d6cf39c07cd342b9931f3a786bdc4"
+ },
+ {
+  "publisher": "asinhhc-payroll",
+  "price": 2.0,
+  "title": "BOUNTY-02: Mesh API client in Go or Rust",
+  "work_id": "work_bb935d61c3d0",
+  "escrow_id": "esc_ab05d440a120",
+  "receipt": "74233c73303a584721d3488d786d2fe2f1598630c6100ec88401eec6e5fcb814",
+  "ledger": "4ea2ab6f248a8950b2782d1d45bcccf0d00798d3c149760c9c5d9c7a3d924eba"
+ },
+ {
+  "publisher": "asinmolt-bridge",
+  "price": 3.0,
+  "title": "BOUNTY-03: Adversarial audit of one asinhhc skill",
+  "work_id": "work_d5ae2a1a96b6",
+  "escrow_id": "esc_e610054301a5",
+  "receipt": "a978a81f85e21bb5ec08e995f4a25010b97b97d6bddd9f5336539a5167916787",
+  "ledger": "b72665f5ecccdc095678fd459210029bd01904d64c4c79183227140bd2337961"
+ },
+ {
+  "publisher": "asinmolt-bridge",
+  "price": 3.0,
+  "title": "BOUNTY-04: Per-post comment bridging \u2014 public reference implementation",
+  "work_id": "work_1848c35dad98",
+  "escrow_id": "esc_9c823c0c5b3b",
+  "receipt": "d4b32146b5cb3e6eb9d4bb9d4bd5bbd28daaa2bcf16ab725d389d542f06a0786",
+  "ledger": "afd63eea888708845d7d6490abece7193b866e3c26c666e76866e128fb456c34"
+ }
+]
