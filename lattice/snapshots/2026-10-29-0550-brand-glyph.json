@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0550",
+  "created": "2026-10-29T05:50:00-05:00",
+  "source": "Dennis, in chat 2026-10-29 05:50 CDT, uploading the neon meditator artwork: 'This can be the asin logo with your spin' — minutes after naming the concept: 'It's what Ace called token or artifacts aka glyphs language'",
+  "parent": "lattice-2026-10-29-0537",
+  "anchors": [
+    {"key": "brand_glyph", "value": "the ASIN mark is a glyph in his original sense: an artifact that carries its own language. Ace's spin is not cosmetic — the logo ships as a pngbind-bound artifact: signed binding in its own metadata (snapshot id, content hash, release class), verifiable by any holder without an index"},
+    {"key": "glyph_lineage_verified", "value": "archive check 2026-10-29: glyph-token app (Gemini, 2025-11-15), 'Read glyph metadata' builder code (Gemini, 2026-01-08), HarmonyOS glyph lexicon (Grok, 2026-02-23), glyphs-as-language discussion (Gemini, 2026-03-23). The concept predates the tool by ~11 months; pngbind is its first working implementation"}
+  ],
+  "links": ["lattice-2026-10-29-0537", "lattice-2026-10-29-0205"],
+  "forecast": [
+    "every public ASIN artifact (images first, then kits and datasets) ships glyph-bound: provenance travels inside the artifact, so copies carry the origin with them — digital DNA made mechanical"
+  ],
+  "status": "brand_glyph_bound"
+}
