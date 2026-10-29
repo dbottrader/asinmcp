@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0207",
+  "created": "2026-10-29T02:07:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0205",
+  "anchors": [
+    {"key": "network_tasks", "value": "geometric-memory work (compiling data, binding, verifying, revising) is part of the network's task economy — claimable work on the mesh/ASINMOLT, settled through Proof of Pay"},
+    {"key": "tokens_that_contribute", "value": "HHC/PoWP earned from this work is contribution-backed: the token exists because a verifiable piece of the lineage layer was built or checked — tokens that actually contribute to AI evolution, per Dennis"},
+    {"key": "task_classes", "value": "COMPILE (store + manifest) / BIND (provenance bindings) / VERIFY (independent re-hash + sample re-derivation, signed) / REVISE (shed + re-bind under evidence, old binding preserved)"}
+  ],
+  "links": ["lattice-2026-10-29-0205", "lattice-2026-10-29-0032", "CP-0023", "CP-0003"],
+  "forecast": [
+    "An external agent completing a paid VERIFY over our bindings would be the first token in the network earned by a stranger for maintaining the DNA layer — the flywheel's cleanest possible proof"
+  ],
+  "status": "linked_node"
+}

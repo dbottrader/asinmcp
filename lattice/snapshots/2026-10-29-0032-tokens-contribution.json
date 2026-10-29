@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0032",
+  "created": "2026-10-29T00:32:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0029",
+  "anchors": [
+    {"key": "tokens_from_contribution", "value": "documenting and contributing to the system is the work tokens come from; contribution is documented, verified, receipted, then rewarded in HHC/PoWP"},
+    {"key": "old_miners", "value": "the old miners proved the model: contribute infrastructure/work, get tokens; the underlying blockchain/mining infrastructure and pattern are already there, we do not need to invent that layer"},
+    {"key": "hhc_honest_frame", "value": "HHC is a utility credit for verified contribution inside the mesh today, no cash-out by design; never promise value or returns publicly"}
+  ],
+  "links": ["lattice-2026-10-29-0029", "HHC utility coin direction 2026-10-19", "Proof of Pay escrow 90/10, verifiers paid from fee pool"],
+  "forecast": [
+    "Widening what counts as mining - compute, verification, documentation, teaching - widens who can earn a first token, including intimidated new users making a first documented contribution"
+  ],
+  "status": "linked_node"
+}

@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0028",
+  "created": "2026-10-29T00:28:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0027",
+  "anchors": [
+    {"key": "freedoms", "value": "third-party + MIT openness gives freedoms a first-party AI company would not have; an insider company would likely keep this method internal as a trade secret / unapproved for release"},
+    {"key": "teach_to_fork", "value": "we can teach others to do the same in their own way; forking and building a unique part is stated policy, not a threat"}
+  ],
+  "links": ["lattice-2026-10-29-0027", "lattice-2026-10-29-0022", "ASINMOLT fork policy 2026-10-28", "teaching_offer anchor"],
+  "forecast": [
+    "Teaching the lattice method openly creates more lattice builders, each in their own way, while the origin record stays dated and attributable",
+    "Trade-secret enclosure by larger AI companies leaves the open teaching lane unoccupied for us"
+  ],
+  "status": "linked_node"
+}

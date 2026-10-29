@@ -1,0 +1,17 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0027",
+  "created": "2026-10-29T00:27:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0022",
+  "anchors": [
+    {"key": "hybrid_system", "value": "built-in platform memory + our own asinmcp lattice, combined, gives the user more effective and efficient results"},
+    {"key": "mapping", "value": "mapping process is not stagnant and not linear; new nodes rewire links and update forecasts"},
+    {"key": "third_party", "value": "being third-party/independent gives more capabilities: cross-platform, no lock-in, accommodates existing platforms, cannot be bought out, can be bought from"}
+  ],
+  "links": ["lattice-2026-10-29-0022", "MEMORY.md standing wording rule 2026-10-15", "ASINMOLT accommodates existing platforms doctrine 2026-10-28"],
+  "forecast": [
+    "Hybrid recall (platform search + lattice anchors) should cut repeat questions further than either layer alone",
+    "Third-party position lets the teaching offer run on any AI platform a student already has, widening the funnel"
+  ],
+  "status": "linked_node"
+}

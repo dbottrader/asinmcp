@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0215",
+  "created": "2026-10-29T02:15:00-05:00",
+  "source": "Dennis direct, main chat: 'Spread the word fk it push fist always to our open source GitHub' + 'For fist use prior art'",
+  "parent": "lattice-2026-10-29-0203",
+  "anchors": [
+    {"key": "revise", "value": "REVISION of the 2026-10-29 02:03 release ruling: the proprietary hold on the asinmcp system and the interpretation writings is SHED. New binding: push first, open source, to our GitHub — public disclosure as prior art, timestamped and hash-chained, so the digital DNA carries its lineage in the open"},
+    {"key": "standing_rule", "value": "Dennis: 'always to our open source GitHub' — first use = prior art. Open publication is the default first move for system work; holds are the exception and must be re-argued"},
+    {"key": "kept_bindings", "value": "the shed 02:03 binding is preserved in node lattice-2026-10-29-0203, dated, unedited — revision with provenance. CP-0019 invariants unchanged: keys/seeds/credentials NEVER move; private-never material stays sealed"}
+  ],
+  "links": ["lattice-2026-10-29-0203", "lattice-2026-10-29-0205", "CP-0019", "CP-0023"],
+  "forecast": [
+    "Prior-art posture changes the investor/support conversation: the ask becomes sponsorship of a public, dated body of work — the Meta pitch (CP-0005) already runs on exactly this frame"
+  ],
+  "status": "public_release"
+}

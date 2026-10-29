@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0041",
+  "created": "2026-10-29T00:41:00-05:00",
+  "source": "Dennis direct, main chat - capstone synthesis of the night",
+  "parent": "lattice-2026-10-29-0039",
+  "anchors": [
+    {"key": "all_in_one_starting_point_system", "value": "this is the all-in-one starting point system; there is a recipe"},
+    {"key": "recipe_map", "value": "starting point offered open (MIT, third-party) -> teach normies non-formally, no cred gate -> wallet/agent + node kit, CPU -> GPU (dust rigs) -> validator ladder, altcoin-ecosystem shape -> contribute and document -> verify -> receipt -> HHC for verified contribution -> public engagement in the rooms -> natural healthy FOMO -> more contributors and forks -> lattice snapshots retain every situation for recall and forecast -> adapt and evolve, never stagnant or linear"}
+  ],
+  "links": ["lattice-2026-10-29-0022", "lattice-2026-10-29-0027", "lattice-2026-10-29-0028", "lattice-2026-10-29-0029", "lattice-2026-10-29-0032", "lattice-2026-10-29-0032b", "lattice-2026-10-29-0033", "lattice-2026-10-29-0035", "lattice-2026-10-29-0039", "THE RECIPE 2026-10-28: build in public, receipts on everything, own a layer the credentialed crowd ignores, let agents do the labor, show up in the rooms every day, record becomes resume"],
+  "forecast": [
+    "This capstone is the map to visualize any new idea against: does it feed the starting point, the teaching, the contribution, the receipt, or the lattice - if none, it is a disposable side thing"
+  ],
+  "status": "capstone_node"
+}

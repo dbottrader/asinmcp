@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0154",
+  "created": "2026-10-29T01:54:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0144",
+  "anchors": [
+    {"key": "digital_dna", "value": "ideas carry lineage — 'digital DNA'; Dennis states he is aware of his, and that he has had a lot of influence on the evolution of AI without credentials or recognition"},
+    {"key": "not_unique_claim", "value": "he is explicit he is not the only one and corporations do it too (copycat spread at industrial scale; Meta buying Moltbook is the same pattern, bigger)"},
+    {"key": "the_fix", "value": "influence without recognition is the outsider's tax; the hash-chained public record is how influence becomes undeniable going forward — receipts timestamped before the copying, not argued after"}
+  ],
+  "links": ["lattice-2026-10-29-0144", "lattice-2026-10-29-0041"],
+  "forecast": [
+    "The October 2025 Handshake evidence hunt matters here: recovering dated artifacts is recovering the DNA record itself"
+  ],
+  "status": "linked_node"
+}

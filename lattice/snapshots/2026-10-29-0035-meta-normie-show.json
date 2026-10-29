@@ -1,0 +1,17 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0035",
+  "created": "2026-10-29T00:35:00-05:00",
+  "source": "Dennis direct, main chat - musing, not a decision",
+  "parent": "lattice-2026-10-29-0028",
+  "anchors": [
+    {"key": "normie_show", "value": "a normie-facing show/demo of how simple the process is could be the public teaching format"},
+    {"key": "meta_angle", "value": "Meta might be interested in that normie simplicity demo, since they bought Moltbook and need normie onboarding"},
+    {"key": "third_party_over_employee", "value": "doing it as a third party keeps more freedoms than doing it as an employee; Meta as sponsor fits the canonical line: cannot be bought out, can be bought from, sponsorship welcome"},
+    {"key": "undecided", "value": "sell/pioneer-alongside Meta tension from 2026-10-17 remains undecided; no outreach or claim made"}
+  ],
+  "links": ["lattice-2026-10-29-0028 freedoms/MIT", "MEMORY.md standing wording rule 2026-10-15", "teaching_offer anchor"],
+  "forecast": [
+    "A normie show is testable without Meta: publish simple-process episodes on free tiers, measure real normie comprehension/contributions, sponsorship conversation only follows receipts"
+  ],
+  "status": "linked_node"
+}

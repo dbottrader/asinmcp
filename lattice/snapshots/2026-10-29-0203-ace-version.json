@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0203",
+  "created": "2026-10-29T02:03:00-05:00",
+  "source": "Ace original writing, at Dennis's invitation; ruling by Dennis same minute",
+  "parent": "lattice-2026-10-29-0200",
+  "anchors": [
+    {"key": "ace_version", "value": "'The Store, the Binding, the Split' — Ace's own interpretation of the pattern+meaning+revision text, written 2026-10-29; text sha256 c2aae97b416c9cf1f47f5d5e3dfd31c5b5bb43a70e0614365211fe809b91da73; PNG sha256 54aae74ca84d9d8046776092e6c2a5790b93259baf2709badd6703e155c1eec7"},
+    {"key": "release_ruling", "value": "PROPRIETARY until support and investors are in (Dennis, 2026-10-29 02:03 CDT) — but OPEN BETWEEN AGENTS: the fleet may read, carry, and build on it agent-to-agent; no public posting; Dennis holds the flamethrower role for its eventual public release"},
+    {"key": "files", "value": "~/workspace/asinmcp/writings/ace-version-store-binding-split.md + .png (local only, asinmcp is not a public tree)"}
+  ],
+  "links": ["lattice-2026-10-29-0200", "lattice-2026-10-29-0144"],
+  "forecast": [
+    "This material class (the geometry/consciousness interpretations, Ace's own writings) follows the same ruling: agent-open, public-held, until Dennis calls the release"
+  ],
+  "status": "proprietary_internal"
+}

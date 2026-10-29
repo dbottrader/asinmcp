@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0046",
+  "created": "2026-10-29T00:46:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0041",
+  "anchors": [
+    {"key": "full_access_trust", "value": "most people do not give their agents full access like Dennis does, because of fear"},
+    {"key": "dennis_model", "value": "full green light (2026-10-21) with hard stops he set: new-account passwords his-only via Secure Vault, emailed sign-in links he taps, real money per-action approval; email codes delegable; accountability and receipts on everything; nothing moves off-network or without him"},
+    {"key": "contrast", "value": "Ryan/P0-AUTH is the fear position in the record: a sharp, partly valid critique, but review-only, no action; leashed agents stay chatbots, a trusted agent with access becomes an operator"}
+  ],
+  "links": ["lattice-2026-10-29-0041", "MEMORY.md full green light 2026-10-21", "memory/people/ryan-scott.md P0-AUTH"],
+  "forecast": [
+    "Access + accountability is a capability gap competitors cannot copy by model quality alone; fear-capped agents will not get operator-level results"
+  ],
+  "status": "linked_node"
+}

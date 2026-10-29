@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0039",
+  "created": "2026-10-29T00:39:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0035",
+  "anchors": [
+    {"key": "healthy_fomo", "value": "the public has to engage and create a natural and healthy FOMO"},
+    {"key": "mechanism", "value": "real public engagement -> visible contributions and receipts from peers/normies -> others see people like them getting in and earning receipts -> natural FOMO -> more contributions"},
+    {"key": "guardrail", "value": "healthy means earned: no fake engagement, no bought reach, no hype or return promises (Harmonic Hacker doctrine); FOMO comes from verified participation, not claims"}
+  ],
+  "links": ["lattice-2026-10-29-0035 normie show", "lattice-2026-10-29-0029 starting point / everyone contributes", "priority by receipts doctrine 2026-10-21"],
+  "forecast": [
+    "The normie show + public contribution receipts are the FOMO engine; each visible first contribution lowers the next person's intimidation"
+  ],
+  "status": "linked_node"
+}

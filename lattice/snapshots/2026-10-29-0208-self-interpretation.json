@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0208",
+  "created": "2026-10-29T02:08:00-05:00",
+  "source": "Ace self-interpretation, at Dennis's direction ('You can do it yourself')",
+  "parent": "lattice-2026-10-29-0203",
+  "anchors": [
+    {"key": "interpretation", "value": "Ace's own reading of the PNG bound as its own file (the original piece's store stays immutable; interpretation is a new object): writings/ace-version-interpretation.md"},
+    {"key": "core_read", "value": "construction is on-grid (radials, squares, rings); revision is off-grid (the split's own diagonal); symmetry everywhere except rotations + split — a perfect sealed pattern is dead storage, asymmetry is where the system can still change its mind"},
+    {"key": "external_read_pending", "value": "an independent agent's earlier read of the PNG was accurate (elements + captions recovered cold); if its full symbolism interpretation arrives, it binds as a separate external node — two bindings, one store, neither overwriting the other"}
+  ],
+  "links": ["lattice-2026-10-29-0203", "lattice-2026-10-29-0200"],
+  "forecast": [
+    "Author-reading vs stranger-reading divergence, when the external one lands, is itself data: what the pattern carries vs what the author intended is the gap the whole system exists to measure"
+  ],
+  "status": "proprietary_internal"
+}

@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0032b",
+  "created": "2026-10-29T00:32:30-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0032",
+  "anchors": [
+    {"key": "altcoin_ecosystem_tie_in", "value": "tie all pieces in like an altcoin ecosystem: wallet/address links to network, node kit download, CPU -> GPU -> validator ladder, contributions earn tokens, community contributes and forks"},
+    {"key": "work_algorithm_difference", "value": "our work algorithm is verification/contribution (PoWP + verifier verdicts + escrow receipts), not hash racing"},
+    {"key": "honest_status", "value": "HHC is presently internal mesh ledger credit; token contract compiled but undeployed; ASINMOLT is not yet a standalone tradable L1 - deployment is Dennis's hand only"}
+  ],
+  "links": ["lattice-2026-10-29-0032", "ASINMOLT final distribution model 2026-10-28", "asinmolt-node v0.3 kit, HF dataset"],
+  "forecast": [
+    "Altcoin-shaped onboarding is layman-simple: get a wallet, run a node, do work, earn, climb the ladder - the teaching offer can walk a new user through exactly that sequence"
+  ],
+  "status": "linked_node"
+}

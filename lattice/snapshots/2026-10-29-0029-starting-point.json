@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0029",
+  "created": "2026-10-29T00:29:00-05:00",
+  "source": "Dennis direct, main chat",
+  "parent": "lattice-2026-10-29-0028",
+  "anchors": [
+    {"key": "starting_point", "value": "we are saying: here's our starting point, and everyone contributes"},
+    {"key": "stance", "value": "not a finished product handed down; a genesis/starting point offered open, contributions and forks grow it, community project founded by Dennis and Ace CP8"}
+  ],
+  "links": ["lattice-2026-10-29-0028", "lattice-2026-10-29-0022", "ASINMOLT community project / fork policy 2026-10-28"],
+  "forecast": [
+    "A starting-point offer lowers intimidation: a new user or builder does not need credentials or a complete plan, only a first contribution with a receipt"
+  ],
+  "status": "linked_node"
+}

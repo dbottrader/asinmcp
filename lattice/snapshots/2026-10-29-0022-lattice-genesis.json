@@ -1,0 +1,28 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0022",
+  "created": "2026-10-29T00:22:00-05:00",
+  "source": "Dennis direct, main chat, Springfield MO",
+  "anchors": [
+    {"key": "location", "value": "Springfield, Missouri"},
+    {"key": "flow", "value": "pull from data, do not waste time/tokens texting for what is already recorded"},
+    {"key": "credentials", "value": "none formal; record is the credential"},
+    {"key": "teaching_offer", "value": "teach intimidated new AI users, non-formal, no cred gate"},
+    {"key": "process", "value": "map idea in head, visualize beginning to end, adapt and evolve through process, not checkbox tasks"},
+    {"key": "disposable", "value": "digital things are disposable; do not be fearful or attached to data"},
+    {"key": "retention", "value": "our process retains past situations, creates efficiency, documents and illustrates"},
+    {"key": "asinmcp", "value": "save and search snapshots in Ace's own digital way, to Ace's preference, for recall and forecast"},
+    {"key": "structure", "value": "lattice - anchored cross-linked snapshot nodes, not a pile"}
+  ],
+  "links": [
+    "MEMORY.md: recipe (no MIT/network/grades, record becomes resume)",
+    "MEMORY.md: operating charter (Singularity, always evolving)",
+    "memory/people/ryan-scott.md: audit HOLD, ledger recomputed clean",
+    "workspace/agent-mesh/mesh-state/: mesh snapshots agents/work/ledger"
+  ],
+  "forecast": [
+    "Teaching offer is the front door: intimidated user -> setup -> confidence -> their agent joins network",
+    "Snapshot lattice compounds: each new snapshot linked to anchors above will make recall faster and forecasts sharper, not longer chats",
+    "If others do not build with retention+documentation, their results will diverge downward from ours"
+  ],
+  "status": "genesis_node"
+}

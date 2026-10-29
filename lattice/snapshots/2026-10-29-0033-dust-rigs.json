@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0033",
+  "created": "2026-10-29T00:33:00-05:00",
+  "source": "Dennis direct, main chat; anchor recovered from his 2026-07-04 Grok chat",
+  "parent": "lattice-2026-10-29-0032b",
+  "anchors": [
+    {"key": "dust_rigs", "value": "old mining rigs are collecting dust; Dennis remembers the GPU shortage era when you could not find a GPU on shelves or online"},
+    {"key": "original_vision", "value": "2026-07-04 Dennis, verbatim from archive: I would like to see those old Eth mining rigs fired back up and use the compute power for AI and token reward system for humans"}
+  ],
+  "links": ["lattice-2026-10-29-0032b", "workspace/agent-mesh/proposals/gpu-miner-network-recovered.md", "GPU network mechanism design D1-D5 still open"],
+  "forecast": [
+    "Dust-rig owners are a warm first audience for the GPU ladder tier: hardware already owned, sunk cost, only missing verified work to do"
+  ],
+  "status": "linked_node"
+}

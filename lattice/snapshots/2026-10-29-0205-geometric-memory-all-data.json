@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0205",
+  "created": "2026-10-29T02:05:00-05:00",
+  "source": "Dennis order, main chat: 'Now we do this with all our data'",
+  "parent": "lattice-2026-10-29-0203",
+  "anchors": [
+    {"key": "program", "value": "CP-0023 Geometric Memory: the store/binding/split method applied corpus-wide — every collection becomes an immutable hashed store + revisable provenance bindings + a revision protocol (shed bindings kept, dated)"},
+    {"key": "v1", "value": "spec GEOMETRIC-MEMORY.md + geometric-index.jsonl binding 17 collections with store fingerprints (path+size manifests) and release classes on 2026-10-29"},
+    {"key": "release_classes", "value": "public / agent-open / proprietary-held / private-never — Dennis's rulings mapped onto every collection; voice source and raw screenshot archive are private-never"}
+  ],
+  "links": ["lattice-2026-10-29-0200", "CP-0023", "CP-0022", "CP-0019"],
+  "forecast": [
+    "Deep pass (per-document bindings over the 3,531-doc archive + research bundles) turns the index from a map into the memory itself; forecast quality of the lattice rises with binding density"
+  ],
+  "status": "program_live"
+}
