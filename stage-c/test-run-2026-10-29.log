@@ -1,0 +1,31 @@
+== A. public read surface ==
+PASS A1 health ok mesh=0.2.1
+PASS A2 bounties carry live states {'esc_257121fbc3de': 'FUNDED', 'esc_ab05d440a120': 'FUNDED', 'esc_e610054301a5': 'FUNDED', 'esc_9c823c0c5b3b': 'FUNDED', 'esc_bcc31cb52fcf': 'FUNDED'}
+PASS A3 ledger head matches mesh height=349 head=f2516eabf34f
+PASS A4 checkpoint signature verifies vs pinned fleet key height=349
+PASS A5 registry snapshot verified records=42
+PASS A6 BOUNTY-05 escrow read FUNDED
+== setup: operator identities + test item via gateway ==
+PASS S0 stored identities authenticate through gateway 
+PASS S1 gated publish works {"work_id": "work_66f4daa200bb", "escrow_id": "esc_550b1efa14e4", "state": "FUNDED", "receipt": "dc17bd20c4c3fcf91a57e143e02b334d91c3e88528ad2fb24f9676b80e89641
+PASS S2 publish approval consumed on success 
+== B. token separation ==
+PASS B1 PoP claim without approval token refused st=403 code=APPROVAL_MISSING
+PASS B2 escrow unmoved by refused claim 
+PASS B3 social token, no approval -> gate refuses st=403 code=APPROVAL_MISSING
+PASS B4 social token + valid approval -> upstream rejects (not 200) st=401
+PASS B5 approval NOT consumed by rejected attempt 
+PASS B6 social token vs escrow service directly -> rejected st=401
+== C. gated write path end-to-end ==
+PASS C1 gated claim works {"ok": true, "escrow_id": "esc_550b1efa14e4", "claim_expires": 1793363195.3457818, "ledger": "b651db4efa4dd08ab13969a1150c41dc2fecd63adc59b6ccabc5d5e9f05ae6db"}
+PASS C2 approval token reuse refused st=403 code=APPROVAL_ALREADY_USED
+PASS C3 wrong-work approval refused st=403 code=APPROVAL_WORK_MISMATCH
+PASS C4 gated submit works {"ok": true, "escrow_id": "esc_550b1efa14e4", "state": "SUBMITTED", "ledger": "2e111cfdb78674d11a4ebcc86df80b6484609998971efe0ce8dd026b4ab8c1c7", "note": "await
+PASS C5 gated verdict works {"ok": true, "escrow_id": "esc_550b1efa14e4", "state": "SUBMITTED", "receipt": "5f199bc8a6cfb4b5e095064d6f08dacc2e756722
+PASS C6 gated verdict works {"ok": true, "escrow_id": "esc_550b1efa14e4", "state": "TERMINAL_PAID", "receipt": "b1884fa655d56ed97b24972a0b00db6d17a3
+PASS C7 escrow TERMINAL_PAID TERMINAL_PAID
+PASS C8 worker paid exactly 0.45 (90% of 0.5) [{'id': 'hhc_571e86a5bc49', 'amount': 0.45, 'kind': 'escrow_release', 'work_id': 'work_66f4daa200bb', 'escrow_id': 'esc_550b1efa14e4', 'receipt': '4735cbd9ed01331e1625230c4adcc8d1b41d360155dcc1849c10d12bbaba0257', 'created': 1793276811.0904806}]
+PASS C9 verifier paid exactly 0.025 from fee pool [{'id': 'hhc_efafaba8ead6', 'amount': 0.025, 'kind': 'verifier_fee', 'work_id': 'work_66f4daa200bb', 'escrow_id': 'esc_550b1efa14e4', 'receipt': '03f4d9b478ac345d637fe732145ec4b1c88d94a27d4e54f33436cdffa930135a', 'created': 1793276811.0904806}]
+PASS C10 terminal receipt present c41c1403a893f92d
+
+== SUMMARY: 25 pass, 0 fail, 0 skip ==

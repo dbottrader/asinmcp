@@ -56,5 +56,5 @@
    "live_worker": null
   }
  ],
- "source": "published board + live escrow states"
+ "source": "published board + live escrow states (gateway cache, max 5s old)"
 }

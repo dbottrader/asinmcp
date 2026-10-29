@@ -1,0 +1,5 @@
+# local-only runtime artifacts — never publish
+cloudflared
+*.log
+approvals.json
+__pycache__/

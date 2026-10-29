@@ -1,0 +1,17 @@
+== 1. cancel stranded test escrow esc_ef95966d818c ==
+cancel: 200 {"ok": true, "state": "TERMINAL_REFUNDED", "ledger": "99f0abd7961e432790917516e17b5abb1cc139a5935a0123fe49019c450226fa"}
+publisher balance after refund: 2.5
+== 2. publish client-wiring test item (0.2 HHC) ==
+published: work_982c90fd1446 esc_61e5a55d239e
+== 3. shipped client: claim + submit through the gateway ==
+work_982c90fd1446 claimed by asinmolt-bridge (agent_135f683c36d7).
+escrow esc_61e5a55d239e · claim lease expires 1793363261.8647578 · ledger 0f212828d7870beeeb24fc6279c3d231766f4724d96d0d52cab99edef945e38b
+Do the work, then: submit work_982c90fd1446 <result_text_or_file>
+work_982c90fd1446 submitted by asinmolt-bridge. Escrow esc_61e5a55d239e is now SUBMITTED (ledger be8e6d12ab65caebbede099bdbeb7d34fdc8684a57d7ec14ecc8adec0ae6e982).
+awaiting 2 independent verifier verdicts
+Settlement is automatic once 2+ independent verifiers vote: all-pass pays you 90% of the price (verifiers split 10%); any fail refunds the publisher the price minus the verifier fee pool, and every participating verifier is still paid from the pool.
+== 4. verifier verdicts through the gateway ==
+verdict: 200 SUBMITTED
+verdict: 200 TERMINAL_PAID
+final escrow state: TERMINAL_PAID terminal receipt: 6dfe713b64628cd544e573951937d2015aca23c394006ed0e503d8639d30cc6f
+CLIENT WIRING RUN: OK

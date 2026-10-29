@@ -5,7 +5,9 @@
   "sha256": "058724feae7fcbd6bde0f81305789b6d5ff743312d0efb5c97947a6a237aeddc",
   "sha256_matches_sigfile": true,
   "pubkey": "d7ea9b08d8f91a681df9530cf5b56672425817e92bfc0b83737496c305c94dd8",
-  "signed_at": "2026-10-29T10:54:49.468329+00:00",
-  "signature_valid": true
+  "pubkey_matches_pin": true,
+  "signed_at": "2026-10-29T12:00:30.894122+00:00",
+  "signature_valid": true,
+  "verified_against": "pinned fleet pubkey (not the sig file's own)"
  }
 }
