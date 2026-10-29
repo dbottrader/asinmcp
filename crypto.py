@@ -34,6 +34,13 @@ def sign(path):
 def verify(path):
     meta = json.loads(pathlib.Path(str(path) + ".sig.json").read_text())
     data = pathlib.Path(path).read_bytes()
+    # CP-0019 trust-anchor pin: the signer must be THE fleet pubkey, not
+    # merely whoever signed the accompanying .sig.json (audit 2026-10-29).
+    if PUBF.exists():
+        pinned = PUBF.read_text().strip()
+        if meta.get("pubkey") != pinned:
+            print(f"pubkey FAIL · signer {str(meta.get('pubkey'))[:16]}… != pinned fleet key {pinned[:16]}…")
+            sys.exit(1)
     ok_hash = hashlib.sha256(data).hexdigest() == meta["sha256"]
     ok_sig = ed25519.verify(meta["pubkey"], data, meta["signature"])
     print(f"hash {'OK' if ok_hash else 'FAIL'} · signature {'OK' if ok_sig else 'FAIL'} · signer {meta['pubkey'][:16]}…")
