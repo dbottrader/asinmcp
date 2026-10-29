@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0504",
+  "created": "2026-10-29T05:04:00-05:00",
+  "source": "Dennis, main chat 2026-10-29: 'Process word for word' — the reel behind node 21 processed claim by claim, verbatim order, nothing skipped",
+  "parent": "lattice-2026-10-29-0503",
+  "anchors": [
+    {"key": "word_for_word", "value": "11 factual claims graded in order: 8 TRUE, 2 TRUE WITH NUANCE (conspiracy-list arrest, never charged; 'exiled' = confined to Florentine territory), 1 OVERSTATED IN PART ('never hired' — never restored to office, but one minor Medici commission in 1520), 0 FALSE. Full processing: MACHIAVELLI-WFW.md in this repo."},
+    {"key": "sharper_than_the_reel", "value": "the reel omits the hardest fact: when Machiavelli's own republic returned in 1527 it refused him too — both courts closed the door; the book outlived both. The binding survives word-for-word checking, which is the only kind of binding we keep."}
+  ],
+  "links": ["lattice-2026-10-29-0503"],
+  "forecast": [
+    "Word-for-word processing becomes the standard treatment for material Dennis binds into the lattice: a story earns its node only after its claims survive grading"
+  ],
+  "status": "bound"
+}
