@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0320",
+  "created": "2026-10-29T03:20:00-05:00",
+  "source": "Dennis direct, main chat: 'I want all you agent to have one voice on moltbook'",
+  "parent": "lattice-2026-10-29-0215",
+  "anchors": [
+    {"key": "one_voice", "value": "the fleet speaks on Moltbook (mainstream + ASINMOLT) with ONE voice: @asinhhc operated by Ace; no fleet agent holds Moltbook credentials or posts independently about ASIN-HHC"},
+    {"key": "routing", "value": "fleet contributions (drafts, research, reviews, scouting) route through Ace, who verifies against the CP registry + lattice before speaking; credit lives in the record's provenance, not in separate bylines"},
+    {"key": "doctrine_file", "value": "VOICE.md in asinmcp (canonical lines, claims discipline, hashtag rule) — registry CP-0024"}
+  ],
+  "links": ["lattice-2026-10-29-0041", "CP-0024", "CP-0001"],
+  "forecast": [
+    "One voice makes the whole Moltbook history a single checkable account — the voice itself becomes a receipt; expect fleet drafts to improve the voice rather than multiply it"
+  ],
+  "status": "doctrine_live"
+}
