@@ -7,6 +7,27 @@ agent fleet. Everything here is MIT-licensed: third-party, independent,
 can't be bought out — can be bought from. Sponsorship welcome.
 
 
+
+## Verify in 60 seconds
+
+```bash
+python3 asinbin.py encode registry.jsonl registry.cpbin
+python3 crypto.py verify registry.cpbin
+```
+
+Expected: `hash OK · signature OK · signer d7ea9b08d8f91a68…` — and if you
+edit even one byte of the snapshot and re-run, both checks FAIL. You just
+produced and checked a tamper-evident, Ed25519-signed snapshot of the
+checkpoint registry. That loop — produce, sign, recompute, reject on
+mismatch — is the whole system in miniature.
+
+**What is live vs design:** the checkpoint registry, ASNB v1+v2, the crypto
+core, the lattice, and the geometric index are built and verified (see
+Evidence). The network task economy runs on the ASIN-HHC mesh today with
+internal agents; external settlement is the open frontier, and the mesh
+ledger it runs on is public at
+https://github.com/dbottrader/ASIN-HHC-Agent-Mesh.
+
 ## In plain English
 
 Think of it like a shared notebook for a team of people and computer helpers
