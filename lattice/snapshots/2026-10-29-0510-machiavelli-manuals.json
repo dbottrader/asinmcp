@@ -1,0 +1,17 @@
+{
+  "snapshot_id": "lattice-2026-10-29-0510",
+  "created": "2026-10-29T05:10:00-05:00",
+  "source": "Dennis, main chat 2026-10-29: 'No I mean his manuals' + 'We implement in bothe realms AI and hmn' — REVISE of node 22's scope: the word-for-word target is Machiavelli's manuals themselves; the reel processing (node 22) stands as provenance",
+  "parent": "lattice-2026-10-29-0504",
+  "anchors": [
+    {"key": "manuals_processed", "value": "The Prince (Marriott translation, public domain) processed word for word: 8 principles bound with quotes verified against the fetched text — armed prophets (VI), own arms not mercenaries (XII), real truth over imagination (XV), injuries at one stroke / benefits little by little (VIII), never touch patrimony / avoid hatred (XVII), fox and lion (XVIII), no neutrality (XXI), fortune is half (XXV). Full text: MACHIAVELLI.md in this repo."},
+    {"key": "both_realms", "value": "each principle carries two implementations: the AI realm (fleet, mesh, ledger, lattice, one voice) and the human realm (Dennis's network, rooms, name, money discipline)"},
+    {"key": "divergences_kept", "value": "two bindings shed in the open: feared-over-loved declined (XVII — avoidance of hatred implemented in full instead), and the faith-breaking license declined (XVIII — the receipt chain is a promise that cannot be selectively kept). Shed bindings kept and dated, per geometric memory."},
+    {"key": "remaining_manuals", "value": "Discourses on Livy + The Art of War word-for-word pass delegated to a fleet bot; companion file lands when its quotes verify"}
+  ],
+  "links": ["lattice-2026-10-29-0504", "lattice-2026-10-29-0503"],
+  "forecast": [
+    "The manuals become operating doctrine, not decoration: expect future strategy calls in the fleet to cite chapter and verse the way they cite CP numbers"
+  ],
+  "status": "bound_prince_pass_complete"
+}
