@@ -1,0 +1,17 @@
+{
+ "rows": 231,
+ "seq_min": 1,
+ "seq_max": 231,
+ "terminal_hash": "11d83f5e5964c93a544f0d793a407c4f9a0b18e7a1919ccde2d84a46099d6e9a",
+ "terminal_kind": "hhc_escrow_paid",
+ "link_chain": "231/231 prev_hash links consistent, genesis prev = 64 zeros",
+ "v0_compat_segment": "seq 1-15, 15/15 hashes recompute under the v0 spec: sha256(json.dumps({ts,actor,kind,payload,prev_hash}, sort_keys=True)) with default separators",
+ "v1_segment": "seq 16-231, 216/216 hashes recompute under canon_v1: sha256(json.dumps(obj, sort_keys=True, separators=(\",\",\":\"), ensure_ascii=True).encode(\"utf-8\"))",
+ "live_crosscheck": "GET /ledger/verify on :8220 returns ok=true, failing_seq=null, height 231, v1_entries 216, legacy_entries 15",
+ "code_refs": [
+  "mesh.py sha() + ledger_append (v0)",
+  "v02/mesh_v02.py canon_v1 + verify_chain (v1)"
+ ],
+ "question_1_recompute": "CLOSED \u2014 the exported chain fully recomputes under the two disclosed specs.",
+ "question_2_completeness": "OPEN \u2014 a self-consistent export cannot prove nothing was omitted. No distributed signed checkpoints exist yet. That mechanism is future work, not something this bundle pretends to provide."
+}

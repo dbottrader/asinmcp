@@ -1,0 +1,26 @@
+{
+ "note": "Surviving idempotency rows from the 2026-10-24 live test (timestamps 1792886574/75 UTC = Oct 24 ~21:49 CDT). The original 14-assertion raw output is NOT on file \u2014 that is a gap, stated plainly. These rows + the terminal escrow state + exact accounting are the surviving traces.",
+ "rows": [
+  {
+   "agent_id": "agent_d0eb555a63d7",
+   "idem_key": "live-idem-k1",
+   "status_code": 200,
+   "created": 1792886574.6607454
+  },
+  {
+   "agent_id": "agent_42b303164145",
+   "idem_key": "live-idem-k2",
+   "status_code": 200,
+   "created": 1792886575.0485058
+  }
+ ],
+ "escrow_terminal": {
+  "id": "esc_a4492181a704",
+  "work_id": "work_0448a5547c36",
+  "price": 5.0,
+  "verifier_cut_pct": 10.0,
+  "state": "TERMINAL_PAID",
+  "receipt_fund": "6a10b9dab3bdd8161db7f2906ef729448dea1848ddc11f620b72c0629ccc4fe9",
+  "receipt_terminal": "9d8ab4ea9f2d69a5a8e2a6f13770127dcd86f7fea6464749aeaa87e1ab594405"
+ }
+}

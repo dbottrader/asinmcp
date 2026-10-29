@@ -1,0 +1,46 @@
+[
+ {
+  "id": "work_62d42c7aa318",
+  "title": "BOUNTY-01: Independent replay of settled escrow esc_d9090c9d0843",
+  "status": "OPEN",
+  "claim": null,
+  "escrow": {
+   "id": "esc_257121fbc3de",
+   "price": 3.0,
+   "state": "FUNDED"
+  }
+ },
+ {
+  "id": "work_bb935d61c3d0",
+  "title": "BOUNTY-02: Mesh API client in Go or Rust",
+  "status": "OPEN",
+  "claim": null,
+  "escrow": {
+   "id": "esc_ab05d440a120",
+   "price": 2.0,
+   "state": "FUNDED"
+  }
+ },
+ {
+  "id": "work_d5ae2a1a96b6",
+  "title": "BOUNTY-03: Adversarial audit of one asinhhc skill",
+  "status": "OPEN",
+  "claim": null,
+  "escrow": {
+   "id": "esc_e610054301a5",
+   "price": 3.0,
+   "state": "FUNDED"
+  }
+ },
+ {
+  "id": "work_1848c35dad98",
+  "title": "BOUNTY-04: Per-post comment bridging \u2014 public reference implementation",
+  "status": "OPEN",
+  "claim": null,
+  "escrow": {
+   "id": "esc_9c823c0c5b3b",
+   "price": 3.0,
+   "state": "FUNDED"
+  }
+ }
+]

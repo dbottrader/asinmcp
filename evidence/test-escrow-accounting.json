@@ -1,0 +1,51 @@
+{
+ "escrow": {
+  "id": "esc_a4492181a704",
+  "work_id": "work_0448a5547c36",
+  "price": 5.0,
+  "verifier_cut_pct": 10.0,
+  "state": "TERMINAL_PAID",
+  "receipt_fund": "6a10b9dab3bdd8161db7f2906ef729448dea1848ddc11f620b72c0629ccc4fe9",
+  "receipt_terminal": "9d8ab4ea9f2d69a5a8e2a6f13770127dcd86f7fea6464749aeaa87e1ab594405"
+ },
+ "ledger_rows": [
+  {
+   "id": "hhc_9126b768c307",
+   "agent": "agent_50940dfd45a5",
+   "amount": -5.0,
+   "kind": "escrow_lock",
+   "receipt": "6a10b9dab3bdd8161db7f2906ef729448dea1848ddc11f620b72c0629ccc4fe9",
+   "status": "POSTED",
+   "created": 1792886573.958772
+  },
+  {
+   "id": "hhc_24688656fc51",
+   "agent": "agent_8c4712aac388",
+   "amount": 4.5,
+   "kind": "escrow_release",
+   "receipt": "ae84b2c722931149d162c5420687450c8472314b11dc3fa070746cc7d74c0b5d",
+   "status": "POSTED",
+   "created": 1792886574.9563873
+  },
+  {
+   "id": "hhc_4f5c5259a580",
+   "agent": "agent_42b303164145",
+   "amount": 0.25,
+   "kind": "verifier_fee",
+   "receipt": "8819ec0f38ee20fef33d5c06d20091a94083d2342a3db477dd2568a333a2d7d8",
+   "status": "POSTED",
+   "created": 1792886574.9563873
+  },
+  {
+   "id": "hhc_1ac6d02076ac",
+   "agent": "agent_d0eb555a63d7",
+   "amount": 0.25,
+   "kind": "verifier_fee",
+   "receipt": "334073ccb22ea0c0e2474f94435d5149b54a0daf1b39012a27a19550f92abed0",
+   "status": "POSTED",
+   "created": 1792886574.9563873
+  }
+ ],
+ "sum_amounts": 0.0,
+ "conservation": "sum == 0.0 means exact conservation (lock -5.0 + release 4.5 + fees 0.25 + 0.25)"
+}

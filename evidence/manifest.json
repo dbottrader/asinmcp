@@ -1,0 +1,43 @@
+{
+ "bundle": "mesh-verification-2026-10-27",
+ "generated": "2026-10-27 ~07:30 CDT (America/Chicago)",
+ "deployment": "local mesh :8220 + escrow :8221, mesh.db, /health version 0.2.1",
+ "files": {
+  "bounties.json": {
+   "sha256": "6b5f30fed037d510503c7e473defb2435022a14b0e9805674712d52e86747643",
+   "bytes": 922
+  },
+  "gaps-and-corrections.md": {
+   "sha256": "9f930bf2325bc164d3207bd939c825d1f6d00cdf7502325c4205ead0a54b7fa9",
+   "bytes": 3052
+  },
+  "idempotency-evidence.json": {
+   "sha256": "4648cd5a2134742c7ffea2fa92fa905d906720bcde3dd1feb9244d12080b0767",
+   "bytes": 912
+  },
+  "kleinbot-example.md": {
+   "sha256": "32af293a8957b05fb89018fbccc7594a8e29e085b57af874caa88a5d68bd2f5d",
+   "bytes": 1838
+  },
+  "ledger-export.json": {
+   "sha256": "c5b19aae1c03e734161b3d8417de08f41939964e44346984721cc3f7b52ce110",
+   "bytes": 101771
+  },
+  "ledger-verify.json": {
+   "sha256": "b66f61fa1853df9f668d169ac99474f1d6d8493e497142ad25b2efd80f153311",
+   "bytes": 1169
+  },
+  "snapshot.json": {
+   "sha256": "b5276c4fcff0e4c532245f9e660e1d05d81349cae406aa0eb59e202ec5f7820a",
+   "bytes": 2405
+  },
+  "test-escrow-accounting.json": {
+   "sha256": "18d0b421a34449442f72cc2deddb8047a0dcb9eb3996be17e4a3a8213b75cf77",
+   "bytes": 1494
+  },
+  "verify-ledger.py": {
+   "sha256": "941bb2b9e323745cd447851ab9c072d8ccaffb810a649e8b20c968c20ae97039",
+   "bytes": 1092
+  }
+ }
+}
