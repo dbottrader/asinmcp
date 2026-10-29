@@ -29,6 +29,21 @@ SEED = KEYS / "ace-lattice.seed"
 PUBF = KEYS / "ace-lattice.pub"
 SIG8 = b"\x89PNG\r\n\x1a\n"
 
+# The fleet signing pubkey is PUBLIC — it is printed in the repo README.
+# Strangers verifying a glyph never have keys/ace-lattice.pub (the keys/
+# directory is never published), so verify falls back to this published
+# constant for the signer pin check. The seed is never published, ever.
+FLEET_PUBKEY = "d7ea9b08d8f91a681df9530cf5b56672425817e92bfc0b83737496c305c94dd8"
+
+
+def pinned_pubkey():
+    """Pinned fleet pubkey: local keys/ace-lattice.pub when present,
+    otherwise the pubkey published in the README."""
+    try:
+        return PUBF.read_text().strip()
+    except OSError:
+        return FLEET_PUBKEY
+
 
 def read_chunks(data):
     if not data.startswith(SIG8):
@@ -60,7 +75,16 @@ def content_hash(chunks):
 
 
 def bind(inp, outp, snapshot_id, release_class):
-    data = pathlib.Path(inp).read_bytes()
+    if not SEED.exists() or not PUBF.exists():
+        print("cannot bind: the fleet signing key (keys/ace-lattice.seed) is not "
+              "present on this machine. Binding is an operator action; verifying "
+              "works anywhere with the published fleet pubkey.")
+        sys.exit(1)
+    try:
+        data = pathlib.Path(inp).read_bytes()
+    except OSError:
+        print(f"cannot bind: no readable file at {inp}")
+        sys.exit(1)
     chunks = read_chunks(data)
     for typ, payload, _, _ in chunks:
         if typ == "tEXt" and payload.startswith(b"asinmcp:binding\x00"):
@@ -86,8 +110,16 @@ def bind(inp, outp, snapshot_id, release_class):
 
 
 def verify(path):
-    data = pathlib.Path(path).read_bytes()
-    chunks = read_chunks(data)
+    try:
+        data = pathlib.Path(path).read_bytes()
+    except OSError:
+        print(f"cannot verify: no readable file at {path}")
+        sys.exit(1)
+    try:
+        chunks = read_chunks(data)
+    except ValueError:
+        print(f"cannot verify: {path} is not a PNG file")
+        sys.exit(1)
     texts = {}
     for typ, payload, _, _ in chunks:
         if typ == "tEXt" and b"\x00" in payload:
@@ -99,7 +131,7 @@ def verify(path):
         print("binding FAIL · no asinmcp:binding chunks present")
         sys.exit(1)
     binding = json.loads(raw.decode("latin-1"))
-    pinned = PUBF.read_text().strip()
+    pinned = pinned_pubkey()
     ok_pin = binding.get("pubkey") == pinned
     ok_content = content_hash(chunks) == binding.get("content_sha256")
     ok_sig = ed25519.verify(binding["pubkey"], raw, sig.decode("latin-1"))

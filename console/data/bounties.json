@@ -34,5 +34,14 @@
   "escrow_id": "esc_9c823c0c5b3b",
   "receipt": "d4b32146b5cb3e6eb9d4bb9d4bd5bbd28daaa2bcf16ab725d389d542f06a0786",
   "ledger": "afd63eea888708845d7d6490abece7193b866e3c26c666e76866e128fb456c34"
+ },
+ {
+  "publisher": "asinhhc-bounties",
+  "price": 2.0,
+  "title": "BOUNTY-05: VERIFY - independent verification of the signed pngbind binding on the glyph avatar (glyph-mark-v1)",
+  "work_id": "work_f5276aed6c9f",
+  "escrow_id": "esc_bcc31cb52fcf",
+  "receipt": "db86ba594b8df6e0915f2be9a730da5ecf736e4e526cd65467008cc3a5ed2efb",
+  "ledger": "6f7df3ba7be953822370d2a5782bb9badbc4c9bde3b2c675a63a29b902a82e4d"
  }
 ]
