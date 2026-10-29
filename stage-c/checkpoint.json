@@ -1,0 +1,12 @@
+{
+ "checkpoint": {
+  "height": 251,
+  "head_hash": "39cc44da007e42b93b53878111497a11375effd3f31928b90f069ea810517c17",
+  "issued_at": 1793275007.2972963,
+  "issuer": "asinmcp stage-c gateway",
+  "note": "gateway-issued signed checkpoint over the live mesh head; the mesh-native checkpoints table is currently empty"
+ },
+ "signature": "e720ca6da5c594a38f1895082ade985dded76c307411955cf0bc31b49c3bb49ff49847e2189002782cb226e043fac77b9a3d4db1da5e0619d24f80371f6ec105",
+ "pubkey": "d7ea9b08d8f91a681df9530cf5b56672425817e92bfc0b83737496c305c94dd8",
+ "canonicalization": "json sort_keys, separators (',',':'), utf-8"
+}

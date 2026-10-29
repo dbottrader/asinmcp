@@ -1,0 +1,16 @@
+{
+ "surface": "ASIN-HHC Stage C public read snapshot",
+ "generated_at": 1793275008.6072738,
+ "ledger_height": 251,
+ "head_hash": "39cc44da007e42b93b53878111497a11375effd3f31928b90f069ea810517c17",
+ "snapshot_max_age_s": 3600,
+ "staleness_rule": "STALE if generated_at older than snapshot_max_age_s or ledger_height below the live height",
+ "verify": "checkpoint.json carries an Ed25519 signature by the fleet key d7ea9b08d8f91a681df9530cf5b56672425817e92bfc0b83737496c305c94dd8 over the canonical checkpoint JSON",
+ "files": [
+  "bounties.json",
+  "checkpoint.json",
+  "ledger-head.json",
+  "registry.json"
+ ],
+ "note": "derived view; the mesh ledger is the canonical source of truth. Escrow writes go through the Stage C gateway (P0-AUTH gated) \u2014 see DESIGN.md in asinmcp/stage-c/."
+}
