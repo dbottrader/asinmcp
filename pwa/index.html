@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>True AI Phone — Device Portal</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b0e14">
+<style>
+:root{--bg:#0b0e14;--card:#141a26;--line:#232c40;--txt:#e6ebf4;--dim:#8b94a7;--acc:#5eead4;--gold:#fbbf24;--bad:#f87171;--ok:#34d399}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.5rem;margin:.3em 0}h2{font-size:1.05rem;color:var(--acc);margin:1.4em 0 .4em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
+label{display:block;font-size:.85rem;color:var(--dim);margin:8px 0 2px}
+input,select,textarea{width:100%;background:#0b0e14;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+textarea{min-height:70px}
+button{font:inherit;cursor:pointer;border-radius:8px;padding:8px 14px;font-weight:700;border:0;background:var(--acc);color:#052e22;margin:6px 6px 0 0}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--line)}
+button.danger{background:var(--bad);color:#fff}
+pre{white-space:pre-wrap;word-break:break-all;background:#0b0e14;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:.82rem}
+.small{font-size:.82rem;color:var(--dim)} .ok{color:var(--ok)} .bad{color:var(--bad)} .gold{color:var(--gold)}
+</style>
+</head>
+<body><div class="wrap">
+<h1>True AI Phone — Device Portal</h1>
+<p class="small">Your agent, on a leash. Pair once, sign every command, approve destructive work on-device, kill anytime. Keys stay on this device. This PWA talks to the device agent on the same origin when served from the device, or to a localhost agent you point it at.</p>
+
+<div class="card"><h2>1 · Device</h2>
+<label>Device base URL</label>
+<input id="base" value="http://127.0.0.1:8741">
+<label>Agent name</label>
+<input id="agentName" value="pwa-agent">
+<div><button id="btnStatus">Check status</button><button id="btnKill" class="danger">Kill switch</button></div>
+<pre id="statusOut">Not checked yet.</pre>
+</div>
+
+<div class="card"><h2>2 · Pair</h2>
+<p class="small">Generate an agent key on this device (WebCrypto Ed25519, stored in this browser only — test-device key, not a production secret store), then enter the pairing code shown by the device agent.</p>
+<div><button id="btnKeygen">Generate agent key</button></div>
+<label>Agent public key (hex)</label><input id="pubkey" readonly>
+<label>Pairing code (from device agent)</label><input id="pairCode" placeholder="e.g. A1B2C3">
+<div><button id="btnPair">Pair with device</button></div>
+<pre id="pairOut"></pre>
+</div>
+
+<div class="card"><h2>3 · Command</h2>
+<label>Action</label>
+<select id="action">
+<option value="list_dir">list_dir (read)</option>
+<option value="read_file">read_file (read)</option>
+<option value="exec_safe">exec_safe (allowlisted)</option>
+<option value="write_file">write_file (destructive — needs approval token)</option>
+<option value="move_to_trash">move_to_trash (destructive — needs approval token)</option>
+</select>
+<label>Path</label><input id="path" value=".">
+<label>Content (write_file only)</label><textarea id="content"></textarea>
+<label>Approval token (destructive only — owner issues it on-device for this exact command)</label><input id="token" placeholder="paste one-use token">
+<div><button id="btnHash">Show command hash</button><button id="btnCmd">Send signed command</button></div>
+<pre id="cmdOut"></pre>
+</div>
+
+<div class="card"><h2>4 · Audit</h2>
+<div><button id="btnAudit">Load audit log</button></div>
+<pre id="auditOut"></pre>
+</div>
+
+<p class="small">Safety: read actions are sandbox-scoped by the device agent. Destructive actions need experimental mode on, a backup marker, and a one-use token — all enforced on the device, not in this UI. If this PWA is served from a public https origin, browsers block talking to a remote http device; serve it from the device itself (same origin) for remote use.</p>
+</div>
+<script src="app.js"></script>
+</body></html>
