@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Buga Sphere Technical Dossier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --paper:#ecebe6; --paper-2:#e2e0da; --ink:#171a1c; --muted:#5f6567;
+      --line:#aaa9a2; --line-strong:#727673; --panel:#f5f4ef; --panel-alt:#deddd7;
+      --signal:#005f66; --signal-soft:#cfe1df; --warn:#9b2f1f; --warn-soft:#eed6cf;
+      --amber:#9a6200; --amber-soft:#efe0b9; --ok:#315f3b; --ok-soft:#d8e5d7;
+      --shadow:0 18px 50px rgba(20,24,24,.10);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper:#111517; --paper-2:#171c1e; --ink:#f0f0e9; --muted:#a8b0b0;
+        --line:#394144; --line-strong:#6a7376; --panel:#1a2022; --panel-alt:#22292c;
+        --signal:#6dc6cb; --signal-soft:#173a3d; --warn:#ff8e77; --warn-soft:#412722;
+        --amber:#f0bc59; --amber-soft:#3b3220; --ok:#8dcb98; --ok-soft:#20382a;
+        --shadow:0 18px 60px rgba(0,0,0,.32);
+      }
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;line-height:1.55}
+    a{color:inherit;text-decoration-color:var(--signal);text-underline-offset:3px}
+    a:hover{color:var(--signal)}
+    button{font:inherit}
+    .mono,.eyebrow,.tag,.metric b,.nav button,.filter,.stamp,.source-index,.status-row,.claim-meta{font-family:"IBM Plex Mono",monospace}
+    .sans,h1,h2,h3,.lede,.verdict strong,.fact-title,.timeline time{font-family:"IBM Plex Sans Condensed",sans-serif}
+    .page{max-width:1380px;margin:0 auto;padding:22px clamp(16px,3vw,44px) 80px}
+    .mast{border-top:7px solid var(--ink);border-bottom:1px solid var(--line-strong);padding:18px 0 22px;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(240px,.55fr);gap:34px;align-items:end}
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--signal);font-weight:600;margin:0 0 14px}
+    h1{font-size:clamp(42px,7vw,94px);line-height:.88;letter-spacing:-.05em;margin:0;max-width:980px;text-wrap:balance}
+    .lede{font-size:clamp(18px,2.1vw,28px);line-height:1.08;margin:20px 0 0;max-width:880px;color:var(--muted)}
+    .stamp{align-self:stretch;border-left:1px solid var(--line-strong);padding-left:24px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;font-size:12px}
+    .stamp .grade{font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;font-size:42px;line-height:.9;color:var(--warn)}
+    .stamp p{margin:4px 0;color:var(--muted)}
+    .nav{position:sticky;top:0;z-index:8;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow:auto;padding:9px 0;margin-bottom:30px;scrollbar-width:none}
+    .nav::-webkit-scrollbar{display:none}
+    .nav button{border:0;background:none;color:var(--muted);padding:8px 12px;white-space:nowrap;cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+    .nav button:hover,.nav button.active{background:var(--ink);color:var(--paper)}
+    section{scroll-margin-top:70px;margin:70px 0}
+    .section-head{display:grid;grid-template-columns:80px minmax(0,680px) 1fr;gap:20px;align-items:baseline;border-top:1px solid var(--line-strong);padding-top:14px;margin-bottom:28px}
+    .section-no{font:600 12px "IBM Plex Mono",monospace;color:var(--signal)}
+    h2{font-size:clamp(30px,4vw,52px);line-height:1;margin:0;letter-spacing:-.035em}
+    .section-note{justify-self:end;max-width:360px;color:var(--muted);font-size:14px;margin:0}
+    .verdict-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}
+    .verdict{background:var(--ink);color:var(--paper);padding:clamp(24px,4vw,54px);box-shadow:var(--shadow);min-height:390px;display:flex;flex-direction:column;justify-content:space-between}
+    .verdict strong{font-size:clamp(32px,4.6vw,62px);line-height:.98;letter-spacing:-.035em;max-width:850px}
+    .verdict p{max-width:690px;font-size:17px;margin:30px 0 0;color:color-mix(in srgb,var(--paper) 78%,transparent)}
+    .stack{display:grid;gap:12px}
+    .metric{border:1px solid var(--line);padding:18px;background:var(--panel);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+    .metric span{font:500 15px "IBM Plex Sans Condensed",sans-serif}
+    .metric b{font-size:11px;text-transform:uppercase;padding:4px 6px;background:var(--warn-soft);color:var(--warn)}
+    .metric small{grid-column:1/-1;color:var(--muted);font-size:12px}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+    .tag{font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 7px;border:1px solid var(--line)}
+    .tag.reported{background:var(--amber-soft);color:var(--amber)}
+    .tag.witness{background:var(--warn-soft);color:var(--warn)}
+    .tag.absence{background:var(--signal-soft);color:var(--signal)}
+    .tag.consensus{background:var(--ok-soft);color:var(--ok)}
+    .anatomy{display:grid;grid-template-columns:minmax(320px,.9fr) minmax(0,1.1fr);gap:28px;align-items:start}
+    .diagram{background:var(--panel-alt);border:1px solid var(--line);padding:16px;position:sticky;top:70px}
+    .diagram svg{width:100%;height:auto;display:block}
+    .diagram figcaption{font-size:12px;color:var(--muted);padding:14px 4px 2px;border-top:1px solid var(--line)}
+    .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .fact{background:var(--panel);border-top:4px solid var(--line-strong);padding:18px;min-height:164px}
+    .fact.warn{border-color:var(--warn)} .fact.signal{border-color:var(--signal)}
+    .fact-title{font-size:22px;font-weight:700;line-height:1;margin:0 0 12px}
+    .fact p{margin:0;color:var(--muted);font-size:14px}
+    .fact .big{display:block;font:700 34px/1 "IBM Plex Sans Condensed",sans-serif;color:var(--ink);margin-bottom:10px}
+    .table-wrap{border-top:4px solid var(--ink)}
+    table{width:100%;border-collapse:collapse;background:var(--panel)}
+    th,td{text-align:left;vertical-align:top;padding:15px;border-bottom:1px solid var(--line)}
+    th{font:600 11px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+    td:first-child{font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;width:21%;font-size:17px}
+    td:nth-child(2){width:44%}
+    td:last-child{font-size:13px;color:var(--muted)}
+    .signal-board{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:18px}
+    .sweep{background:var(--panel);padding:24px;border:1px solid var(--line)}
+    .sweep-title{display:flex;justify-content:space-between;gap:15px;align-items:baseline;margin-bottom:22px}
+    .sweep-title h3{margin:0;font-size:28px}.sweep-title span{font:11px "IBM Plex Mono",monospace;color:var(--muted)}
+    .freq-axis{position:relative;height:118px;margin:8px 2px 0;border-bottom:2px solid var(--ink)}
+    .freq-axis:before{content:"";position:absolute;left:2%;right:2%;top:34px;height:24px;background:var(--paper-2)}
+    .response-band{position:absolute;left:18%;width:22%;top:25px;height:42px;background:var(--warn);color:white;font:600 11px "IBM Plex Mono",monospace;padding:12px 8px;text-align:center}
+    .tick{position:absolute;bottom:-27px;font:10px "IBM Plex Mono",monospace;color:var(--muted);transform:translateX(-50%)}
+    .tick:before{content:"";display:block;height:9px;border-left:1px solid var(--line-strong);margin:0 auto 4px}
+    .signal-list{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+    .signal-row{background:var(--panel);padding:15px;display:grid;grid-template-columns:85px 1fr;gap:10px}
+    .signal-row b{font:600 13px "IBM Plex Mono",monospace;color:var(--signal)}
+    .signal-row p{margin:0;font-size:13px;color:var(--muted)}
+    .mass-plot{background:var(--panel);border:1px solid var(--line);padding:24px}
+    .mass-scale{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center;margin:20px 0}
+    .mass-scale b{font:600 13px "IBM Plex Mono",monospace}.mass-track{height:30px;background:var(--paper-2);position:relative}
+    .mass-track i{position:absolute;left:0;top:0;bottom:0;background:var(--warn)}
+    .mass-scale small{grid-column:2;color:var(--muted)}
+    .caveat{border-left:7px solid var(--warn);background:var(--warn-soft);padding:18px 20px;margin-top:18px;font-size:14px}
+    .timeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+    .event{padding:20px 16px;min-height:230px;border-right:1px solid var(--line)}
+    .event:last-child{border-right:0}.event time{display:block;font-size:14px;font-weight:700;color:var(--signal);margin-bottom:18px}.event h3{font-size:20px;line-height:1.05;margin:0 0 10px}.event p{font-size:12px;color:var(--muted);margin:0}
+    .filters{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 20px}
+    .filter{border:1px solid var(--line-strong);background:transparent;color:var(--ink);font-size:10px;text-transform:uppercase;padding:7px 10px;cursor:pointer}
+    .filter.active,.filter:hover{background:var(--signal);border-color:var(--signal);color:var(--paper)}
+    .claims{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+    .claim{background:var(--panel);padding:16px 18px;display:grid;grid-template-columns:120px minmax(0,1fr) 170px;gap:18px;align-items:start}
+    .claim[hidden]{display:none}.claim-meta{font-size:10px;text-transform:uppercase;color:var(--muted)}
+    .claim h3{font-size:19px;line-height:1.05;margin:0 0 7px}.claim p{font-size:13px;color:var(--muted);margin:0}.claim .tag{justify-self:start}
+    .tests{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:test}
+    .test{counter-increment:test;background:var(--ink);color:var(--paper);padding:24px;min-height:250px;position:relative}
+    .test:before{content:"0" counter(test);font:600 12px "IBM Plex Mono",monospace;color:var(--signal);position:absolute;top:18px;right:18px}
+    .test h3{font-size:24px;line-height:1;margin:35px 0 14px}.test p{font-size:14px;color:color-mix(in srgb,var(--paper) 75%,transparent)}
+    .test .answer{font:600 11px "IBM Plex Mono",monospace;text-transform:uppercase;border-top:1px solid color-mix(in srgb,var(--paper) 25%,transparent);padding-top:12px;margin-top:20px;color:var(--paper)}
+    .sources{columns:2;column-gap:36px;padding:0;margin:0;list-style:none;counter-reset:src}
+    .sources li{counter-increment:src;break-inside:avoid;border-top:1px solid var(--line);padding:11px 0 16px 38px;position:relative;font-size:12px;color:var(--muted)}
+    .sources li:before{content:counter(src,decimal-leading-zero);position:absolute;left:0;top:12px;font:600 10px "IBM Plex Mono",monospace;color:var(--signal)}
+    .sources a{word-break:break-word}
+    .footer{margin-top:70px;border-top:7px solid var(--ink);padding-top:18px;display:flex;justify-content:space-between;gap:20px;font:11px "IBM Plex Mono",monospace;color:var(--muted)}
+    @media(max-width:980px){
+      .mast,.verdict-grid,.anatomy,.signal-board{grid-template-columns:1fr}.stamp{border-left:0;border-top:1px solid var(--line);padding:16px 0 0;display:grid;grid-template-columns:auto 1fr}.section-head{grid-template-columns:54px 1fr}.section-note{grid-column:2;justify-self:start}.diagram{position:relative;top:0}.timeline{grid-template-columns:repeat(3,1fr)}.event:nth-child(3){border-right:0}.tests{grid-template-columns:1fr}.claim{grid-template-columns:95px 1fr}.claim .tag{grid-column:2}
+    }
+    @media(max-width:650px){
+      .page{padding-left:14px;padding-right:14px}.mast{padding-top:12px;gap:20px}h1{font-size:50px}.lede{font-size:19px}.nav{margin-left:-14px;margin-right:-14px;padding:8px;flex-wrap:wrap;overflow:visible}.nav button{flex:1 1 auto;padding:7px 9px}.section-head{grid-template-columns:38px 1fr}.facts{grid-template-columns:1fr}.timeline{grid-template-columns:1fr}.event{min-height:auto;border-right:0;border-bottom:1px solid var(--line)}.event:last-child{border-bottom:0}.claim{grid-template-columns:1fr;gap:8px}.claim .tag{grid-column:1}table,tbody,tr,td{display:block}thead{display:none}tr{border-bottom:1px solid var(--line);padding:12px}td,td:first-child,td:nth-child(2){width:100%;border:0;padding:5px 4px}td:last-child:before{content:"STATUS / SOURCE — ";font:600 10px "IBM Plex Mono",monospace}.sources{columns:1}.footer{flex-direction:column}.freq-axis{margin-bottom:20px}.response-band{left:12%;width:34%;font-size:9px}.sweep{padding:16px}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="mast">
+      <div>
+        <p class="eyebrow">Technical review • recovered near Buga, Colombia • public record</p>
+        <h1>What is actually known about the sphere?</h1>
+        <p class="lede">A claim-by-claim examination of composition, internal fibers, alleged mass “growth,” circular structures, emissions, and the limits of the available evidence.</p>
+      </div>
+      <aside class="stamp" aria-label="Evidence grade">
+        <div><div class="grade">HOLD</div><p>Extraordinary-origin claims</p></div>
+        <div><b>Compiled 11 Oct 2026</b><p>No peer-reviewed paper, signed institutional report, raw scan set, or independent replication was publicly available.</p></div>
+      </aside>
+    </header>
+
+    <nav class="nav" aria-label="Dossier sections">
+      <button data-target="verdict" class="active">Verdict</button><button data-target="anatomy">Inside</button><button data-target="composition">Composition</button><button data-target="signals">Signals</button><button data-target="mass">Mass</button><button data-target="timeline">Timeline</button><button data-target="ledger">Claim ledger</button><button data-target="tests">Decisive tests</button><button data-target="sources">Sources</button>
+    </nav>
+
+    <section id="verdict">
+      <div class="section-head"><span class="section-no">01</span><h2>Evidence posture</h2><p class="section-note">The case is rich in reported measurements but poor in accessible records.</p></div>
+      <div class="verdict-grid">
+        <article class="verdict">
+          <strong>The object may be interesting. Its extraordinary properties are not established.</strong>
+          <p>The public case rests on examinations within Jaime Maussan’s circle, media summaries, and witness testimony. The reported alloy is terrestrial; the fiber, dating, mass, thermal, and signal claims lack public raw data and independent replication. Mainstream assessments favor a manufactured terrestrial artifact.</p>
+        </article>
+        <div class="stack">
+          <div class="metric"><span>Peer-reviewed studies</span><b>None found</b><small>As of late 2026.</small></div>
+          <div class="metric"><span>Institutional validation</span><b>None public</b><small>UNAM, UGA, IPN, and Colombian universities have not issued validating reports.</small></div>
+          <div class="metric"><span>Independent CT release</span><b>Not available</b><small>Counts and internal descriptions change across reports.</small></div>
+          <div class="metric"><span>Toroidal component</span><b>Not reported</b><small>A fiber “ring” is the nearest claim; it is not evidence of a torus.</small></div>
+        </div>
+      </div>
+      <div class="legend" aria-label="Status legend"><span class="tag reported">Team-reported</span><span class="tag witness">Witness / weak provenance</span><span class="tag absence">Documented gap</span><span class="tag consensus">Independent critique</span></div>
+    </section>
+
+    <section id="anatomy">
+      <div class="section-head"><span class="section-no">02</span><h2>Inside: reported, not reconstructed</h2><p class="section-note">The drawing maps claims spatially. It is not a CT image or a verified engineering model.</p></div>
+      <div class="anatomy">
+        <figure class="diagram">
+          <svg viewBox="0 0 680 680" role="img" aria-label="Schematic of reported Buga sphere internal claims">
+            <defs><radialGradient id="shell" cx="40%" cy="35%"><stop offset="0" stop-color="var(--panel)"/><stop offset="1" stop-color="var(--paper-2)"/></radialGradient></defs>
+            <circle cx="340" cy="340" r="270" fill="url(#shell)" stroke="var(--ink)" stroke-width="4"/>
+            <circle cx="340" cy="340" r="238" fill="none" stroke="var(--line-strong)" stroke-width="3" stroke-dasharray="9 8"/>
+            <circle cx="340" cy="340" r="204" fill="none" stroke="var(--line)" stroke-width="2"/>
+            <ellipse cx="340" cy="340" rx="267" ry="75" fill="none" stroke="var(--warn)" stroke-width="8" opacity=".85"/>
+            <ellipse cx="340" cy="340" rx="135" ry="54" fill="none" stroke="var(--signal)" stroke-width="9" stroke-dasharray="5 7"/>
+            <circle cx="340" cy="340" r="46" fill="var(--ink)"/>
+            <g fill="var(--amber)" stroke="var(--panel)" stroke-width="4">
+              <circle cx="340" cy="181" r="19"/><circle cx="441" cy="219" r="19"/><circle cx="488" cy="315" r="19"/><circle cx="456" cy="423" r="19"/><circle cx="366" cy="492" r="19"/><circle cx="258" cy="474" r="19"/><circle cx="192" cy="385" r="19"/><circle cx="198" cy="278" r="19"/><circle cx="258" cy="206" r="19"/>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink)">
+              <line x1="485" y1="110" x2="538" y2="61" stroke="var(--line-strong)"/><text x="545" y="57">THREE LAYERS</text><text x="545" y="76" fill="var(--muted)">X-ray claim</text>
+              <line x1="456" y1="423" x2="555" y2="468" stroke="var(--line-strong)"/><text x="520" y="493">9 → 16–18</text><text x="520" y="512" fill="var(--muted)">microsphere counts</text>
+              <line x1="396" y1="340" x2="558" y2="340" stroke="var(--line-strong)"/><text x="568" y="337">CENTRAL CORE</text><text x="568" y="356" fill="var(--muted)">“chip” hypothesis</text>
+              <line x1="213" y1="340" x2="97" y2="292" stroke="var(--line-strong)"/><text x="14" y="275">52 FIBERS</text><text x="14" y="294" fill="var(--muted)">ring-like claim</text>
+              <line x1="74" y1="340" x2="18" y2="340" stroke="var(--warn)"/><text x="14" y="366">31 WINDOWS</text><text x="14" y="385" fill="var(--muted)">equatorial belt</text>
+            </g>
+          </svg>
+          <figcaption>Claim schematic. Sources report three concentric layers, a central core, microspheres, an equatorial belt, black-polymer windows, and a fiber ring. No raw scan volume was available to validate geometry, count, material, or connectivity.</figcaption>
+        </figure>
+        <div class="facts">
+          <article class="fact signal"><span class="big">52</span><h3 class="fact-title">Fiber-optic-like filaments</h3><p>UNAM-linked specialists were said to find 52 fibers, 40–350 μm in diameter, occupying ~2 mm² and ~42% of the interior. UNAM issued no official report.</p></article>
+          <article class="fact"><span class="big">3</span><h3 class="fact-title">Concentric metal layers</h3><p>Radiologist José Luis Velázquez’s first X-ray account described three layers and no visible welds. Raw X-ray files and an outside re-read were not released.</p></article>
+          <article class="fact warn"><span class="big">9 → 18</span><h3 class="fact-title">Changing microsphere count</h3><p>The first account said nine around a central core. Later reports gave 16–18. The discrepancy remains unresolved.</p></article>
+          <article class="fact"><span class="big">31</span><h3 class="fact-title">Equatorial windows</h3><p>Reports describe 31 small black polymer windows or precisely drilled holes, with natural resin anchoring thread-like structures.</p></article>
+          <article class="fact warn"><span class="big">0</span><h3 class="fact-title">Explicit toroidal findings</h3><p>No public source reports a toroidal, donut-shaped part. “Forming a ring” describes the fibers’ arrangement, not a demonstrated toroidal field or device.</p></article>
+          <article class="fact signal"><span class="big">2000×</span><h3 class="fact-title">Microscopic claim</h3><p>A later account said inspection revealed hidden wiring like a microchip. No image set, methods, calibration, or institutional publication accompanied it.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="composition">
+      <div class="section-head"><span class="section-no">03</span><h2>Composition ledger</h2><p class="section-note">Claims are not equivalent to signed laboratory results.</p></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Material / feature</th><th>What was reported</th><th>Evidence status</th></tr></thead>
+          <tbody>
+            <tr><td>Outer metal</td><td>Predominantly aluminum, with zinc, copper, iron, magnesium, manganese, and nickel.</td><td><span class="tag reported">Team-reported</span><br>No signed institutional metallurgy report published.</td></tr>
+            <tr><td>Rare earths</td><td>An October 2025 communiqué attributed to Steven Greer claimed rare-earth elements “unknown to science.”</td><td><span class="tag witness">Unverified</span><br>No corroborating spectra or institutional result.</td></tr>
+            <tr><td>Resin</td><td>Natural or organic resin reportedly anchors thread-like structures in equatorial holes; Maussan later called it bioluminescent.</td><td><span class="tag reported">Claim only</span><br>Bioluminescence not independently demonstrated.</td></tr>
+            <tr><td>Carbon date</td><td>A ~6 mg sample was reported as 12,560 ± 30 years BP, approximately 10,610 BC.</td><td><span class="tag witness">Disputed provenance</span><br>UGA issued no statement and reportedly denied knowledge; C-14 dates resin, not aluminum.</td></tr>
+            <tr><td>Isotopes</td><td>13C/12C and 18O/16O were reportedly measured for dating corrections.</td><td><span class="tag absence">No anomaly shown</span><br>No credible published anomalous isotope ratios.</td></tr>
+            <tr><td>Seamless shell</td><td>Early X-ray examination described no welds, joints, rivets, or assembly points.</td><td><span class="tag consensus">Conventional routes exist</span><br>Superplastic forming or magnetic pulse welding can produce seamless appearance.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="caveat"><b>Dating boundary.</b> Even if the resin date is authentic, it dates that carbon-bearing sample—not the aluminum object or the date of assembly. Old resin can be incorporated into a new object, and the chain of custody included roughly two months of private handling.</div>
+    </section>
+
+    <section id="signals">
+      <div class="section-head"><span class="section-no">04</span><h2>Signals, resonance & heat</h2><p class="section-note">Reported responses lack public control traces, instrument logs, and independent repeats.</p></div>
+      <div class="signal-board">
+        <article class="sweep">
+          <div class="sweep-title"><h3>July 2025 acoustic sweep</h3><span>IPN venue • team report</span></div>
+          <div class="freq-axis" aria-label="Reported frequency sweep from 60 to 20000 hertz with response band from 190 to 300 hertz">
+            <div class="response-band">190–300 Hz response</div>
+            <span class="tick" style="left:2%">60 Hz</span><span class="tick" style="left:22%">300</span><span class="tick" style="left:52%">1 kHz</span><span class="tick" style="left:98%">20 kHz</span>
+          </div>
+          <p style="margin:48px 0 0;color:var(--muted);font-size:14px">The sphere was reportedly swept from 60 to 20,000 Hz and responded most strongly from 190–300 Hz, including during chanted “Om” or Sanskrit mantras. Skeptical acousticians note that this band is compatible with ordinary mechanical resonance for a soccer-ball-sized aluminum object.</p>
+        </article>
+        <div class="signal-list">
+          <div class="signal-row"><b>+5 °C</b><p>Surface rise during the acoustic experiment, according to the team; no public thermal trace.</p></div>
+          <div class="signal-row"><b>EMF surge</b><p>Meter activity was reported during stimulation; instrument model, baseline, shielding, and controls were not published.</p></div>
+          <div class="signal-row"><b>2.3 Hz</b><p>A constant “base pulse” appears only in a weak, unattributed enthusiast source.</p></div>
+          <div class="signal-row"><b>LF waves</b><p>Transmit/receive capability was asserted by Carlos Muñoz and Rodolfo Garrido, without a released spectrum.</p></div>
+          <div class="signal-row"><b>Thermal</b><p>Claims range from cold exterior and vaporized water to a >150 °C interior; none was shown under controlled conditions.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mass">
+      <div class="section-head"><span class="section-no">05</span><h2>Did it “grow”?</h2><p class="section-note">The reported change is mass, not physical growth; even the direction varies by source.</p></div>
+      <div class="mass-plot">
+        <div class="mass-scale"><b>Recovery</b><div class="mass-track"><i style="width:20%"></i></div><small>2 kg, attributed to finder José Arias Restrepo.</small></div>
+        <div class="mass-scale"><b>~2 months</b><div class="mass-track"><i style="width:100%"></i></div><small>About 10 kg, claimed by David Vélez after private storage at Germany Company offices.</small></div>
+        <div class="mass-scale"><b>Variants</b><div class="mass-track"><i style="width:81%"></i></div><small>Other reports cite an 8.1 kg baseline, 2→16 kg over five months, or a drop from ~10→2 kg in a speculative model.</small></div>
+        <div class="caveat"><b>No independent weigh log exists.</b> There is no continuous custody record, calibrated scale series, time-stamped protocol, environmental control, or outside witness set for the alleged 2→10 kg increase. The available record does not establish mass change.</div>
+      </div>
+    </section>
+
+    <section id="timeline">
+      <div class="section-head"><span class="section-no">06</span><h2>Chain of claims</h2><p class="section-note">Confidence falls where custody and documentation break.</p></div>
+      <div class="timeline">
+        <article class="event"><time>02 MAR 2025</time><h3>Reported recovery</h3><p>A silent sphere was said to zigzag, change altitude abruptly, strike or brush a high-voltage line, and land near Alto Bonito outside Buga.</p></article>
+        <article class="event"><time>MAR–APR 2025</time><h3>Private custody</h3><p>Handled by Arias and David Vélez; stored at a metal-detector business. This period is central to the chain-of-custody critique.</p></article>
+        <article class="event"><time>MAY 2025</time><h3>X-ray accounts</h3><p>Velázquez reported three layers, nine microspheres, a central core, and no welds. Later counts changed.</p></article>
+        <article class="event"><time>30 MAY 2025</time><h3>Fiber claim</h3><p>Press material attributed 52 internal fibers to specialists linked with UNAM. No institutional report followed.</p></article>
+        <article class="event"><time>09 JUL 2025</time><h3>Acoustic test</h3><p>At IPN, the team reported vibration at 190–300 Hz, a temperature rise, and EMF response.</p></article>
+        <article class="event"><time>12 SEP 2025 → 2026</time><h3>Resin & second sphere</h3><p>A ~6 mg resin sample was reportedly received for dating. In 2026, a separate 13 kg sphere with 29 black dots entered the story.</p></article>
+      </div>
+    </section>
+
+    <section id="ledger">
+      <div class="section-head"><span class="section-no">07</span><h2>Claim ledger</h2><p class="section-note">Filter by evidence posture, not by how compelling a claim sounds.</p></div>
+      <div class="filters" role="group" aria-label="Filter claims">
+        <button class="filter active" data-filter="all">All</button><button class="filter" data-filter="reported">Team-reported</button><button class="filter" data-filter="witness">Witness / weak</button><button class="filter" data-filter="absence">Gap / negative</button><button class="filter" data-filter="consensus">Independent critique</button>
+      </div>
+      <div class="claims">
+        <article class="claim" data-status="reported"><div class="claim-meta">Structure</div><div><h3>Three layers and internal microspheres</h3><p>Based on José Luis Velázquez’s X-ray account; count changed from nine to 16–18 in later telling.</p></div><span class="tag reported">Raw scans absent</span></article>
+        <article class="claim" data-status="reported"><div class="claim-meta">Fibers</div><div><h3>52 optical-fiber-like filaments</h3><p>Attributed to UNAM-linked specialists; dimensions and interior share were reported without an official UNAM publication.</p></div><span class="tag reported">Unreplicated</span></article>
+        <article class="claim" data-status="absence"><div class="claim-meta">Toroid</div><div><h3>No toroidal component identified</h3><p>A ring-shaped fiber arrangement is the only near match. A ring is not proof of a toroidal device or field.</p></div><span class="tag absence">Not found</span></article>
+        <article class="claim" data-status="witness"><div class="claim-meta">Mass</div><div><h3>2 kg rising to ~10 kg</h3><p>Claimed by Vélez over about two months; no independent calibration or continuous weigh record.</p></div><span class="tag witness">Anecdotal</span></article>
+        <article class="claim" data-status="reported"><div class="claim-meta">Dating</div><div><h3>12,560 ± 30 years BP resin</h3><p>Dates the alleged organic sample, not the metal object or assembly; UGA issued no validating statement.</p></div><span class="tag reported">Provenance disputed</span></article>
+        <article class="claim" data-status="witness"><div class="claim-meta">Signals</div><div><h3>LF emissions and transmit/receive behavior</h3><p>Asserted by proponents without released spectrum, noise floor, antenna geometry, shielding controls, or repeat.</p></div><span class="tag witness">Unsupported</span></article>
+        <article class="claim" data-status="consensus"><div class="claim-meta">Origin</div><div><h3>“99% a terrestrial artifact”</h3><p>Garry Nolan’s assessment; Julia Mossbridge likewise described it as likely art or hoax construction using known manufacturing methods.</p></div><span class="tag consensus">Mainstream view</span></article>
+        <article class="claim" data-status="absence"><div class="claim-meta">Institutions</div><div><h3>No signed validation</h3><p>No peer-reviewed paper or public signed report from UNAM, UGA, IPN, MIT, or a Colombian university validates the extraordinary claims.</p></div><span class="tag absence">Central gap</span></article>
+        <article class="claim" data-status="witness"><div class="claim-meta">Media</div><div><h3>“MIT X-ray” coverage appears fabricated</h3><p>Stories naming “Dr. Elizabeth Vance,” “BS-2026-X,” and “Project Chronos” lack corroboration and resemble AI-generated fiction.</p></div><span class="tag witness">Exclude</span></article>
+      </div>
+    </section>
+
+    <section id="tests">
+      <div class="section-head"><span class="section-no">08</span><h2>What would settle it?</h2><p class="section-note">Extraordinary language is unnecessary. Good metrology is decisive.</p></div>
+      <div class="tests">
+        <article class="test"><h3>Independent materials panel</h3><p>Sample under documented custody. Publish calibrated elemental spectra, micrographs, isotope data, blank controls, and uncertainty. Repeat at two unaffiliated laboratories.</p><div class="answer">Answers: composition & isotope claims</div></article>
+        <article class="test"><h3>Raw volumetric imaging</h3><p>Release DICOM CT data, X-ray projections, scan settings, phantoms, segmentation rules, and an outside radiology read. Counts should not shift by narration.</p><div class="answer">Answers: layers, fibers, core, microspheres, torus</div></article>
+        <article class="test"><h3>Controlled signal chamber</h3><p>Use shielded baselines, dummy aluminum spheres, calibrated antennas, accelerometers, microphones, and thermal probes. Pre-register frequencies and analysis before stimulation.</p><div class="answer">Answers: emissions, resonance & thermal response</div></article>
+        <article class="test"><h3>Custodied mass series</h3><p>Two calibrated balances, tamper-evident enclosure, environmental logging, continuous video, and independent observers. Report raw time series—not selected endpoints.</p><div class="answer">Answers: “growth” / weight change</div></article>
+        <article class="test"><h3>Resin authentication</h3><p>Document sampling location and custody, chemistry, contamination controls, and replicate dates. Keep the inference narrow: resin age is not object age.</p><div class="answer">Answers: organic sample age only</div></article>
+        <article class="test"><h3>Manufacturing comparison</h3><p>Compare seams, alloy, forming marks, interior components, and dimensions against industrial tanks, art fabrication, optical fiber, and known joining methods.</p><div class="answer">Answers: terrestrial fabrication hypotheses</div></article>
+      </div>
+    </section>
+
+    <section id="sources">
+      <div class="section-head"><span class="section-no">09</span><h2>Public source file</h2><p class="section-note">Proponent and skeptical sources are retained so claims can be traced to their origin.</p></div>
+      <ol class="sources">
+        <li><a href="https://lumeta.news/en/buga-sphere-14-months-anatomy-uap-phenomenon-no-peer-review" target="_blank" rel="noopener">Lumeta — 14-month critical synthesis</a></li>
+        <li><a href="https://caballodetroy.medium.com/esfera-de-buga-cuando-el-sensacionalismo-se-disfraza-de-descubrimiento-cient%C3%ADfico-31089151f8a5" target="_blank" rel="noopener">Caballo de Troya — Greer report and UGA critique</a></li>
+        <li><a href="https://poluxweb.com/Polux3/index.php/television/documentales/63413-jaime-maussan-presenta-estudios-ineditos-de-la-esfera-de-buga-en-un-especial" target="_blank" rel="noopener">PoluxWeb — Maussan special and fiber-ring claims</a></li>
+        <li><a href="https://delcieloalatierra.org/cronicas/es-oficial-la-universidad-confirma-la-presencia-de-fibra-optica-en-la-esfera-de-buga/" target="_blank" rel="noopener">Del Cielo a la Tierra — 52-fiber claim</a></li>
+        <li><a href="https://jjproducciones.sumejor.com/12-560-anos-tiene-la-esfera-de-buga/" target="_blank" rel="noopener">JJ Producciones — carbon-date protocol claim</a></li>
+        <li><a href="https://moonfires.com/the-buga-sphere/" target="_blank" rel="noopener">Moonfires — proponent claim compilation</a></li>
+        <li><a href="https://factually.co/fact-checks/science/buga-sphere-eyewitness-reports-scientific-analyses-appearance-2cbd33" target="_blank" rel="noopener">Factually — science claim summary</a></li>
+        <li><a href="https://orbitaltoday.com/2025/11/02/buga-sphere-anomaly-explained/" target="_blank" rel="noopener">Orbital Today — Mossbridge and Nolan critiques</a></li>
+        <li><a href="https://www.livemint.com/news/mysterious-sphere-found-in-buga-colombia-sparks-ufo-speculation/amp-11748192527904.html" target="_blank" rel="noopener">LiveMint — initial coverage and caution</a></li>
+        <li><a href="https://www.frontpagedetectives.com/latest-news/mysterious-sphere-etched-with-ancient-symbols-found-in-colombia-sparks-ufo-debate-watch-videos" target="_blank" rel="noopener">Front Page Detectives — water and early material claims</a></li>
+        <li><a href="https://www.thedailyjagran.com/world/ufo-mystery-in-colombia-buga-sphere-with-chip-microspheres-and-mantra-reactions-leaves-experts-divided-10284505" target="_blank" rel="noopener">The Daily Jagran — transceiver and mantra claims</a></li>
+        <li><a href="https://astronomer.pro/physical-and-material-analysis-of-the-buga-sphere-may-july-2025/" target="_blank" rel="noopener">Astronomer.pro — physical analysis recap</a></li>
+        <li><a href="https://www.youtube.com/watch?v=Aplpp6Z0GAQ" target="_blank" rel="noopener">Maussan interview — second sphere and resin discussion</a></li>
+        <li><a href="https://files.osf.io/v1/resources/eukjb_v1/providers/osfstorage/686805bb66b20b028703ab11?format=pdf&action=download&direct&version=1" target="_blank" rel="noopener">OSF preprint — speculative negative-mass model, not measurements</a></li>
+        <li><a href="https://www.youtube.com/watch?v=1qD0prN_OcQ" target="_blank" rel="noopener">“MIT X-ray” video — retained as fabrication warning only</a></li>
+      </ol>
+    </section>
+
+    <footer class="footer"><span>PUBLIC RECORD / CLAIM-BOUNDARY REVIEW</span><span>Compiled from public reporting available through 11 Oct 2026</span></footer>
+  </main>
+  <script>
+    (function(){
+      var navButtons=document.querySelectorAll('.nav button');
+      navButtons.forEach(function(btn){btn.addEventListener('click',function(){var el=document.getElementById(btn.dataset.target);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});});});
+      var filters=document.querySelectorAll('.filter');
+      var claims=document.querySelectorAll('.claim');
+      filters.forEach(function(btn){btn.addEventListener('click',function(){filters.forEach(function(b){b.classList.remove('active');});btn.classList.add('active');var f=btn.dataset.filter;claims.forEach(function(c){c.hidden=!(f==='all'||c.dataset.status===f);});});});
+      if('IntersectionObserver' in window){
+        var sections=document.querySelectorAll('section[id]');
+        var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){navButtons.forEach(function(b){b.classList.toggle('active',b.dataset.target===entry.target.id);});}});},{rootMargin:'-20% 0px -70% 0px'});
+        sections.forEach(function(s){observer.observe(s);});
+      }
+    })();
+  </script>
+</body>
+</html>

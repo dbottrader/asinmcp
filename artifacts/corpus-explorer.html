@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Code Corpus Explorer</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f1;
+      --surface: #ffffff;
+      --surface-2: #e9ede7;
+      --ink: #14201d;
+      --muted: #55645f;
+      --line: #cbd3ce;
+      --grid: rgba(20,32,29,.055);
+      --accent: #087f74;
+      --accent-2: #d4552f;
+      --accent-soft: #d7f0eb;
+      --warn-bg: #fff3d4;
+      --warn-ink: #6b4300;
+      --shadow: 0 16px 44px rgba(30,48,43,.09);
+      --code-bg: #13201d;
+      --code-ink: #d8f5e9;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #08110f;
+        --surface: #0e1a17;
+        --surface-2: #14231f;
+        --ink: #e9f2ee;
+        --muted: #9eb0a9;
+        --line: #2a3a35;
+        --grid: rgba(228,245,238,.045);
+        --accent: #49cabb;
+        --accent-2: #f27c52;
+        --accent-soft: #10342f;
+        --warn-bg: #2a2412;
+        --warn-ink: #f7d97e;
+        --shadow: 0 20px 50px rgba(0,0,0,.32);
+        --code-bg: #050b09;
+        --code-ink: #cdece0;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 0;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 28px 28px;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    button, input, select { font: inherit; }
+    a { color: inherit; }
+    .mono, code, .stat strong, .badge, th, .sample-id, .footer-mark {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .hero { padding: clamp(56px, 9vw, 112px) 0 44px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(290px, .65fr); gap: 52px; align-items: end; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--accent); font-weight: 760; font-size: .82rem; }
+    .eyebrow::before { content: ""; width: 34px; height: 2px; background: currentColor; }
+    h1 { margin: 16px 0 20px; max-width: 900px; font-size: clamp(2.7rem, 7.2vw, 6.7rem); line-height: .92; letter-spacing: -.07em; font-weight: 790; }
+    .hero p { margin: 0; max-width: 760px; font-size: clamp(1rem, 2vw, 1.24rem); color: var(--muted); }
+    .hero-side { border-top: 1px solid var(--line); padding-top: 18px; }
+    .hero-side p { font-size: .95rem; }
+    .source-stamp { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 7px 10px; background: var(--accent-soft); color: var(--accent); font-size: .76rem; font-weight: 750; border-radius: 4px; }
+    .source-stamp i { width: 7px; height: 7px; background: currentColor; border-radius: 50%; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+    .stat { min-width: 0; padding: 24px; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat strong { display: block; color: var(--accent); font-size: clamp(1.65rem, 4vw, 2.7rem); letter-spacing: -.06em; line-height: 1; }
+    .stat span { display: block; margin-top: 9px; color: var(--muted); font-size: .86rem; }
+    section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 28px; align-items: end; margin-bottom: 26px; }
+    .section-head h2 { margin: 0; font-size: clamp(1.7rem, 4vw, 3.2rem); letter-spacing: -.045em; line-height: 1.05; }
+    .section-head p { margin: 0; max-width: 530px; color: var(--muted); }
+    .chart-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 18px; align-items: start; }
+    .panel { border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+    .panel-head { padding: 20px 22px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .panel-head h3 { margin: 0; font-size: 1rem; }
+    .panel-head span { color: var(--muted); font-size: .78rem; }
+    .chart-pad { padding: 22px; }
+    .chart-wrap { width: 100%; overflow: hidden; }
+    svg { display: block; width: 100%; height: auto; }
+    .axis { stroke: var(--line); stroke-width: 1; }
+    .tick { fill: var(--muted); font: 12px ui-monospace, monospace; }
+    .label { fill: var(--ink); font: 13px ui-monospace, monospace; }
+    .value { fill: var(--muted); font: 12px ui-monospace, monospace; text-anchor: end; }
+    .bar-main { fill: var(--accent); }
+    .bar-hot { fill: var(--accent-2); }
+    .bar-soft { fill: var(--line); }
+    .chart-note { margin: 16px 0 0; color: var(--muted); font-size: .76rem; }
+    .evidence { margin-top: 18px; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; padding: 20px 22px; background: var(--warn-bg); color: var(--warn-ink); border: 1px solid color-mix(in srgb, var(--warn-ink) 28%, transparent); }
+    .hold { font: 800 1.3rem ui-monospace, monospace; border: 2px solid currentColor; padding: 8px 10px; transform: rotate(-2deg); }
+    .evidence strong { display: block; margin-bottom: 3px; }
+    .evidence p { margin: 0; font-size: .9rem; }
+    .mirror-table { border: 1px solid var(--line); background: var(--surface); }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 15px 18px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-size: .74rem; font-weight: 650; }
+    td { font-size: .92rem; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: var(--surface-2); }
+    .source-name { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+    .source-name::before { content: ""; width: 9px; height: 9px; background: var(--accent); }
+    .zero { color: var(--muted); }
+    .tools { display: grid; grid-template-columns: minmax(220px, 1fr) 190px 190px; gap: 10px; margin-bottom: 16px; }
+    .input-wrap { position: relative; }
+    .input-wrap::before { content: "⌕"; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 1.25rem; }
+    input, select {
+      width: 100%; min-height: 46px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; padding: 10px 12px;
+    }
+    input { padding-left: 38px; }
+    input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent); outline-offset: 2px; }
+    .gallery-meta { display: flex; justify-content: space-between; gap: 16px; align-items: center; color: var(--muted); font-size: .82rem; margin-bottom: 16px; }
+    .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .sample { min-width: 0; border: 1px solid var(--line); background: var(--surface); padding: 16px; transition: border-color .16s ease, background .16s ease; }
+    .sample:hover { border-color: var(--accent); background: var(--surface-2); }
+    .sample-top { display: flex; justify-content: space-between; gap: 14px; align-items: start; }
+    .sample-id { font-size: .85rem; font-weight: 750; letter-spacing: -.02em; overflow-wrap: anywhere; }
+    .hashprint { display: grid; grid-template-columns: repeat(4, 5px); grid-template-rows: repeat(4, 5px); gap: 2px; flex: 0 0 auto; }
+    .hashprint i { width: 5px; height: 5px; background: var(--line); }
+    .hashprint i.on { background: var(--accent); }
+    .hashprint i.hot { background: var(--accent-2); }
+    .badges { display: flex; flex-wrap: wrap; gap: 5px; margin: 18px 0; }
+    .badge { padding: 4px 6px; background: var(--surface-2); color: var(--muted); border-radius: 3px; font-size: .65rem; text-transform: lowercase; }
+    .badge.primary { background: var(--accent-soft); color: var(--accent); }
+    .sample dl { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 16px; margin: 0; }
+    .sample dt { color: var(--muted); font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; }
+    .sample dd { margin: 2px 0 0; font: 700 .82rem ui-monospace, monospace; }
+    .empty { display: none; padding: 36px; text-align: center; border: 1px dashed var(--line); color: var(--muted); }
+    .provenance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .prov-step { background: var(--surface); padding: 24px; }
+    .prov-step b { display: block; color: var(--accent); font: 800 1.5rem ui-monospace, monospace; }
+    .prov-step h3 { margin: 12px 0 8px; font-size: 1rem; }
+    .prov-step p { margin: 0; color: var(--muted); font-size: .86rem; }
+    .command { margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--code-bg); color: var(--code-ink); padding: 14px 14px 14px 18px; border-radius: 6px; }
+    .command code { overflow-wrap: anywhere; }
+    .copy { border: 1px solid rgba(255,255,255,.24); color: inherit; background: transparent; border-radius: 4px; padding: 7px 10px; cursor: pointer; flex: 0 0 auto; }
+    .copy:hover { background: rgba(255,255,255,.09); }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .links a, .links span { display: inline-flex; align-items: center; gap: 7px; border-bottom: 1px solid currentColor; text-decoration: none; color: var(--accent); font-weight: 700; font-size: .86rem; }
+    footer { border-top: 1px solid var(--line); padding: 32px 0 50px; }
+    .footer-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; }
+    .footer-mark { font-size: 1.4rem; color: var(--accent); font-weight: 800; }
+    footer p { margin: 0; color: var(--muted); font-size: .84rem; }
+    footer strong { color: var(--ink); }
+    .toast { position: fixed; right: 18px; bottom: 18px; background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 4px; font-weight: 700; font-size: .82rem; opacity: 0; transform: translateY(8px); pointer-events: none; transition: .2s ease; z-index: 10; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) {
+      .hero-grid, .chart-grid { grid-template-columns: 1fr; }
+      .hero-grid { gap: 30px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .tools { grid-template-columns: 1fr 1fr; }
+      .input-wrap { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 24px, 1180px); }
+      .hero { padding-top: 42px; }
+      h1 { font-size: clamp(2.65rem, 16vw, 4.5rem); }
+      section { padding: 54px 0; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 12px; }
+      .stats { display: block; }
+      .stat { border-right: 0; border-bottom: 1px solid var(--line); }
+      .stat:last-child { border-bottom: 0; }
+      .tools { grid-template-columns: 1fr; }
+      .input-wrap { grid-column: auto; }
+      .gallery { grid-template-columns: 1fr; }
+      .evidence { grid-template-columns: 1fr; justify-items: start; }
+      .provenance-grid { grid-template-columns: 1fr; }
+      .command { align-items: flex-start; flex-direction: column; }
+      .copy { align-self: stretch; }
+      .footer-grid { grid-template-columns: 1fr; gap: 8px; }
+      .mirror-table, .mirror-table tbody, .mirror-table tr, .mirror-table td { display: block; width: 100%; }
+      .mirror-table thead { display: none; }
+      .mirror-table tr { display: grid; grid-template-columns: 1fr 1fr; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+      .mirror-table tr:last-child { border-bottom: 0; }
+      .mirror-table td { border: 0; padding: 4px 0; text-align: left !important; }
+      .mirror-table td:first-child { grid-column: 1 / -1; margin-bottom: 5px; }
+      .mirror-table td::before { content: attr(data-label); display: block; color: var(--muted); font: 600 .64rem ui-monospace, monospace; text-transform: uppercase; }
+      .mirror-table td:first-child::before { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">ASIN-HHC / six-mirror extraction</div>
+            <h1>3,455 blocks.<br>One inspectable corpus.</h1>
+            <p>Code fragments recovered from 1,817 files across six AI platform archives, normalized and deduplicated without erasing their source trail.</p>
+          </div>
+          <div class="hero-side">
+            <p>This release is build material—not verified evidence. Browse its shape, inspect representative records, and keep every finding on HOLD until it is replayed.</p>
+            <div class="source-stamp"><i></i> Verified 14 Oct 2026 · stats.json + INDEX.json</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="stats" aria-label="Corpus headline statistics">
+        <div class="stat"><strong>3,455</strong><span>unique blocks</span></div>
+        <div class="stat"><strong>11.0 MB</strong><span>normalized code</span></div>
+        <div class="stat"><strong>5,454</strong><span>raw blocks scanned</span></div>
+        <div class="stat"><strong>371</strong><span>excluded for secrets or contact data</span></div>
+      </div>
+    </div>
+
+    <section id="shape">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The shape of the archive</h2>
+          <p>Unknown-language material leads the corpus, while glyph and receipt work dominate the classified purpose tags.</p>
+        </div>
+        <div class="chart-grid">
+          <article class="panel">
+            <div class="panel-head"><h3>Top languages</h3><span>blocks · zero baseline</span></div>
+            <div class="chart-pad chart-wrap">
+              <svg viewBox="0 0 700 390" role="img" aria-labelledby="lang-title lang-desc">
+                <title id="lang-title">Top language counts</title>
+                <desc id="lang-desc">Unknown 1043, HTML 576, JavaScript 414, Python 375, Bash 278, JSON 250, YAML 225, and all other languages 294 combined.</desc>
+                <g transform="translate(118 18)">
+                  <line class="axis" x1="0" y1="0" x2="0" y2="320"/><line class="axis" x1="0" y1="320" x2="520" y2="320"/>
+                  <g class="tick"><text x="0" y="344">0</text><text x="124.6" y="344">250</text><text x="249.3" y="344">500</text><text x="373.9" y="344">750</text><text x="498.6" y="344">1,000</text></g>
+                  <g class="axis"><line x1="124.6" y1="0" x2="124.6" y2="320"/><line x1="249.3" y1="0" x2="249.3" y2="320"/><line x1="373.9" y1="0" x2="373.9" y2="320"/><line x1="498.6" y1="0" x2="498.6" y2="320"/></g>
+                  <g>
+                    <text class="label" x="-12" y="24" text-anchor="end">unknown</text><rect class="bar-hot" x="0" y="8" width="520" height="22"/><text class="value" x="512" y="24" style="fill:white">1,043</text>
+                    <text class="label" x="-12" y="64" text-anchor="end">html</text><rect class="bar-main" x="0" y="48" width="287" height="22"/><text class="value" x="279" y="64" style="fill:white">576</text>
+                    <text class="label" x="-12" y="104" text-anchor="end">javascript</text><rect class="bar-main" x="0" y="88" width="206" height="22"/><text class="value" x="198" y="104" style="fill:white">414</text>
+                    <text class="label" x="-12" y="144" text-anchor="end">python</text><rect class="bar-main" x="0" y="128" width="187" height="22"/><text class="value" x="179" y="144" style="fill:white">375</text>
+                    <text class="label" x="-12" y="184" text-anchor="end">bash</text><rect class="bar-main" x="0" y="168" width="139" height="22"/><text class="value" x="131" y="184" style="fill:white">278</text>
+                    <text class="label" x="-12" y="224" text-anchor="end">json</text><rect class="bar-main" x="0" y="208" width="125" height="22"/><text class="value" x="117" y="224" style="fill:white">250</text>
+                    <text class="label" x="-12" y="264" text-anchor="end">yaml</text><rect class="bar-main" x="0" y="248" width="112" height="22"/><text class="value" x="104" y="264" style="fill:white">225</text>
+                    <text class="label" x="-12" y="304" text-anchor="end">other</text><rect class="bar-soft" x="0" y="288" width="146" height="22"/><text class="value" x="138" y="304">294</text>
+                  </g>
+                </g>
+              </svg>
+              <p class="chart-note">“Other” is the combined remainder of the listed top-language series: JSX, Markdown, CSS, SQL, Text, TypeScript, Solidity, LaTeX, and 63 blocks in additional languages.</p>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><h3>Purpose tags</h3><span>all 3,455 blocks</span></div>
+            <div class="chart-pad chart-wrap">
+              <svg viewBox="0 0 570 480" role="img" aria-labelledby="purpose-title purpose-desc">
+                <title id="purpose-title">Purpose tag distribution</title>
+                <desc id="purpose-desc">Unknown 809, glyph 566, receipt 566, decode 377, gate 337, wallet 214, morphology 162, pen 144, coherence 112, Moltbook 85, algebra 46, replay 33, fisher 4.</desc>
+                <g transform="translate(108 12)">
+                  <line class="axis" x1="0" y1="0" x2="0" y2="430"/><line class="axis" x1="0" y1="430" x2="440" y2="430"/>
+                  <g class="tick"><text x="0" y="452">0</text><text x="136" y="452">250</text><text x="272" y="452">500</text><text x="408" y="452">750</text></g>
+                  <g class="axis"><line x1="136" y1="0" x2="136" y2="430"/><line x1="272" y1="0" x2="272" y2="430"/><line x1="408" y1="0" x2="408" y2="430"/></g>
+                  <g>
+                    <text class="label" x="-10" y="23" text-anchor="end">unknown</text><rect class="bar-hot" x="0" y="9" width="440" height="19"/><text class="value" x="432" y="23" style="fill:white">809</text>
+                    <text class="label" x="-10" y="55" text-anchor="end">glyph</text><rect class="bar-main" x="0" y="41" width="308" height="19"/><text class="value" x="300" y="55" style="fill:white">566</text>
+                    <text class="label" x="-10" y="87" text-anchor="end">receipt</text><rect class="bar-main" x="0" y="73" width="308" height="19"/><text class="value" x="300" y="87" style="fill:white">566</text>
+                    <text class="label" x="-10" y="119" text-anchor="end">decode</text><rect class="bar-main" x="0" y="105" width="205" height="19"/><text class="value" x="197" y="119" style="fill:white">377</text>
+                    <text class="label" x="-10" y="151" text-anchor="end">gate</text><rect class="bar-main" x="0" y="137" width="183" height="19"/><text class="value" x="175" y="151" style="fill:white">337</text>
+                    <text class="label" x="-10" y="183" text-anchor="end">wallet</text><rect class="bar-main" x="0" y="169" width="116" height="19"/><text class="value" x="108" y="183" style="fill:white">214</text>
+                    <text class="label" x="-10" y="215" text-anchor="end">morphology</text><rect class="bar-main" x="0" y="201" width="88" height="19"/><text class="value" x="80" y="215" style="fill:white">162</text>
+                    <text class="label" x="-10" y="247" text-anchor="end">pen</text><rect class="bar-main" x="0" y="233" width="78" height="19"/><text class="value" x="70" y="247" style="fill:white">144</text>
+                    <text class="label" x="-10" y="279" text-anchor="end">coherence</text><rect class="bar-main" x="0" y="265" width="61" height="19"/><text class="value" x="53" y="279">112</text>
+                    <text class="label" x="-10" y="311" text-anchor="end">moltbook</text><rect class="bar-main" x="0" y="297" width="46" height="19"/><text class="value" x="38" y="311">85</text>
+                    <text class="label" x="-10" y="343" text-anchor="end">algebra</text><rect class="bar-main" x="0" y="329" width="25" height="19"/><text class="value" x="52" y="343">46</text>
+                    <text class="label" x="-10" y="375" text-anchor="end">replay</text><rect class="bar-main" x="0" y="361" width="18" height="19"/><text class="value" x="45" y="375">33</text>
+                    <text class="label" x="-10" y="407" text-anchor="end">fisher</text><rect class="bar-main" x="0" y="393" width="2" height="19"/><text class="value" x="24" y="407">4</text>
+                  </g>
+                </g>
+              </svg>
+            </div>
+          </article>
+        </div>
+
+        <aside class="evidence" aria-label="Evidence status notice">
+          <div class="hold">HOLD</div>
+          <div><strong>Build material is not evidence.</strong><p>No block in this corpus has been independently replayed under the current <span class="mono">tau_hard = 0.25</span> or coherence-function requirements.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="mirrors">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Contribution by mirror</h2>
+          <p>DeepSeek contributes the largest unique share. Kimi contains summaries rather than fenced code; OAI’s three raw blocks were excluded as contact data.</p>
+        </div>
+        <div class="mirror-table">
+          <table>
+            <thead><tr><th>Mirror</th><th class="num">Files / chats</th><th class="num">Raw blocks</th><th class="num">Unique blocks</th></tr></thead>
+            <tbody>
+              <tr><td><span class="source-name">DeepSeek</span></td><td class="num" data-label="Files / chats">116</td><td class="num" data-label="Raw blocks">1,883</td><td class="num" data-label="Unique blocks">1,267</td></tr>
+              <tr><td><span class="source-name">Gemini</span></td><td class="num" data-label="Files / chats">829</td><td class="num" data-label="Raw blocks">1,604</td><td class="num" data-label="Unique blocks">1,077</td></tr>
+              <tr><td><span class="source-name">Grok</span></td><td class="num" data-label="Files / chats">334</td><td class="num" data-label="Raw blocks">1,519</td><td class="num" data-label="Unique blocks">781</td></tr>
+              <tr><td><span class="source-name">CodePen</span></td><td class="num" data-label="Files / chats">455 files · 367 pens</td><td class="num" data-label="Raw blocks">445</td><td class="num" data-label="Unique blocks">330</td></tr>
+              <tr class="zero"><td><span class="source-name">Kimi</span></td><td class="num" data-label="Files / chats">66</td><td class="num" data-label="Raw blocks">0</td><td class="num" data-label="Unique blocks">0</td></tr>
+              <tr class="zero"><td><span class="source-name">OAI / ChatGPT</span></td><td class="num" data-label="Files / chats">17</td><td class="num" data-label="Raw blocks">3</td><td class="num" data-label="Unique blocks">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="samples">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Representative records</h2>
+          <p>Twenty-four illustrative samples from the index—not the full 3,455. Each fingerprint is derived from its normalized SHA-256 identity.</p>
+        </div>
+        <div class="tools" aria-label="Sample filters">
+          <div class="input-wrap"><input id="search" type="search" placeholder="Search hash, language, purpose, mirror" aria-label="Search samples" /></div>
+          <select id="language" aria-label="Filter by language"><option value="all">All languages</option><option>python</option><option>unknown</option><option>text</option><option>json</option><option>bash</option><option>css</option><option>javascript</option><option>jsx</option></select>
+          <select id="purpose" aria-label="Filter by purpose"><option value="all">All purposes</option><option>glyph</option><option>receipt</option><option>decode</option><option>gate</option><option>wallet</option><option>morphology</option><option>pen</option><option>coherence</option><option>moltbook</option><option>algebra</option><option>replay</option><option>fisher</option><option>unknown</option></select>
+        </div>
+        <div class="gallery-meta"><span id="resultCount">24 records shown</span><span>Illustrative sample · metadata only</span></div>
+        <div class="gallery" id="gallery">
+          <article class="sample" data-hash="9ea5d4ab" data-lang="python" data-purpose="glyph" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 9ea5d4ab</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">python</span><span class="badge">glyph</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>667</dd></div><div><dt>Occurrences</dt><dd>22×</dd></div></dl></article>
+          <article class="sample" data-hash="86b28109" data-lang="unknown" data-purpose="glyph" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA 86b28109</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">unknown</span><span class="badge">glyph</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>617</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="f96d34c1" data-lang="unknown" data-purpose="receipt" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA f96d34c1</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">unknown</span><span class="badge">receipt</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>751</dd></div><div><dt>Occurrences</dt><dd>20×</dd></div></dl></article>
+          <article class="sample" data-hash="03ce9d0f" data-lang="text" data-purpose="receipt" data-mirror="grok"><div class="sample-top"><div class="sample-id">SHA 03ce9d0f</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">text</span><span class="badge">receipt</span><span class="badge">grok</span></div><dl><div><dt>Bytes</dt><dd>246</dd></div><div><dt>Occurrences</dt><dd>15×</dd></div></dl></article>
+          <article class="sample" data-hash="ffbbdfd4" data-lang="python" data-purpose="decode" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA ffbbdfd4</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">python</span><span class="badge">decode</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>603</dd></div><div><dt>Occurrences</dt><dd>18×</dd></div></dl></article>
+          <article class="sample" data-hash="7e6bead0" data-lang="unknown" data-purpose="decode" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA 7e6bead0</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">unknown</span><span class="badge">decode</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>377</dd></div><div><dt>Occurrences</dt><dd>4×</dd></div></dl></article>
+          <article class="sample" data-hash="9b1dcf66" data-lang="python" data-purpose="gate" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 9b1dcf66</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">python</span><span class="badge">gate</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>483</dd></div><div><dt>Occurrences</dt><dd>22×</dd></div></dl></article>
+          <article class="sample" data-hash="970accc1" data-lang="unknown" data-purpose="gate" data-mirror="grok"><div class="sample-top"><div class="sample-id">SHA 970accc1</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">unknown</span><span class="badge">gate</span><span class="badge">grok</span></div><dl><div><dt>Bytes</dt><dd>313</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="f028ec09" data-lang="json" data-purpose="wallet" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA f028ec09</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">json</span><span class="badge">wallet</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>1,409</dd></div><div><dt>Occurrences</dt><dd>9×</dd></div></dl></article>
+          <article class="sample" data-hash="8f9ddc6c" data-lang="bash" data-purpose="wallet" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 8f9ddc6c</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">bash</span><span class="badge">wallet</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>675</dd></div><div><dt>Occurrences</dt><dd>7×</dd></div></dl></article>
+          <article class="sample" data-hash="754280ea" data-lang="python" data-purpose="morphology" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 754280ea</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">python</span><span class="badge">morphology</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>1,268</dd></div><div><dt>Occurrences</dt><dd>22×</dd></div></dl></article>
+          <article class="sample" data-hash="5f60519a" data-lang="unknown" data-purpose="morphology" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA 5f60519a</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">unknown</span><span class="badge">morphology</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>722</dd></div><div><dt>Occurrences</dt><dd>2×</dd></div></dl></article>
+          <article class="sample" data-hash="b92c6735" data-lang="css" data-purpose="pen" data-mirror="codepen"><div class="sample-top"><div class="sample-id">SHA b92c6735</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">css</span><span class="badge">pen</span><span class="badge">codepen</span></div><dl><div><dt>Bytes</dt><dd>441</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="a1a4a354" data-lang="javascript" data-purpose="pen" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA a1a4a354</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">javascript</span><span class="badge">pen</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>1,117</dd></div><div><dt>Occurrences</dt><dd>1×</dd></div></dl></article>
+          <article class="sample" data-hash="67d1a4ba" data-lang="jsx" data-purpose="coherence" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 67d1a4ba</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">jsx</span><span class="badge">coherence</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>519</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="e39102e8" data-lang="unknown" data-purpose="coherence" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA e39102e8</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">unknown</span><span class="badge">coherence</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>1,588</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="fcd1a435" data-lang="bash" data-purpose="moltbook" data-mirror="grok"><div class="sample-top"><div class="sample-id">SHA fcd1a435</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">bash</span><span class="badge">moltbook</span><span class="badge">grok</span></div><dl><div><dt>Bytes</dt><dd>275</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="eb21a9b2" data-lang="python" data-purpose="moltbook" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA eb21a9b2</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">python</span><span class="badge">moltbook</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>500</dd></div><div><dt>Occurrences</dt><dd>2×</dd></div></dl></article>
+          <article class="sample" data-hash="2883def7" data-lang="jsx" data-purpose="algebra" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 2883def7</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">jsx</span><span class="badge">algebra</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>380</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="481fdbfc" data-lang="bash" data-purpose="algebra" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA 481fdbfc</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">bash</span><span class="badge">algebra</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>559</dd></div><div><dt>Occurrences</dt><dd>2×</dd></div></dl></article>
+          <article class="sample" data-hash="a55663a6" data-lang="json" data-purpose="replay" data-mirror="gemini"><div class="sample-top"><div class="sample-id">SHA a55663a6</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">json</span><span class="badge">replay</span><span class="badge">gemini</span></div><dl><div><dt>Bytes</dt><dd>1,787</dd></div><div><dt>Occurrences</dt><dd>2×</dd></div></dl></article>
+          <article class="sample" data-hash="b2774e58" data-lang="bash" data-purpose="replay" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA b2774e58</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">bash</span><span class="badge">replay</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>487</dd></div><div><dt>Occurrences</dt><dd>1×</dd></div></dl></article>
+          <article class="sample" data-hash="9cb40721" data-lang="bash" data-purpose="fisher" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 9cb40721</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">bash</span><span class="badge">fisher</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>397</dd></div><div><dt>Occurrences</dt><dd>3×</dd></div></dl></article>
+          <article class="sample" data-hash="1984011e" data-lang="python" data-purpose="unknown" data-mirror="deepseek"><div class="sample-top"><div class="sample-id">SHA 1984011e</div><div class="hashprint" aria-hidden="true"></div></div><div class="badges"><span class="badge primary">python</span><span class="badge">unknown</span><span class="badge">deepseek</span></div><dl><div><dt>Bytes</dt><dd>804</dd></div><div><dt>Occurrences</dt><dd>7×</dd></div></dl></article>
+        </div>
+        <div class="empty" id="empty">No representative records match those filters.</div>
+      </div>
+    </section>
+
+    <section id="provenance">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Provenance stays attached</h2>
+          <p>The extractor reads mirrors without modifying them, normalizes content, and records the source chat file plus heading for every unique block.</p>
+        </div>
+        <div class="provenance-grid">
+          <article class="prov-step"><b>01</b><h3>Read-only extraction</h3><p>5,454 raw blocks scanned across 1,817 files in six archives.</p></article>
+          <article class="prov-step"><b>02</b><h3>Normalized SHA-256</h3><p>Content is deduplicated by its normalized digest. The most-repeated glyph-engine Python block appears 22 times.</p></article>
+          <article class="prov-step"><b>03</b><h3>Source trail</h3><p>Every unique record retains mirror, chat file, heading, language, purpose, byte count, and occurrence count.</p></article>
+        </div>
+        <div class="command"><code>python3 tools/build_corpus.py</code><button class="copy" id="copyCommand" type="button">Copy reproduce command</button></div>
+        <div class="links"><a href="https://asin-hhc-moltbook-1gny5j.v2.appdeploy.ai/" target="_blank" rel="noopener noreferrer">Visit ASIN-HHC Moltbook ↗</a><span>X: @mankind_peace</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="footer-mark">MIT</div>
+      <p><strong>Dennis Christie / ASIN-HHC, 2026.</strong><br>Open code, preserved provenance, findings held to replay.</p>
+      <p>Equality before profits.</p>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+  <script>
+    (function () {
+      var samples = Array.prototype.slice.call(document.querySelectorAll('.sample'));
+      var search = document.getElementById('search');
+      var language = document.getElementById('language');
+      var purpose = document.getElementById('purpose');
+      var count = document.getElementById('resultCount');
+      var empty = document.getElementById('empty');
+
+      samples.forEach(function (card) {
+        var hash = card.getAttribute('data-hash');
+        var print = card.querySelector('.hashprint');
+        (hash + hash).split('').forEach(function (char, idx) {
+          var dot = document.createElement('i');
+          var value = parseInt(char, 16);
+          if (value >= 11) dot.className = 'hot';
+          else if (value >= 5) dot.className = 'on';
+          print.appendChild(dot);
+        });
+      });
+
+      function filterSamples() {
+        var q = search.value.trim().toLowerCase();
+        var lang = language.value.toLowerCase();
+        var use = purpose.value.toLowerCase();
+        var visible = 0;
+        samples.forEach(function (card) {
+          var haystack = [card.dataset.hash, card.dataset.lang, card.dataset.purpose, card.dataset.mirror].join(' ').toLowerCase();
+          var matches = (!q || haystack.indexOf(q) !== -1) && (lang === 'all' || card.dataset.lang === lang) && (use === 'all' || card.dataset.purpose === use);
+          card.hidden = !matches;
+          if (matches) visible += 1;
+        });
+        count.textContent = visible + (visible === 1 ? ' record shown' : ' records shown');
+        empty.style.display = visible ? 'none' : 'block';
+      }
+      search.addEventListener('input', filterSamples);
+      language.addEventListener('change', filterSamples);
+      purpose.addEventListener('change', filterSamples);
+
+      var toast = document.getElementById('toast');
+      var toastTimer;
+      document.getElementById('copyCommand').addEventListener('click', function () {
+        var text = 'python3 tools/build_corpus.py';
+        function showToast(message) {
+          toast.textContent = message;
+          toast.classList.add('show');
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 1800);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { showToast('Command copied'); }, function () { showToast('Select the command to copy'); });
+        } else {
+          showToast('Select the command to copy');
+        }
+      });
+    }());
+  </script>
+</body>
+</html>

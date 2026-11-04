@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:,">
+<title>CP8 / ASIN-HHC — Evidence Atlas</title>
+<style>
+:root{
+  --bg:#0a0e13; --bg2:#0e131a; --panel:#121922; --panel2:#161f2b; --line:#243041; --line2:#2e3c52;
+  --text:#e8edf3; --muted:#9aa8ba; --faint:#6b7a8f;
+  --amber:#e8a838; --amber-dim:#7a5a1e; --teal:#2dd4bf; --red:#f87171; --red-bg:#2a1414;
+  --green:#4ade80; --blue:#7dd3fc;
+  --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root{--bg:#f4f1ea;--bg2:#ece8dd;--panel:#fffdf8;--panel2:#f7f3e8;--line:#d8d0bd;--line2:#c4b998;--text:#1a1f27;--muted:#5a6577;--faint:#8a94a5;--red-bg:#fdecec;color-scheme:light}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3{line-height:1.15;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px 80px}
+.mono{font-family:var(--mono)}
+.small{font-size:12.5px;color:var(--muted)}
+.tiny{font-size:11.5px;color:var(--faint)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1120px;margin:0 auto;padding:10px 18px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.nav a{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:6px 9px;border-radius:6px}
+.nav a:hover{color:var(--text);background:var(--panel2);text-decoration:none}
+.nav .brand{color:var(--text);font-family:var(--mono);font-size:12px;margin-right:8px}
+
+/* hero */
+.hero{padding:52px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.hero h1{font-size:clamp(38px,7vw,64px);font-weight:800;letter-spacing:-.02em}
+.hero h1 span{color:var(--amber)}
+.hero .sub{font-size:clamp(16px,2.4vw,20px);color:var(--muted);max-width:640px;margin-top:14px}
+.hero .by{margin-top:16px;font-size:13px;color:var(--faint)}
+.asin{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.asin div{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;min-width:120px}
+.asin b{display:block;font-size:15px}
+.asin span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+
+.rule{margin:26px 0 0;border:1.5px solid var(--amber);background:color-mix(in srgb,var(--amber) 8%,var(--panel));border-radius:10px;padding:18px 20px}
+.rule .r1{font-size:clamp(17px,2.6vw,22px);font-weight:700}
+.rule .r2{margin-top:6px;color:var(--muted);font-size:13.5px}
+.rule .r2 b{color:var(--text)}
+
+.pipe{margin-top:26px}
+.pipe ol{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;list-style:none;margin:0;padding:0}
+.pipe li{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 12px 10px;position:relative}
+.pipe li::after{content:"→";position:absolute;right:-11px;top:38%;color:var(--faint);font-size:14px;z-index:2}
+.pipe li:last-child::after{display:none}
+.pipe .n{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.1em}
+.pipe b{display:block;font-size:13px;margin-top:4px}
+.pipe span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+@media(max-width:760px){.pipe ol{grid-template-columns:1fr 1fr}.pipe li::after{display:none}}
+
+.rules{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.rules span{font-size:12px;border:1px solid var(--line2);border-radius:999px;padding:5px 11px;background:var(--bg2);color:var(--muted)}
+.rules span b{color:var(--text)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:26px 0 6px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.stat .v{font-size:32px;font-weight:800;letter-spacing:-.02em}
+.stat .l{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+.stat.hold .v{color:var(--amber)} .stat.zero .v{color:var(--red)} .stat.ok .v{color:var(--green)}
+@media(max-width:760px){.stats{grid-template-columns:1fr 1fr}}
+
+/* sections */
+section{padding:42px 0 6px}
+.sec-head{margin-bottom:18px}
+.sec-head h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);max-width:680px;margin-top:6px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+
+/* accordion */
+.acc{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.acc-item{border-bottom:1px solid var(--line)}
+.acc-item:last-child{border-bottom:none}
+.acc-btn{width:100%;display:flex;gap:12px;align-items:center;text-align:left;background:none;border:none;color:var(--text);padding:16px 18px;cursor:pointer;font-family:var(--sans);font-size:15px;font-weight:700}
+.acc-btn:hover{background:var(--panel2)}
+.acc-btn .qnum{font-family:var(--mono);font-size:11px;color:var(--bg);background:var(--amber);border-radius:5px;padding:2px 7px;flex:none}
+.acc-btn .chev{margin-left:auto;color:var(--faint);font-size:18px;transition:transform .2s;flex:none}
+.acc-item.open .chev{transform:rotate(90deg)}
+.acc-body{display:none;padding:0 18px 18px 58px;color:var(--muted);font-size:14px;max-width:820px}
+.acc-item.open .acc-body{display:block}
+.acc-body b{color:var(--text)}
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;border-radius:5px;padding:2px 7px;vertical-align:1px}
+.p-hold{background:color-mix(in srgb,var(--amber) 20%,transparent);color:var(--amber);border:1px solid var(--amber-dim)}
+.p-neg{background:var(--red-bg);color:var(--red);border:1px solid #5a2626}
+.p-ok{background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);border:1px solid #245c38}
+.p-test{background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal);border:1px solid #1f5a52}
+.p-obs{background:color-mix(in srgb,var(--blue) 14%,transparent);color:var(--blue);border:1px solid #2b4a5f}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;padding:5px 6px 5px 10px;max-width:100%;overflow:hidden}
+.chip .h{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip button{flex:none;font-family:var(--sans);font-size:11px;font-weight:700;border:1px solid var(--line2);background:var(--panel2);color:var(--text);border-radius:5px;padding:3px 8px;cursor:pointer}
+.chip button:hover{border-color:var(--amber);color:var(--amber)}
+.chip button.done{border-color:var(--green);color:var(--green)}
+
+/* cards/grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}
+.card h3{font-size:17px}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.card ul{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:13.5px}
+.card ul li{margin:5px 0}
+.card ul li b{color:var(--text)}
+code{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+
+/* tables */
+.tablewrap{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:11px 14px;border-bottom:1px solid var(--line);background:var(--bg2);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.num,th.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+@media(max-width:700px){
+  table,thead,tbody,tr,td,th{display:block}
+  thead{display:none}
+  tr{border-bottom:1px solid var(--line2);padding:8px 0}
+  td{border-bottom:none;padding:5px 14px}
+  td.num{text-align:left}
+  td::before{content:attr(data-l);display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+}
+
+/* bars */
+.bars{margin-top:14px}
+.barrow{display:grid;grid-template-columns:110px 1fr 74px;gap:10px;align-items:center;margin:7px 0;font-size:12.5px}
+.barrow .bl{font-family:var(--mono);color:var(--muted)}
+.barrow .bv{font-family:var(--mono);text-align:right}
+.bar{height:14px;background:var(--bg2);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--teal)}
+.bar.amber i{background:var(--amber)} .bar.red i{background:var(--red)} .bar.grey i{background:var(--faint)}
+
+/* neg callout */
+.neg{border:1.5px solid #5a2626;background:var(--red-bg);border-radius:10px;padding:18px 20px;margin-top:14px}
+.neg h3{color:var(--red);font-size:16px}
+.neg p{color:var(--muted);margin:6px 0 0;font-size:13.5px}.neg p b{color:var(--text)}
+.good{border:1.5px solid #245c38;background:color-mix(in srgb,var(--green) 7%,var(--panel));border-radius:10px;padding:18px 20px;margin-top:14px}
+.good h3{color:var(--green);font-size:16px}.good p{color:var(--muted);margin:6px 0 0;font-size:13.5px}.good p b{color:var(--text)}
+
+/* filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{font-family:var(--sans);font-size:12.5px;font-weight:700;border:1px solid var(--line2);background:var(--panel);color:var(--muted);border-radius:999px;padding:7px 14px;cursor:pointer}
+.filters button:hover{color:var(--text)}
+.filters button.on{background:var(--amber);border-color:var(--amber);color:#14100a}
+
+/* matrix */
+.matrix td.c{text-align:center}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%}
+.dot.y{background:var(--green)} .dot.n{background:var(--red)} .dot.p{background:var(--amber)}
+
+/* unresolved */
+.u-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:760px){.u-grid{grid-template-columns:1fr}}
+.u-item{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13.5px;color:var(--muted)}
+.u-item b{color:var(--text)}
+.u-item .uid{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--red);background:var(--red-bg);border:1px solid #5a2626;border-radius:5px;padding:2px 7px;height:fit-content;flex:none}
+
+/* timeline */
+.tl{border-left:2px solid var(--line2);margin-left:8px;padding-left:26px}
+.tl-item{position:relative;padding:0 0 22px}
+.tl-item::before{content:"";position:absolute;left:-33px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2.5px solid var(--amber)}
+.tl-item .d{font-family:var(--mono);font-size:11.5px;color:var(--amber);letter-spacing:.06em}
+.tl-item b{display:block;font-size:15px;margin-top:2px}
+.tl-item p{color:var(--muted);font-size:13.5px;margin:3px 0 0;max-width:640px}
+
+.next{margin-top:44px;border:1.5px solid var(--amber);border-radius:12px;padding:26px;background:color-mix(in srgb,var(--amber) 7%,var(--panel))}
+.next h2{font-size:22px}.next p{color:var(--muted);margin-top:8px;max-width:700px}.next p b{color:var(--text)}
+footer{margin-top:50px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+<span class="brand">CP8 // EVIDENCE ATLAS</span>
+<a href="#questions">8 Questions</a><a href="#implementation">Implementation</a><a href="#ccd9">CCD-9</a><a href="#formations">Formations</a><a href="#replay">Replay</a><a href="#findings">Findings</a><a href="#convergence">Convergence</a><a href="#unresolved">Unresolved</a><a href="#ledger">Ledger</a><a href="#timeline">Timeline</a>
+</div></nav>
+
+<div class="wrap">
+
+<!-- 1 HERO -->
+<header class="hero">
+  <div class="eyebrow">ASIN-HHC · Holbrook-CP8-HHC · Evidence Atlas · 2026-10-07</div>
+  <h1>CP8 / <span>ASIN-HHC</span></h1>
+  <p class="sub">A human–AI provenance and evidence-governance framework for geometric morphology — built so that any future agent can tell, at a glance, what was actually executed, what it produced, and what is still only claimed.</p>
+  <p class="by">By <b style="color:var(--text)">Dennis M. Christie</b> · GitHub <span class="mono">@dbottrader</span> · Collaboration: Ace, Grok, Kimi</p>
+  <div class="asin">
+    <div><span>Anchor</span><b>Anchor</b></div>
+    <div><span>Shape</span><b>Shape</b></div>
+    <div><span>Intention</span><b>Intention</b></div>
+    <div><span>Number</span><b>Number</b></div>
+  </div>
+
+  <div class="rule" role="note">
+    <div class="r1">“The index describes evidence; it does not promote evidence.”</div>
+    <div class="r2">Promotion state is <b>HOLD everywhere</b>. Promoted / ESTABLISHED morphology findings: <b>0</b>. Nothing on this page upgrades a finding — it only locates the evidence, its hashes, and its replay status.</div>
+  </div>
+
+  <div class="pipe">
+    <ol>
+      <li><span class="n">01</span><b>CP8</b><span>Geometric morphology programme</span></li>
+      <li><span class="n">02</span><b>Morphology pipeline</b><span>Pass 0–6 measurement chain</span></li>
+      <li><span class="n">03</span><b>CCD-9 execution</b><span>Polar angular spectral scan</span></li>
+      <li><span class="n">04</span><b>Evidence artifacts</b><span>Maps, guides, specimens</span></li>
+      <li><span class="n">05</span><b>Receipts</b><span>SHA-256 hashes &amp; commits</span></li>
+      <li><span class="n">06</span><b>Promotion state</b><span>HOLD — nothing promoted</span></li>
+    </ol>
+  </div>
+  <div class="rules">
+    <span><b>Rule 1</b> · No receipt means no promotion</span>
+    <span><b>Rule 2</b> · Replay supersedes narration</span>
+    <span><b>Rule 3</b> · Specification is not implementation</span>
+    <span><b>Rule 4</b> · Reality retains veto</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat zero"><div class="v">0</div><div class="l">Promoted findings</div></div>
+    <div class="stat hold"><div class="v">HOLD</div><div class="l">Promotion state — all findings</div></div>
+    <div class="stat ok"><div class="v">5 / 6</div><div class="l">Synthetics trigger Pass 3 (negative control)</div></div>
+    <div class="stat"><div class="v">U1–U13</div><div class="l">Open unresolved items</div></div>
+  </div>
+</header>
+
+<!-- 2 EIGHT QUESTIONS -->
+<section id="questions">
+  <div class="sec-head">
+    <div class="kicker">Start here — 60 seconds</div>
+    <h2>The 8 questions a future agent must answer</h2>
+    <p>Tap each question. If any answer below cannot be verified from a receipt, the finding stays on HOLD — that is the system working as designed.</p>
+  </div>
+  <div class="acc" id="acc">
+    <div class="acc-item open">
+      <button class="acc-btn"><span class="qnum">Q1</span> What is CP8? <span class="chev">›</span></button>
+      <div class="acc-body">CP8 is Dennis M. Christie’s <b>human–AI provenance and evidence-governance framework</b> (ASIN-HHC) applied to the geometric morphology of aerial / crop formations. Its core discipline: every claim must trace to an executed run, an input, and a SHA-256 receipt before it can move from OBSERVED → TESTED → PROMOTED. <span class="pill p-hold">PROMOTION: HOLD</span></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q2</span> What code implements it? <span class="chev">›</span></button>
+      <div class="acc-body">Two tracks. <b>(a) Public &amp; executable:</b> the Holbrook evidence infrastructure — <code>scripts/build-merkle.py</code>, <code>scripts/verify.py</code>, <code>scripts/audit-packet.py</code>, the <code>verification/</code> Node suite, <code>dar_p/gate_validator.py</code> and tests (Tier E2). <b>(b) Described, not public:</b> the morphology Pass 0–6 pipeline — only README/STATUS exist in <code>cp8-morphology</code> and <code>CP8-Ultimate-System</code>; source ships as a Drive zip (see Implementation). Specification is not implementation.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q3</span> What was executed? <span class="chev">›</span></button>
+      <div class="acc-body">Two executions carry receipts: <b>CCD9-EXECUTION-001</b> — a polar angular spectral scan (harmonic 15 ≈ 19.99% energy, exploratory p ≈ 0.0016), state <span class="pill p-hold">EXECUTED_EXPLORATORY_HOLD</span>; and the <b>2026-10-07 replay specimen</b> — DAR-P tests 8 passed, Merkle build+verify ALL CHECKS PASSED 4/4, Crabwood Pass 2/3/5 recomputed <b>exactly</b>. Details in CCD-9 and Replay sections.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q4</span> What input produced each result? <span class="chev">›</span></button>
+      <div class="acc-body">CCD-9 ran on a frozen HTML/PNG artifact pair (hashes in CCD-9 section) — but those bytes, code and seed are <b>not committed</b>, so input lineage for the original run is incomplete. The replay specimen ran on the Drive zip <code>cp8-morphology-v1.0.0.zip</code> (SHA-256 <span class="mono">26a92378…fb972</span>) plus recorded measurements. Pass 0–1 is blocked: the original input <b>2289.png</b> was never published.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q5</span> Where are the receipts / hashes? <span class="chev">›</span></button>
+      <div class="acc-body">In the Publication Ledger below — every entry carries a commit hash verified live on <code>Holbrook-CP8-HHC</code> main, and key artifacts carry SHA-256 digests (core index, replay receipt, morphology zip, CCD-9 inputs, HOS ground truth). All chips are copyable. A claim without a chip here has no receipt.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q6</span> Which findings are OBSERVED vs TESTED vs PROMOTED vs HOLD? <span class="chev">›</span></button>
+      <div class="acc-body">OBSERVED: Crabwood candidate metrics (reported, not verified). TESTED: CCD-9 harmonic-15 signal (exploratory), CCD-9 claim audits (<b>negative</b>), source binding, the Pass 3 negative control (<b>negative</b>), Baudo audit. PROMOTED: <b>none — count is 0</b>. Every finding’s promotion state is <span class="pill p-hold">HOLD</span>. Filter the full register in Findings.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q7</span> What remains unresolved? <span class="chev">›</span></button>
+      <div class="acc-body"><b>13 items (U1–U13)</b>: morphology code not public; CCD-9 code/seed/bytes not public; source binding visual-only; geometry-matched nulls and hypotheses CC-H001–CC-H004 unexecuted; Pass 3 rule not tightened; only 6 synthetic controls (target 100+); no ground-truth measurements; a stale 2026-05-23 manifest; unindexed Roundway artifacts; a self-reported patent filing; open launch gates. Full list in Unresolved.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn"><span class="qnum">Q8</span> Can another agent replay it? <span class="chev">›</span></button>
+      <div class="acc-body"><b>Partially.</b> The evidence infrastructure replays today (Merkle + DAR-P, verified 2026-10-07). Crabwood Pass 2/3/5 and the synthetic chain recompute from recorded measurements. The original CCD-9 run and Pass 0–1 <b>cannot</b> be replayed — code, seed, frozen bytes and input 2289.png are unpublished. See the replayability matrix. The single unblock is at the bottom of this page.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 IMPLEMENTATION -->
+<section id="implementation">
+  <div class="sec-head">
+    <div class="kicker">Section · Implementation truth</div>
+    <h2>Two tracks: what runs, and what is only described</h2>
+    <p>The honest split. One track is public and executable today; the other is specified in documents but its code is not in public GitHub. Conflating them is the fastest way to overstate CP8.</p>
+  </div>
+  <div class="grid2">
+    <div class="card" style="border-color:#245c38">
+      <div class="tag" style="color:var(--green)">Track A · Public &amp; executable · Tier E2</div>
+      <h3>Evidence infrastructure</h3>
+      <p class="small">Holbrook provenance stack in <span class="mono">dbottrader/Holbrook-CP8-HHC</span> — public, runnable, and replay-verified on 2026-10-07.</p>
+      <ul>
+        <li><code>scripts/build-merkle.py</code> — Merkle tree builder</li>
+        <li><code>scripts/verify.py</code> — receipt verification</li>
+        <li><code>scripts/audit-packet.py</code> — audit packets</li>
+        <li><code>verification/</code> — Node verification suite</li>
+        <li><code>dar_p/gate_validator.py</code> — DAR-P gate validation</li>
+        <li>Test suites — DAR-P <b>8 passed</b> in replay specimen</li>
+      </ul>
+      <p class="small" style="margin-top:14px">HOS ground truth hash</p>
+      <span class="chip"><span class="h">63b5160ef51f0464295e86888c3e6605d8f6cc970635183887083818e8749320</span><button data-copy="63b5160ef51f0464295e86888c3e6605d8f6cc970635183887083818e8749320">Copy</button></span>
+    </div>
+    <div class="card" style="border-color:#5a2626">
+      <div class="tag" style="color:var(--red)">Track B · Described · Code not in public GitHub</div>
+      <h3>Morphology pipeline, Pass 0–6</h3>
+      <p class="small">Repos <span class="mono">cp8-morphology</span> and <span class="mono">CP8-Ultimate-System</span> contain only README / STATUS. The pipeline is specified and was executed locally, but the source is not public — STATUS points to a Drive zip.</p>
+      <ul>
+        <li>Source: <code>cp8-morphology-v1.0.0.zip</code> · <b>40,329 bytes</b> (Drive)</li>
+        <li><b>Import defect as shipped:</b> <code>pipeline.py</code> / <code>__init__.py</code> use stale names <code>cp8_cropcircle_processor</code> / <code>run_pipeline</code> — actual API is <code>geometry/CropCircleEngine</code> / <code>run_full_pipeline</code>. One wiring fix needed; <b>modules run individually</b>.</li>
+        <li>CCD-9 scan code, seed and frozen bytes likewise <b>not committed</b>.</li>
+      </ul>
+      <p class="small" style="margin-top:14px">Morphology zip SHA-256</p>
+      <span class="chip"><span class="h">26a9237898aaa50a04bfdaf265a00dd7a630f2e7faa35cb7dfe18347579fb972</span><button data-copy="26a9237898aaa50a04bfdaf265a00dd7a630f2e7faa35cb7dfe18347579fb972">Copy</button></span>
+    </div>
+  </div>
+</section>
+
+<!-- 4 CCD-9 -->
+<section id="ccd9">
+  <div class="sec-head">
+    <div class="kicker">Section · Canonical case</div>
+    <h2>CCD-9: the one executed spectral case</h2>
+    <p>Execution <span class="mono">CCD9-EXECUTION-001</span> · Artifact <span class="mono">CCD-9-791-LOOM-EMBEDDED</span> · State <span class="pill p-hold">EXECUTED_EXPLORATORY_HOLD</span></p>
+  </div>
+  <div class="card">
+    <h3>Polar angular spectral scan</h3>
+    <p class="small">Centre [310, 205] · Ellipse [190, 130] · 1440 angular × 8 radial samples · Harmonics 1–30</p>
+    <div class="bars">
+      <div class="barrow"><span class="bl">Harmonic 15</span><div class="bar amber"><i style="width:100%"></i></div><span class="bv">19.99%</span></div>
+      <div class="barrow"><span class="bl">Harmonic 12</span><div class="bar"><i style="width:65%"></i></div><span class="bv">13.03%</span></div>
+      <div class="barrow"><span class="bl">Null mean</span><div class="bar grey"><i style="width:17%"></i></div><span class="bv">3.34%</span></div>
+      <div class="barrow"><span class="bl">Null 95th pct</span><div class="bar grey"><i style="width:49%"></i></div><span class="bv">9.89%</span></div>
+    </div>
+    <p class="small">Harmonic 15 energy share <span class="mono">0.1998894513</span> (≈19.99%) · Harmonic 12 ≈ 13.03%. Permutation null (n=5000): mean 3.34%, SD 3.21%, 95th percentile 9.89%, empirical <b>p ≈ 0.0016</b>. <b>Exploratory only</b> — the null is not geometry-matched, so this p-value cannot promote anything.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <span class="chip"><span class="tiny" style="flex:none">HTML</span><span class="h">900bf538b6a8138d6bd3880b6f579f1e4ec7aa09f1f596dabe12e7349917613d</span><button data-copy="900bf538b6a8138d6bd3880b6f579f1e4ec7aa09f1f596dabe12e7349917613d">Copy</button></span>
+      <span class="chip"><span class="tiny" style="flex:none">PNG · 773,611 B</span><span class="h">7f747d643c2b90fd6ddf3fb0af6d0796a62fafaa2a6a4f95821cd4f6d42e1e11</span><button data-copy="7f747d643c2b90fd6ddf3fb0af6d0796a62fafaa2a6a4f95821cd4f6d42e1e11">Copy</button></span>
+    </div>
+    <p class="small" style="margin-top:10px">Frozen bytes, scan code and seed are <b style="color:var(--text)">NOT committed</b> — the original CCD-9 run cannot be replayed from the public repo.</p>
+  </div>
+
+  <div class="grid2" style="margin-top:12px">
+    <div class="neg" style="margin-top:0">
+      <h3>Claim audits — not supported</h3>
+      <p>8 petals — <b>not supported</b> · 3 concentric rings — <b>not established</b> · Octagonal boundary — <b>not established</b> · Solar-apex alignment — <b>not established</b> · 111 / 432 / 528 Hz — <b>not derivable</b> from the data · 8×3=24 — <b>semantic hypothesis only</b>. Hypotheses <b>CC-H001–CC-H004</b> remain OPEN. These negatives are findings, not footnotes.</p>
+    </div>
+    <div class="card">
+      <div class="tag" style="color:var(--amber)">Source reconciliation</div>
+      <h3>Which field is this?</h3>
+      <ul>
+        <li><b>Wanborough 2026</b> binding — <span class="pill p-neg">REJECTED</span></li>
+        <li><b>Ware Farm Manor, 28 June 2025</b> — likely source, <b>moderate visual match only</b>. Visual similarity is not a binding; no ground-truth measurement confirms it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5 FORMATIONS -->
+<section id="formations">
+  <div class="sec-head">
+    <div class="kicker">Section · Reported measurements</div>
+    <h2>Reported formations</h2>
+    <p>State for every row: <span class="pill p-obs">OBSERVED / REPORTED</span> — measured and recorded, <b style="color:var(--text)">not independently verified</b>. Crabwood is the primary candidate; candidacy is not promotion.</p>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Formation</th><th class="num">Nodes</th><th class="num">Edges</th><th class="num">Clustering</th><th class="num">Box dim</th><th class="num">Evidence</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td data-l="Formation"><b>Crabwood Face 2002</b> <span class="tiny">· primary candidate</span></td><td class="num" data-l="Nodes">128</td><td class="num" data-l="Edges">224</td><td class="num" data-l="Clustering">0.2536</td><td class="num" data-l="Box dim">1.2293</td><td class="num" data-l="Evidence">0.669</td><td><span class="pill p-obs">OBSERVED</span> <span class="pill p-hold">HOLD</span></td></tr>
+      <tr><td data-l="Formation"><b>Jellyfish</b></td><td class="num" data-l="Nodes">54</td><td class="num" data-l="Edges">97</td><td class="num" data-l="Clustering">0.3148</td><td class="num" data-l="Box dim">1.1917</td><td class="num" data-l="Evidence">0.542</td><td><span class="pill p-obs">OBSERVED</span> <span class="pill p-hold">HOLD</span></td></tr>
+      <tr><td data-l="Formation"><b>Concentric Rings</b></td><td class="num" data-l="Nodes">41</td><td class="num" data-l="Edges">77</td><td class="num" data-l="Clustering">0.3333</td><td class="num" data-l="Box dim">1.237</td><td class="num" data-l="Evidence">0.525</td><td><span class="pill p-obs">OBSERVED</span> <span class="pill p-hold">HOLD</span></td></tr>
+      <tr><td data-l="Formation"><b>Yin-Yang Spiral</b></td><td class="num" data-l="Nodes">37</td><td class="num" data-l="Edges">65</td><td class="num" data-l="Clustering">0.3018</td><td class="num" data-l="Box dim">1.0769</td><td class="num" data-l="Evidence">0.519</td><td><span class="pill p-obs">OBSERVED</span> <span class="pill p-hold">HOLD</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small" style="margin-top:10px">Related audit: the <b style="color:var(--text)">Baudo motor claim</b> was tested and rated <b style="color:var(--text)">LOW — 0.15</b> (F-BAUDO, HOLD). A low verdict is a result, and it stays on the record.</p>
+</section>
+
+<!-- 6 REPLAY -->
+<section id="replay">
+  <div class="sec-head">
+    <div class="kicker">Section · Replay specimen · Executed 2026-10-07</div>
+    <h2>What an independent replay actually reproduced</h2>
+    <p>Receipt <span class="mono">CP8-REPLAY-SPECIMEN-2026-10-07</span> — the strongest evidence on this page, because someone re-ran it instead of re-telling it.</p>
+  </div>
+  <span class="chip"><span class="tiny" style="flex:none">RECEIPT SHA-256</span><span class="h">27786f5b92f31f0d7fee9e8f9b9a8de52fd004ac3f9491460068870453051247</span><button data-copy="27786f5b92f31f0d7fee9e8f9b9a8de52fd004ac3f9491460068870453051247">Copy</button></span>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="good" style="margin-top:0">
+      <h3>Reproduced exactly</h3>
+      <p><b>DAR-P tests: 8 passed.</b> Merkle build + verify: <b>ALL CHECKS PASSED, 4/4</b>.<br><br>
+      <b>Crabwood Pass 2/3/5 recompute — EXACT:</b> nodes 128, edges 224, clustering 0.2536, density 0.027559, spectral gap 0.000451, binary 1 rule (<span class="mono">filled_empty_grid</span>), box dimension 1.2293 ±0.0433, R² 0.9951.<br><br>
+      <b>Synthetic controls, full chain:</b> grammar_default 17 / 0.9866 · ifs_julia 62 / 1.2872 · lsys_radial 27 / 1.0382 · pack_radial_6 84 / 1.2594 — all exact. lsys_koch 0 / none.</p>
+    </div>
+    <div>
+      <div class="neg" style="margin-top:0">
+        <h3>Key negative control — read this first</h3>
+        <p><b>5 of 6 synthetic controls trigger the Pass 3 binary rule</b> via <span class="mono">filled_empty_grid</span>. The rule fires on generated patterns that encode no message — so <b>message-encoding claims are barred</b> until the rule survives ≥3 independent formations. This single result constrains more claims than any positive number on this page.</p>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="tag" style="color:var(--amber)">Known drift &amp; blocks</div>
+        <ul>
+          <li><b>ifs_sierpinski:</b> 53 / 0.9256 vs recorded 57 / 0.9292 — attributed to library version drift (OpenCV 5 / scikit-image 0.26 vs recorded 4.12). Numbers differ; the chain reproduces.</li>
+          <li><b>Pass 0–1 replay blocked:</b> original input <code>2289.png</code> not published.</li>
+          <li><b>Original CCD-9 not reproduced:</b> code / seed / frozen bytes unpublished (see clean-room test below).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>Clean-room CCD-9 spectral scan <span class="small">· independently re-implemented · seed 20261007</span></h3>
+    <p class="small">Does the method discriminate, or does it find “15” everywhere? Four synthetic inputs, one re-implementation:</p>
+    <div class="bars">
+      <div class="barrow"><span class="bl">15-fold synth</span><div class="bar amber"><i style="width:93%"></i></div><span class="bv">h15 · 0.5564</span></div>
+      <div class="barrow"><span class="bl">8-fold synth</span><div class="bar"><i style="width:100%"></i></div><span class="bv">h8 · 0.5987</span></div>
+      <div class="barrow"><span class="bl">3 rings</span><div class="bar grey"><i style="width:100%"></i></div><span class="bv">h2 · 0.8198</span></div>
+      <div class="barrow"><span class="bl">Random blobs</span><div class="bar grey"><i style="width:44%"></i></div><span class="bv">h4 · 0.2632</span></div>
+    </div>
+    <p class="small">15-fold input → top harmonic 15 (0.5564, p ≈ 0.0005) ✓ · 8-fold → top 8 (0.5987; h15 p 0.98) ✓ · 3 rings → top 2 (0.8198, p 0.97) ✓ · Random → top 4 (0.2632, p 0.80) ✓. The scanner finds the symmetry that is actually there and does not hallucinate 15-fold structure in controls. <b style="color:var(--text)">This validates that the method is reconstructable. It does NOT reproduce the original CCD-9 result</b> — different code, different seed, different input bytes.</p>
+  </div>
+
+  <h3 style="margin:26px 0 12px;font-size:17px">Replayability matrix</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Component</th><th style="text-align:center">Code available</th><th style="text-align:center">Input available</th><th style="text-align:center">Replayed 2026-10-07</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td data-l="Component"><b>Evidence infra</b> (Merkle / verify / DAR-P)</td><td class="c" data-l="Code"><span class="dot y"></span></td><td class="c" data-l="Input"><span class="dot y"></span></td><td class="c" data-l="Replayed"><span class="dot y"></span></td><td><span class="pill p-ok">REPLAYABLE</span></td></tr>
+      <tr><td data-l="Component"><b>Crabwood Pass 2 / 3 / 5</b></td><td class="c" data-l="Code"><span class="dot p"></span></td><td class="c" data-l="Input"><span class="dot y"></span></td><td class="c" data-l="Replayed"><span class="dot y"></span></td><td><span class="pill p-ok">RECOMPUTED EXACT</span> <span class="tiny">via zip + recorded measurements</span></td></tr>
+      <tr><td data-l="Component"><b>Synthetic control chain</b></td><td class="c" data-l="Code"><span class="dot p"></span></td><td class="c" data-l="Input"><span class="dot y"></span></td><td class="c" data-l="Replayed"><span class="dot y"></span></td><td><span class="pill p-ok">REPRODUCED</span> <span class="tiny">1 version-drift case</span></td></tr>
+      <tr><td data-l="Component"><b>Pass 0–1</b></td><td class="c" data-l="Code"><span class="dot p"></span></td><td class="c" data-l="Input"><span class="dot n"></span></td><td class="c" data-l="Replayed"><span class="dot n"></span></td><td><span class="pill p-neg">BLOCKED</span> <span class="tiny">input 2289.png unpublished</span></td></tr>
+      <tr><td data-l="Component"><b>Original CCD-9 scan</b></td><td class="c" data-l="Code"><span class="dot n"></span></td><td class="c" data-l="Input"><span class="dot n"></span></td><td class="c" data-l="Replayed"><span class="dot n"></span></td><td><span class="pill p-neg">BLOCKED</span> <span class="tiny">code / seed / bytes uncommitted</span></td></tr>
+      <tr><td data-l="Component"><b>Clean-room spectral method</b></td><td class="c" data-l="Code"><span class="dot y"></span></td><td class="c" data-l="Input"><span class="dot y"></span></td><td class="c" data-l="Replayed"><span class="dot y"></span></td><td><span class="pill p-test">METHOD VALIDATED</span> <span class="tiny">not the original result</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 7 FINDINGS -->
+<section id="findings">
+  <div class="sec-head">
+    <div class="kicker">Section · Findings register</div>
+    <h2>Every finding, with its state — and its HOLD</h2>
+    <p>Filter by state. Note what no filter can show you: a PROMOTED finding. There are none.</p>
+  </div>
+  <div class="filters" id="filters">
+    <button class="on" data-f="all">All findings</button>
+    <button data-f="OBSERVED">OBSERVED</button>
+    <button data-f="TESTED">TESTED</button>
+    <button data-f="negative">Negative results</button>
+    <button data-f="HOLD">On HOLD</button>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>ID</th><th>Finding</th><th>Class</th><th>Verdict</th><th>Promotion</th></tr></thead>
+    <tbody id="findingsBody">
+      <tr data-state="TESTED HOLD"><td class="mono" data-l="ID">F-CCD9-H15</td><td data-l="Finding"><b>Harmonic-15 spectral signal</b> — 19.99% energy share, exploratory p ≈ 0.0016; null not geometry-matched</td><td data-l="Class"><span class="pill p-test">TESTED</span></td><td data-l="Verdict">Exploratory signal</td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+      <tr data-state="TESTED HOLD negative"><td class="mono" data-l="ID">F-CCD9-CLAIM-AUDITS</td><td data-l="Finding"><b>CCD-9 claim audits</b> — 8 petals, rings, octagon, solar-apex, 111/432/528 Hz</td><td data-l="Class"><span class="pill p-test">TESTED</span></td><td data-l="Verdict"><span style="color:var(--red);font-weight:700">Negative — not supported</span></td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+      <tr data-state="TESTED HOLD"><td class="mono" data-l="ID">F-CCD9-SOURCE-BINDING</td><td data-l="Finding"><b>Source binding</b> — Wanborough 2026 rejected; Ware Farm Manor 2025-06-28 likely, visual match only</td><td data-l="Class"><span class="pill p-test">TESTED</span></td><td data-l="Verdict">Unbound</td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+      <tr data-state="TESTED HOLD negative"><td class="mono" data-l="ID">F-PASS3-NEGATIVE-CONTROL</td><td data-l="Finding"><b>Pass 3 negative control</b> — 5/6 synthetics trigger binary rule; message-encoding claims barred</td><td data-l="Class"><span class="pill p-test">TESTED</span></td><td data-l="Verdict"><span style="color:var(--red);font-weight:700">Negative — rule too permissive</span></td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+      <tr data-state="OBSERVED HOLD"><td class="mono" data-l="ID">F-CRABWOOD-CANDIDATE</td><td data-l="Finding"><b>Crabwood Face 2002 candidate</b> — 128/224, clustering 0.2536, box dim 1.2293, evidence 0.669</td><td data-l="Class"><span class="pill p-obs">OBSERVED</span></td><td data-l="Verdict">Primary candidate, unverified</td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+      <tr data-state="TESTED HOLD negative"><td class="mono" data-l="ID">F-BAUDO</td><td data-l="Finding"><b>Baudo motor claim audit</b></td><td data-l="Class"><span class="pill p-test">TESTED</span></td><td data-l="Verdict"><span style="color:var(--red);font-weight:700">LOW — 0.15</span></td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+      <tr data-state="HOLD"><td class="mono" data-l="ID">F-PROMOTED-COUNT</td><td data-l="Finding"><b>Promoted / ESTABLISHED morphology findings</b></td><td data-l="Class">—</td><td data-l="Verdict"><b style="font-size:16px">0</b></td><td data-l="Promotion"><span class="pill p-hold">HOLD</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small" id="filterNote" style="margin-top:10px">Showing all 7 register entries.</p>
+</section>
+
+<!-- 8 CONVERGENCE -->
+<section id="convergence">
+  <div class="sec-head">
+    <div class="kicker">Section · External check · Verified 2026-10-06</div>
+    <h2>OpenAI convergence: conceptual only, no connection</h2>
+    <p>CP8 was cross-checked against OpenAI’s <span class="mono">openai/math</span> corpus. The result is a clean negative on connection — and a genuine, narrower convergence of method.</p>
+  </div>
+  <div class="grid2">
+    <div class="neg" style="margin-top:0">
+      <h3>No direct connection — 0 hits, both directions</h3>
+      <p>GitHub code search found <b>no CP8, ASIN-HHC, Holbrook or Roundway</b> in openai/math, and <b>no Kakeya, Mahler, Riemann, Navier or Hodge</b> in Dennis’s repos. Corpus scale for reference: <b>722 manuscripts, 372 families, ~4,000 problems</b>, with Lean formalizations. Any claim of derivation or direct link is unsupported. Two precision notes: the corpus’s Riemann result is <b>quasi-Riemann</b> (zero-free region Re s &gt; 7/8) — <b>not</b> a Riemann Hypothesis solution; its Navier–Stokes claim is separate and <b>not Clay-accepted</b>.</p>
+    </div>
+    <div class="card">
+      <div class="tag" style="color:var(--teal)">Where they genuinely converge</div>
+      <h3>Method, not subject matter</h3>
+      <ul>
+        <li><b>Checkable artifacts:</b> Lean certificates + source SHA-256 and run receipts on their side; hash / receipt / replay / promotion gates on CP8’s. Same instinct, different guarantee — <b>Lean proves correctness; a hash proves byte integrity only</b>.</li>
+        <li><b>Harmonic / spectral tools</b> used on geometric structure in both programmes.</li>
+        <li><b>Planar geometry primitives</b> (circles, graphs) — pointed at different questions.</li>
+      </ul>
+      <p class="small" style="margin-top:10px">Per the 2026-07-30 provenance record: similarity is conceptual convergence unless direct derivation is independently demonstrated. It has not been.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 UNRESOLVED -->
+<section id="unresolved">
+  <div class="sec-head">
+    <div class="kicker">Section · Open register</div>
+    <h2>Unresolved U1–U13</h2>
+    <p>From the core index. This list is the real roadmap: nothing promotes until the items gating it close.</p>
+  </div>
+  <div class="u-grid">
+    <div class="u-item"><span class="uid">U1</span><div><b>Morphology code not public</b> — Pass 0–6 source only in Drive zip</div></div>
+    <div class="u-item"><span class="uid">U2</span><div><b>CCD-9 code / seed / frozen bytes not public</b> — original run unreplayable</div></div>
+    <div class="u-item"><span class="uid">U3</span><div><b>Ware Farm source is visual-only</b> — no measured binding</div></div>
+    <div class="u-item"><span class="uid">U4</span><div><b>Wanborough NOT_FROZEN</b> — candidate not locked as an input</div></div>
+    <div class="u-item"><span class="uid">U5</span><div><b>Geometry-matched nulls unexecuted</b> — CCD-9 p-value stays exploratory</div></div>
+    <div class="u-item"><span class="uid">U6</span><div><b>Hypotheses CC-H001–CC-H004 unexecuted</b> — all OPEN</div></div>
+    <div class="u-item"><span class="uid">U7</span><div><b>Pass 3 rule tightening undone</b> — binary rule fires on 5/6 synthetics</div></div>
+    <div class="u-item"><span class="uid">U8</span><div><b>Only 6 synthetic controls</b> — target 100+</div></div>
+    <div class="u-item"><span class="uid">U9</span><div><b>No ground-truth measurements</b> for any formation</div></div>
+    <div class="u-item"><span class="uid">U10</span><div><b>Perspective distortion</b> uncorrected in aerial inputs</div></div>
+    <div class="u-item"><span class="uid">U11</span><div><b>sha256-manifest stale</b> — dated 2026-05-23, 45 files, Merkle root below</div></div>
+    <div class="u-item"><span class="uid">U12</span><div><b>Roundway 2023 / 2026 Drive artifacts unindexed</b></div></div>
+    <div class="u-item"><span class="uid">U13</span><div><b>Launch gates open</b> — US Provisional 63/892,035 is SELF_REPORTED only; publication gates unmet</div></div>
+  </div>
+  <p class="small" style="margin-top:12px">Stale manifest Merkle root (U11):</p>
+  <span class="chip"><span class="h">cf9cbfe42ccb8df8f9b0256e5b9403291f1e2257842cab8240742914c2c15033</span><button data-copy="cf9cbfe42ccb8df8f9b0256e5b9403291f1e2257842cab8240742914c2c15033">Copy</button></span>
+</section>
+
+<!-- 10 LEDGER -->
+<section id="ledger">
+  <div class="sec-head">
+    <div class="kicker">Section · Publication ledger</div>
+    <h2>Published and verified live</h2>
+    <p>Every entry below is on <span class="mono">Holbrook-CP8-HHC</span> <span class="mono">main</span> and was verified live. Tap Copy on any chip to grab the exact hash.</p>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Artifact</th><th>Commit / Hash</th><th></th></tr></thead>
+    <tbody>
+      <tr><td data-l="Artifact"><b>Convergence note</b> <span class="tiny">(2026-10-06)</span></td><td data-l="Commit"><span class="mono small">1813eb9df6595d1f64dd8af7c139b7b942caac7f</span></td><td><button class="chip" style="cursor:pointer" data-copy="1813eb9df6595d1f64dd8af7c139b7b942caac7f"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>OpenAI cross-map</b> <span class="tiny">(2026-10-06)</span></td><td data-l="Commit"><span class="mono small">15284dc6feee1a8ddd79192647f5b3faeeb16092</span></td><td><button class="chip" style="cursor:pointer" data-copy="15284dc6feee1a8ddd79192647f5b3faeeb16092"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Convergence manifest</b></td><td data-l="Commit"><span class="mono small">b913da29e5a7a9f7f03160b2368b923f19f6f1e0</span></td><td><button class="chip" style="cursor:pointer" data-copy="b913da29e5a7a9f7f03160b2368b923f19f6f1e0"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Core index</b> <span class="mono tiny">manifests/cp8-core-index-2026-10-07.json</span></td><td data-l="Commit"><span class="mono small">e5eb227a89622dd42436b30a5233d36e7b2bf5e1</span></td><td><button class="chip" style="cursor:pointer" data-copy="e5eb227a89622dd42436b30a5233d36e7b2bf5e1"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Core index file SHA-256</b></td><td data-l="Hash"><span class="mono small">ee3f93acacea4e20c9bf1676231c192488343587abfbe37103c663428941ec32</span></td><td><button class="chip" style="cursor:pointer" data-copy="ee3f93acacea4e20c9bf1676231c192488343587abfbe37103c663428941ec32"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Evidence map</b> <span class="mono tiny">docs/CP8_CORE_EVIDENCE_MAP_2026-10-07.md</span></td><td data-l="Commit"><span class="mono small">a0092f9ce8aa6b4e9d3d05ab27e056810c20661d</span></td><td><button class="chip" style="cursor:pointer" data-copy="a0092f9ce8aa6b4e9d3d05ab27e056810c20661d"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Replay guide</b> <span class="mono tiny">docs/CP8_REPLAY_GUIDE_2026-10-07.md</span></td><td data-l="Commit"><span class="mono small">eea523b3f9f9f8cb24768ee7bb92000e4bf7dc02</span></td><td><button class="chip" style="cursor:pointer" data-copy="eea523b3f9f9f8cb24768ee7bb92000e4bf7dc02"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Replay receipt</b> <span class="mono tiny">manifests/cp8-replay-receipt-2026-10-07.json</span></td><td data-l="Commit"><span class="mono small">8c6780524732abec37eb66f76c5f52bf06cd3061</span></td><td><button class="chip" style="cursor:pointer" data-copy="8c6780524732abec37eb66f76c5f52bf06cd3061"><span>Copy</span></button></td></tr>
+      <tr><td data-l="Artifact"><b>Replay specimen</b> <span class="mono tiny">docs/CP8_REPLAY_SPECIMEN_2026-10-07.md</span></td><td data-l="Commit"><span class="mono small">4c2e92d379caf6b16366e33c2fa5603c16882b27</span></td><td><button class="chip" style="cursor:pointer" data-copy="4c2e92d379caf6b16366e33c2fa5603c16882b27"><span>Copy</span></button></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small" style="margin-top:10px">Local source documents (goal files, <span class="mono">asin-hhc-cp8-public-launch/files/</span>): <span class="mono">docs/CP8_CORE_EVIDENCE_MAP_2026-10-07.md</span> · <span class="mono">docs/CP8_REPLAY_GUIDE_2026-10-07.md</span> · <span class="mono">docs/CP8_REPLAY_SPECIMEN_2026-10-07.md</span> · <span class="mono">manifests/cp8-core-index-2026-10-07.json</span> · <span class="mono">manifests/cp8-replay-receipt-2026-10-07.json</span></p>
+</section>
+
+<!-- 11 TIMELINE -->
+<section id="timeline">
+  <div class="sec-head">
+    <div class="kicker">Section · Timeline</div>
+    <h2>From genesis to replay</h2>
+  </div>
+  <div class="tl">
+    <div class="tl-item"><span class="d">2026-05-23</span><b>Genesis</b><p>Programme origin; the sha256-manifest of this date (45 files) is now the stale artifact flagged as U11.</p></div>
+    <div class="tl-item"><span class="d">2026-07-04</span><b>Project genome</b><p>The CP8 project genome is fixed as the reference description of the programme.</p></div>
+    <div class="tl-item"><span class="d">2026-07-30</span><b>Public provenance record</b><p>Holbrook provenance record published — already stating that cross-programme similarity is conceptual convergence unless direct derivation is independently demonstrated.</p></div>
+    <div class="tl-item"><span class="d">2026-08-08</span><b>cp8-morphology v1.0.0 status</b><p>STATUS published pointing at the Drive zip; code itself remains outside public GitHub (U1).</p></div>
+    <div class="tl-item"><span class="d">CCD-9 · EXECUTED</span><b>CCD-9 execution → HOLD</b><p>CCD9-EXECUTION-001 runs the polar angular spectral scan; harmonic 15 ≈ 19.99%, exploratory p ≈ 0.0016. Claim audits return negative; state set to EXECUTED_EXPLORATORY_HOLD, where it remains.</p></div>
+    <div class="tl-item"><span class="d">2026-10-06</span><b>OpenAI convergence published</b><p>Cross-map against openai/math (722 manuscripts / 372 families): 0 hits either direction; conceptual convergence note, cross-map and manifest committed to Holbrook-CP8-HHC.</p></div>
+    <div class="tl-item"><span class="d">2026-10-07</span><b>Core index + replay specimen</b><p>Core evidence index published; the replay specimen is executed the same day — evidence infrastructure and Crabwood Pass 2/3/5 reproduce, the Pass 3 negative control (5/6) is confirmed, and the blocked items are named precisely.</p></div>
+  </div>
+</section>
+
+<!-- 12 ECOSYSTEM -->
+<section id="ecosystem">
+  <div class="sec-head">
+    <div class="kicker">Section · Ecosystem context</div>
+    <h2>Where CP8 lives</h2>
+    <p>Context for orientation — <b style="color:var(--text)">not findings</b>. Presence in a tool is not evidence.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Workspaces</h3><ul>
+      <li><b>GitHub @dbottrader</b> — 22 public repos, incl. Holbrook-CP8-HHC, ASIN-HHC, cp8-morphology, CP8-Ultimate-System</li>
+      <li><b>Linear</b> — project “ASIN-HHC / CP8 Public Launch”, 25 issues</li>
+      <li><b>Notion</b> — Dennis’s Workspace HQ (launch brief, telemetry, evidence intake, sphere/orb corpus)</li>
+    </ul></div>
+    <div class="card"><h3>Surfaces &amp; collaborators</h3><ul>
+      <li><b>Lovable</b> — Evidence Beacon / CP8 Evidence OS (published); DMT Codex Explorer</li>
+      <li><b>Replit</b> — 18 apps under @dennismchristie, incl. Cosmic Geometry Transformer</li>
+      <li><b>Agents in collaboration</b> — Ace, Grok, Kimi (per repo descriptions)</li>
+    </ul></div>
+  </div>
+
+  <div class="next">
+    <div class="kicker" style="color:var(--amber)">The single next unblock</div>
+    <h2>Publish the morphology code — and hash-bind the Crabwood input</h2>
+    <p>Commit the <b>Pass 0–6 morphology source</b> to public GitHub and publish the <b>Crabwood input/output pair</b> — the original <b>2289.png</b> with a SHA-256 receipt alongside its recorded outputs. That one act converts Pass 0–1 from <b>BLOCKED</b> to replayable, lets an independent agent re-derive the 128-node Crabwood result end-to-end instead of from recorded measurements, and is the prerequisite for every promotion conversation that follows. Until then: <b>HOLD — 0 promoted, by design.</b></p>
+  </div>
+</section>
+
+<footer>
+  <p class="small">CP8 / ASIN-HHC Evidence Atlas · Built 2026-10-07 from the verified public record of dbottrader/Holbrook-CP8-HHC, cp8-morphology and CP8-Ultimate-System and the published 2026-10-06/07 packages. Every number on this page is reproduced exactly as recorded; where a result is negative, blocked or unverified, the page says so in place. <b style="color:var(--text)">The index describes evidence; it does not promote evidence.</b></p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  // accordion
+  var items=document.querySelectorAll('.acc-item');
+  items.forEach(function(it){
+    it.querySelector('.acc-btn').addEventListener('click',function(){
+      var open=it.classList.contains('open');
+      items.forEach(function(i){i.classList.remove('open')});
+      if(!open) it.classList.add('open');
+    });
+  });
+  // copy chips
+  function flash(btn){var o=btn.textContent;btn.textContent='Copied ✓';btn.classList.add('done');setTimeout(function(){btn.textContent=o;btn.classList.remove('done')},1400)}
+  document.querySelectorAll('[data-copy]').forEach(function(el){
+    el.addEventListener('click',function(e){
+      e.preventDefault();
+      var v=el.getAttribute('data-copy');
+      var btn=(el.tagName==='BUTTON'&&el.classList.contains('chip'))?el:(el.querySelector('button')||el);
+      function ok(){flash(btn)}
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(ok).catch(function(){fallback()})}else{fallback()}
+      function fallback(){var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(_){ }document.body.removeChild(t)}
+    });
+  });
+  // findings filter
+  var rows=[].slice.call(document.querySelectorAll('#findingsBody tr'));
+  var note=document.getElementById('filterNote');
+  document.querySelectorAll('#filters button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#filters button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      var f=b.getAttribute('data-f'),n=0;
+      rows.forEach(function(r){
+        var show=(f==='all')||r.getAttribute('data-state').indexOf(f)>-1;
+        r.style.display=show?'':'none'; if(show)n++;
+      });
+      note.textContent='Showing '+n+' of '+rows.length+' register entries'+(f==='all'?'':' filtered by '+f)+'. Promoted findings in every filter: 0.';
+    });
+  });
+})();
+</script>
+</body>
+</html>

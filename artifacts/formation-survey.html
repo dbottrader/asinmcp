@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Public Formation Data Survey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --paper: #f6f5ef;
+      --ink: #17201b;
+      --muted: #58635c;
+      --faint: #7b847e;
+      --line: #cfd2c8;
+      --panel: #ffffff;
+      --panel-soft: #eceee7;
+      --forest: #153f30;
+      --forest-2: #235743;
+      --amber: #b96f11;
+      --amber-soft: #f2e5ca;
+      --red: #8a3f32;
+      --red-soft: #f0ded8;
+      --shadow: 0 18px 50px rgba(19, 40, 30, .09);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #101512;
+        --ink: #edf1eb;
+        --muted: #b3bdb6;
+        --faint: #87928b;
+        --line: #35413a;
+        --panel: #171e1a;
+        --panel-soft: #202922;
+        --forest: #76b998;
+        --forest-2: #9bd3b6;
+        --amber: #e6a44e;
+        --amber-soft: #3f321d;
+        --red: #e39b8c;
+        --red-soft: #3d2926;
+        --shadow: 0 18px 50px rgba(0, 0, 0, .24);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 16px;
+      line-height: 1.58;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+      outline: 3px solid var(--amber);
+      outline-offset: 3px;
+    }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+    .mast {
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      padding: 44px 0 40px;
+      background:
+        radial-gradient(circle at 88% 16%, transparent 0 62px, color-mix(in srgb, var(--forest) 20%, transparent) 63px 64px, transparent 65px 91px, color-mix(in srgb, var(--forest) 14%, transparent) 92px 93px, transparent 94px),
+        linear-gradient(90deg, transparent 0 61%, color-mix(in srgb, var(--line) 45%, transparent) 61% 61.1%, transparent 61.1%);
+    }
+    .mast-grid { display: grid; grid-template-columns: 1.45fr .75fr; gap: 60px; align-items: end; }
+    .kicker, .eyebrow {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .73rem;
+      letter-spacing: .075em;
+      text-transform: uppercase;
+      color: var(--forest-2);
+      font-weight: 500;
+    }
+    h1, h2, h3 { font-family: "Newsreader", serif; }
+    h1 {
+      max-width: 830px;
+      margin: 15px 0 19px;
+      font-size: clamp(3.1rem, 7vw, 6.6rem);
+      line-height: .91;
+      letter-spacing: -.048em;
+      font-weight: 650;
+    }
+    .dek { max-width: 770px; margin: 0; font-size: clamp(1.05rem, 2vw, 1.28rem); color: var(--muted); }
+    .mast-note {
+      border-top: 3px solid var(--forest);
+      padding-top: 15px;
+      max-width: 320px;
+      justify-self: end;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+    .mast-note strong { display: block; color: var(--ink); font-size: 1rem; margin-bottom: 4px; }
+
+    .jumpbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in srgb, var(--paper) 93%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .jumpbar .wrap { display: flex; gap: 22px; align-items: center; min-height: 52px; overflow: hidden; }
+    .jumpbar a { text-decoration: none; color: var(--muted); font-size: .84rem; white-space: nowrap; }
+    .jumpbar a:hover { color: var(--ink); }
+    .jumpbar .stamp { margin-left: auto; font-family: "IBM Plex Mono", monospace; font-size: .7rem; color: var(--faint); }
+
+    main { padding-bottom: 80px; }
+    section { scroll-margin-top: 72px; }
+    .section { padding: 68px 0 0; }
+    .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 430px); gap: 42px; align-items: end; margin-bottom: 28px; }
+    h2 { margin: 7px 0 0; font-size: clamp(2.1rem, 4vw, 3.7rem); line-height: 1; letter-spacing: -.03em; }
+    .section-head p { margin: 0; color: var(--muted); }
+
+    .availability {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .signal { padding: 23px 22px 25px; min-height: 174px; border-right: 1px solid var(--line); }
+    .signal:last-child { border-right: 0; }
+    .signal .symbol { font-family: "IBM Plex Mono", monospace; font-size: 1.35rem; color: var(--forest-2); }
+    .signal.limited .symbol { color: var(--amber); }
+    .signal.none .symbol { color: var(--red); }
+    .signal h3 { margin: 22px 0 6px; font-size: 1.48rem; line-height: 1.05; }
+    .signal p { margin: 0; color: var(--muted); font-size: .88rem; }
+
+    .verdict {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 26px;
+      align-items: start;
+      background: var(--forest);
+      color: var(--paper);
+      padding: 25px 28px;
+    }
+    @media (prefers-color-scheme: dark) { .verdict { color: #102019; } }
+    .verdict .label { font-family: "IBM Plex Mono", monospace; font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; opacity: .78; }
+    .verdict p { margin: 0; font-size: 1.05rem; }
+
+    .case-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    article.case {
+      grid-column: span 4;
+      background: var(--panel);
+      border-top: 4px solid var(--forest);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      min-height: 540px;
+    }
+    article.case:nth-child(2) { grid-column: span 5; border-top-color: var(--amber); }
+    article.case:nth-child(3) { grid-column: span 3; border-top-color: var(--red); }
+    .case-index { font-family: "IBM Plex Mono", monospace; color: var(--faint); font-size: .72rem; }
+    .case h3 { font-size: 2rem; line-height: 1; margin: 13px 0 7px; }
+    .case .place { color: var(--muted); margin: 0 0 24px; font-size: .9rem; }
+    .finding { border-top: 1px solid var(--line); padding: 15px 0; }
+    .finding b { display: block; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px; }
+    .finding p { margin: 0; color: var(--muted); font-size: .91rem; }
+    .case .status { margin-top: auto; padding-top: 20px; }
+    .pill { display: inline-block; border-radius: 999px; padding: 5px 9px; font-family: "IBM Plex Mono", monospace; font-size: .68rem; background: var(--panel-soft); color: var(--forest-2); }
+    .pill.warn { background: var(--amber-soft); color: var(--amber); }
+    .pill.no { background: var(--red-soft); color: var(--red); }
+
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 9px;
+      color: var(--forest-2);
+      font-weight: 600;
+      font-size: .82rem;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    .source-link::after { content: "↗"; font-family: "IBM Plex Mono", monospace; }
+
+    .distinction {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      padding: 22px;
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .distinction .mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: var(--amber-soft); color: var(--amber); font-family: "Newsreader", serif; font-size: 1.7rem; }
+    .distinction h3 { margin: 0 0 5px; font-family: "IBM Plex Sans", sans-serif; font-size: 1rem; }
+    .distinction p { margin: 0; color: var(--muted); font-size: .88rem; }
+
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .filter-btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font: 500 .8rem "IBM Plex Sans", sans-serif;
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .filter-btn[aria-pressed="true"] { background: var(--forest); color: var(--paper); border-color: var(--forest); }
+    @media (prefers-color-scheme: dark) { .filter-btn[aria-pressed="true"] { color: #102019; } }
+    .filter-btn:hover { border-color: var(--forest); color: var(--ink); }
+
+    .source-list { border-top: 1px solid var(--line); }
+    .source-row {
+      display: grid;
+      grid-template-columns: 64px minmax(190px, 1.1fr) 1.8fr 140px;
+      gap: 20px;
+      align-items: start;
+      padding: 20px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+    .source-row[hidden] { display: none; }
+    .rank { font: 500 .74rem "IBM Plex Mono", monospace; color: var(--faint); padding-top: 2px; }
+    .source-row h3 { margin: 0; font-size: 1.12rem; line-height: 1.2; font-family: "IBM Plex Sans", sans-serif; }
+    .source-row p { margin: 0; color: var(--muted); font-size: .88rem; }
+    .access { font: .7rem "IBM Plex Mono", monospace; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
+
+    details { border-bottom: 1px solid var(--line); }
+    details:first-child { border-top: 1px solid var(--line); }
+    summary { cursor: pointer; padding: 17px 2px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 18px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font: 1.2rem "IBM Plex Mono", monospace; color: var(--forest-2); }
+    details[open] summary::after { content: "−"; }
+    .detail-body { padding: 0 0 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 22px; }
+    .detail-body a { color: var(--forest-2); text-underline-offset: 3px; overflow-wrap: anywhere; }
+    .detail-item { font-size: .87rem; color: var(--muted); }
+    .detail-item strong { color: var(--ink); }
+
+    .gap-board { display: grid; grid-template-columns: 1.15fr .85fr; gap: 18px; }
+    .gap-main { background: var(--panel); border: 1px solid var(--line); padding: 28px; }
+    .gap-main h3 { font-size: 2rem; margin: 0 0 10px; }
+    .gap-main p { color: var(--muted); margin: 0 0 20px; }
+    .gap-list { list-style: none; padding: 0; margin: 0; }
+    .gap-list li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 11px 0; border-top: 1px solid var(--line); }
+    .gap-list .x { color: var(--red); font-family: "IBM Plex Mono", monospace; }
+    .adjacent { background: var(--amber-soft); padding: 28px; }
+    .adjacent h3 { margin: 0 0 13px; font-size: 1.6rem; }
+    .adjacent p { margin: 0 0 17px; color: var(--muted); }
+    .adjacent ul { margin: 0; padding-left: 20px; }
+    .adjacent li { margin: 9px 0; font-size: .88rem; }
+
+    .method { padding: 52px 0 30px; }
+    .method-inner { border-left: 5px solid var(--amber); padding-left: 22px; max-width: 820px; }
+    .method h2 { font-size: 2.2rem; }
+    .method p { color: var(--muted); margin: 10px 0 0; }
+
+    footer { border-top: 1px solid var(--line); padding: 26px 0 42px; color: var(--muted); font-size: .82rem; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 24px; }
+    footer code { font-family: "IBM Plex Mono", monospace; color: var(--faint); }
+
+    @media (max-width: 900px) {
+      .mast-grid, .section-head, .gap-board { grid-template-columns: 1fr; }
+      .mast-note { justify-self: start; max-width: 600px; }
+      .availability { grid-template-columns: repeat(2, 1fr); }
+      .signal:nth-child(2) { border-right: 0; }
+      .signal:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      article.case, article.case:nth-child(2), article.case:nth-child(3) { grid-column: span 12; min-height: auto; }
+      .distinction { grid-template-columns: auto 1fr; }
+      .distinction > div:last-child { grid-column: 2; }
+      .source-row { grid-template-columns: 50px 1fr 110px; }
+      .source-row > p { grid-column: 2 / 4; }
+      .detail-body { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 28px, 1180px); }
+      .mast { padding-top: 30px; background: radial-gradient(circle at 110% 10%, transparent 0 64px, color-mix(in srgb, var(--forest) 20%, transparent) 65px 66px, transparent 67px); }
+      h1 { font-size: clamp(3.05rem, 17vw, 4.7rem); }
+      .jumpbar .wrap { gap: 17px; }
+      .jumpbar a:nth-of-type(4) { display: none; }
+      .jumpbar .stamp { display: none; }
+      .section { padding-top: 52px; }
+      .availability { grid-template-columns: 1fr; }
+      .signal { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .signal:last-child { border-bottom: 0; }
+      .verdict { grid-template-columns: 1fr; gap: 8px; }
+      article.case { padding: 22px; }
+      .distinction { grid-template-columns: 1fr; }
+      .distinction > div:last-child { grid-column: auto; }
+      .source-row { grid-template-columns: 38px 1fr; gap: 12px; }
+      .source-row > p, .source-row .access { grid-column: 2; }
+      footer .wrap { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header class="mast">
+    <div class="wrap mast-grid">
+      <div>
+        <div class="kicker">Public web survey · 10 October 2026</div>
+        <h1>What the public record actually contains</h1>
+        <p class="dek">A source-by-source audit of crop-formation imagery, geometry, transcripts, field measurements, and adjacent research—separating usable data from commentary and missing evidence.</p>
+      </div>
+      <aside class="mast-note">
+        <strong>Bottom line</strong>
+        Photographs are abundant. Reusable geometry is rare. Machine-readable formation data and public Buga measurements were not found.
+      </aside>
+    </div>
+  </header>
+
+  <nav class="jumpbar" aria-label="Section navigation">
+    <div class="wrap">
+      <a href="#snapshot">Snapshot</a>
+      <a href="#cases">Case files</a>
+      <a href="#sources">Sources</a>
+      <a href="#gaps">Gaps</a>
+      <span class="stamp">RESEARCH SNAPSHOT / UTC</span>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section" id="snapshot">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Availability scan</div>
+            <h2>Strong on images.<br>Thin on measurements.</h2>
+          </div>
+          <p>The survey covered Crabwood 2002, two distinct Roundway formations in 2023, Roundway 2026, the Buga sphere, major formation archives, and published geometry work.</p>
+        </div>
+
+        <div class="availability" aria-label="Public data availability summary">
+          <div class="signal">
+            <div class="symbol">●</div>
+            <h3>Photos & video</h3>
+            <p>Abundant, free to view, generally copyrighted and not licensed for redistribution.</p>
+          </div>
+          <div class="signal limited">
+            <div class="symbol">◐</div>
+            <h3>Vector geometry</h3>
+            <p>Limited to select construction guides and SVG/DXF/TXT diagram releases.</p>
+          </div>
+          <div class="signal none">
+            <div class="symbol">○</div>
+            <h3>CSV / JSON</h3>
+            <p>No public machine-readable formation-coordinate or outline database was found.</p>
+          </div>
+          <div class="signal limited">
+            <div class="symbol">◐</div>
+            <h3>Lab literature</h3>
+            <p>Plant and soil papers exist; Buga lab reports and measurements do not.</p>
+          </div>
+        </div>
+
+        <div class="verdict">
+          <div class="label">Survey verdict</div>
+          <p>The best immediately reusable records are Crabwood’s 1,368-bit HTML transcription and the Roundway Hill 2023 construction/vector materials. Neither is a coordinate survey of the original formation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cases">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Three case files</div>
+            <h2>Evidence, format, limit.</h2>
+          </div>
+          <p>Each file distinguishes what can be opened now from claims that remain secondary, indexed-only, or unsupported by public data.</p>
+        </div>
+
+        <div class="case-grid">
+          <article class="case">
+            <div class="case-index">01 / HAMPSHIRE</div>
+            <h3>Crabwood 2002</h3>
+            <p class="place">15 August 2002 · East of Winchester</p>
+            <div class="finding">
+              <b>Best public record</b>
+              <p>Red Collie’s HTML page publishes the full 1,368-digit disk transcription, grouped by character, with separators and annotations.</p>
+              <a class="source-link" href="http://www.cropcircleconnector.com/anasazi/time2007n.html" target="_blank" rel="noopener">Open the bit transcription</a>
+            </div>
+            <div class="finding">
+              <b>Images & field account</b>
+              <p>Lucy Pringle’s first-hand account includes an aerial photograph, witness timeline, approximate size, lay observations, and soil notes.</p>
+              <a class="source-link" href="https://cropcirclephotographs.co.uk/a-formation-in-a-field-east-of-winchester-just-off-sarum-road/" target="_blank" rel="noopener">Read the field account</a>
+            </div>
+            <div class="finding">
+              <b>Hard limit</b>
+              <p>No CSV/JSON outline, digitized bit matrix, or coordinate survey was found. The transcription lives inside prose.</p>
+            </div>
+            <div class="status"><span class="pill">Bits available</span> <span class="pill no">Geometry absent</span></div>
+          </article>
+
+          <article class="case">
+            <div class="case-index">02 / WILTSHIRE</div>
+            <h3>Roundway 2023–26</h3>
+            <p class="place">Multiple formations · Do not merge the 2023 records</p>
+            <div class="finding">
+              <b>13 August 2023</b>
+              <p>Zef Damen’s reconstruction gives 24 compass-and-straightedge steps using circles, nonagons, a hexagon, and diagonals, then compares the construction with aerial images.</p>
+              <a class="source-link" href="https://www.cropcircleconnector.com/2023/roundwayhill/aroundwayhill2023reconstruction/aroundwayhill2023reconstruction.html" target="_blank" rel="noopener">Inspect the reconstruction</a>
+            </div>
+            <div class="finding">
+              <b>Closest thing to a dataset</b>
+              <p>The Roundway Hill diagrams page links SVG, DXF, and TXT files credited to Rev. Daniel Elis Axelrod under CC BY-NC-ND 2025.</p>
+              <a class="source-link" href="http://cropcircleconnector.com/2023/roundwayhill/diagrams.html" target="_blank" rel="noopener">Open diagrams & downloads</a>
+            </div>
+            <div class="finding">
+              <b>2026 records</b>
+              <p>Photo/report pages and two aerial videos exist for the 11 July and 18 July formations. No formal survey or coordinate dataset was found.</p>
+              <a class="source-link" href="https://cropcircleconnector.com/2026/roundway2/comments.html" target="_blank" rel="noopener">View the 18 July record</a>
+            </div>
+            <div class="status"><span class="pill warn">Limited vectors</span> <span class="pill no">No survey</span></div>
+          </article>
+
+          <article class="case">
+            <div class="case-index">03 / COLOMBIA</div>
+            <h3>Buga sphere</h3>
+            <p class="place">Reported March 2025 · Buga</p>
+            <div class="finding">
+              <b>What is public</b>
+              <p>Photos, videos, and claimed X-ray images circulate through social platforms and press-style coverage.</p>
+              <a class="source-link" href="https://www.youtube.com/watch?v=bQsbsJo7cfM" target="_blank" rel="noopener">Example video record</a>
+            </div>
+            <div class="finding">
+              <b>What is missing</b>
+              <p>No public 3D scan, glyph catalog, coordinates, transcription table, lab report, materials dataset, or peer-reviewed paper was found.</p>
+            </div>
+            <div class="finding">
+              <b>Published material</b>
+              <p>Available preprints are speculative and do not supply underlying measurement data.</p>
+              <a class="source-link" href="https://files.osf.io/v1/resources/eukjb_v1/providers/osfstorage/686805bb66b20b028703ab11?format=pdf&amp;action=download&amp;direct&amp;version=1" target="_blank" rel="noopener">Open the OSF preprint</a>
+            </div>
+            <div class="status"><span class="pill no">No primary dataset</span></div>
+          </article>
+        </div>
+
+        <aside class="distinction">
+          <div class="mark">!</div>
+          <div>
+            <h3>Roundway Down · 11 June 2023</h3>
+            <p>Barley; OS Grid Ref <strong>SU 02009 65741</strong>; about 250 ft; ground-report record says <strong>“Not Surveyed.”</strong></p>
+          </div>
+          <div>
+            <h3>Roundway Hill · 13 August 2023</h3>
+            <p>Map Ref <strong>SU0102664896</strong>; separate formation with construction diagrams and vector downloads.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="sources">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Ranked source index</div>
+            <h2>The most useful public records.</h2>
+          </div>
+          <p>Filter by source role. “Opened in research” means the page was read directly during the 10 October 2026 survey; “indexed lead” means it was located in search results but not confirmed page-by-page.</p>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filter source list">
+          <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">All sources</button>
+          <button class="filter-btn" type="button" data-filter="transcript" aria-pressed="false">Transcripts</button>
+          <button class="filter-btn" type="button" data-filter="geometry" aria-pressed="false">Geometry</button>
+          <button class="filter-btn" type="button" data-filter="archive" aria-pressed="false">Archives</button>
+          <button class="filter-btn" type="button" data-filter="research" aria-pressed="false">Research</button>
+        </div>
+
+        <div class="source-list" aria-live="polite">
+          <div class="source-row" data-category="archive geometry">
+            <div class="rank">01</div>
+            <div><h3>Crop Circle Connector</h3><a class="source-link" href="http://cropcircleconnector.com/2023/roundwayhill/diagrams.html" target="_blank" rel="noopener">Roundway page</a></div>
+            <p>Large per-formation archive with aerial and ground photographs, videos, diagrams, field reports, and comments. Best single imagery starting point.</p>
+            <div class="access">Free view<br>Copyrighted</div>
+          </div>
+          <div class="source-row" data-category="transcript research">
+            <div class="rank">02</div>
+            <div><h3>Red Collie transcription</h3><a class="source-link" href="http://www.cropcircleconnector.com/anasazi/time2007n.html" target="_blank" rel="noopener">Open record</a></div>
+            <p>The only complete public bit-level record found for Crabwood’s disk: 1,368 binary digits in HTML prose.</p>
+            <div class="access">Free<br>Opened in research</div>
+          </div>
+          <div class="source-row" data-category="geometry">
+            <div class="rank">03</div>
+            <div><h3>Axelrod + Damen geometry</h3><a class="source-link" href="https://www.cropcircleconnector.com/2023/roundwayhill/aroundwayhill2023reconstruction/aroundwayhill2023reconstruction.html" target="_blank" rel="noopener">Construction guide</a></div>
+            <p>Stepwise reconstruction plus select downloadable SVG/DXF/TXT diagrams. The strongest reusable geometry source found.</p>
+            <div class="access">Free<br>CC BY-NC-ND vectors</div>
+          </div>
+          <div class="source-row" data-category="research">
+            <div class="rank">04</div>
+            <div><h3>BLT Research papers</h3></div>
+            <p>Peer-reviewed plant and soil studies, including node-length and X-ray diffraction material. Useful as lab literature, not outline geometry.</p>
+            <div class="access">Free to read<br>Copyrighted</div>
+          </div>
+          <div class="source-row" data-category="archive">
+            <div class="rank">05</div>
+            <div><h3>Ground reports + photo archive</h3><a class="source-link" href="http://www.cropcirclearchives.co.uk/archives/ccarchives.htm" target="_blank" rel="noopener">Archive index</a></div>
+            <p>ukcropcircles.co.uk covers ground reports from 2005–2026; Greg Jefferys’ archive organizes international images from 1978–2018.</p>
+            <div class="access">Free view<br>View-only</div>
+          </div>
+        </div>
+
+        <div style="margin-top:40px">
+          <div class="eyebrow" style="margin-bottom:12px">Extended reading & provenance</div>
+          <details>
+            <summary>Crabwood analysis and provenance leads</summary>
+            <div class="detail-body">
+              <div class="detail-item"><strong>Lucy Pringle account:</strong> <a href="https://cropcirclephotographs.co.uk/a-formation-in-a-field-east-of-winchester-just-off-sarum-road/" target="_blank" rel="noopener">first-hand field notes and aerial image</a> — opened in research.</div>
+              <div class="detail-item"><strong>Treurniet:</strong> <a href="https://rxiv.org/pdf/1112.0050v2.pdf" target="_blank" rel="noopener">image-decoding preprint</a> — indexed, not peer-reviewed.</div>
+              <div class="detail-item"><strong>Pitkänen:</strong> <a href="http://tgdtheory.fi/pdfpool/crop2.pdf" target="_blank" rel="noopener">ASCII interpretation paper</a> — indexed.</div>
+              <div class="detail-item"><strong>Andrews statement:</strong> <a href="http://constantiaoomen.com/2019/06/21/crabwood-crop-formation-colin-andrews-statement/" target="_blank" rel="noopener">film-promotion provenance claim</a> — indexed lead.</div>
+            </div>
+          </details>
+          <details>
+            <summary>Roundway photo, video, and field-report leads</summary>
+            <div class="detail-body">
+              <div class="detail-item"><strong>11 June 2023:</strong> <a href="https://temporarytemples.co.uk/project/roundway-down-2023" target="_blank" rel="noopener">Temporary Temples record</a> — indexed.</div>
+              <div class="detail-item"><strong>Ground report:</strong> <a href="https://www.ukcropcircles.co.uk/?page=circle-report&amp;id=595" target="_blank" rel="noopener">“Not Surveyed” record</a> — opened in research.</div>
+              <div class="detail-item"><strong>18 July 2026:</strong> <a href="http://temporarytemples.co.uk/project/roundway-2-2026" target="_blank" rel="noopener">Temporary Temples record</a> — indexed.</div>
+              <div class="detail-item"><strong>2026 aerial videos:</strong> <a href="https://www.youtube.com/watch?v=iID-Xr1fl3E" target="_blank" rel="noopener">11 July</a> · <a href="https://www.youtube.com/watch?v=juHmZB625i8" target="_blank" rel="noopener">18 July</a> — indexed.</div>
+            </div>
+          </details>
+          <details>
+            <summary>Buga coverage and skeptical counterpoints</summary>
+            <div class="detail-body">
+              <div class="detail-item"><strong>Origins and claims:</strong> <a href="https://factually.co/fact-checks/other/buga-spere-origin-meaning-72532d" target="_blank" rel="noopener">Factually overview</a> — indexed.</div>
+              <div class="detail-item"><strong>Video debunk status:</strong> <a href="https://factually.co/fact-checks/media/buga-sphere-debunked-videos-who-debunked-them-64dc40" target="_blank" rel="noopener">Factually survey</a> — indexed.</div>
+              <div class="detail-item"><strong>Terrestrial/art-project hypotheses:</strong> <a href="https://orbitaltoday.com/2025/11/02/buga-sphere-anomaly-explained/" target="_blank" rel="noopener">Orbital Today summary</a> — indexed.</div>
+              <div class="detail-item"><strong>Data status:</strong> no official repository, public 3D scan, glyph measurements, lab dataset, or peer-reviewed paper was found.</div>
+            </div>
+          </details>
+          <details>
+            <summary>Adjacent geometry and critical literature</summary>
+            <div class="detail-body">
+              <div class="detail-item"><strong>Glassner, “Crop Art”:</strong> <a href="https://www.glassner.com/wp-content/uploads/2014/04/CG-CGA-PDF-04-11-Crop-Art-2-Nov04.pdf" target="_blank" rel="noopener">textual reconstruction code</a>, not Fourier.</div>
+              <div class="detail-item"><strong>Tsanov:</strong> <a href="https://zenodo.org/records/18473473/files/Hybrid_Linear_Cyclic_Topological_Structures.pdf" target="_blank" rel="noopener">topological analysis of the 2008 Pi formation</a>, not Fourier.</div>
+              <div class="detail-item"><strong>Kozlowski:</strong> <a href="https://jcer.com/index.php/jcj/article/download/767/788" target="_blank" rel="noopener">Schumann-wave / Julia-set hypothesis</a>, no formation fitting.</div>
+              <div class="detail-item"><strong>Critical re-analysis:</strong> <a href="https://demoamnkn31-fr-eu.smartcat-proxy.net/archivos_pdf/cropcircles_ballslight.pdf" target="_blank" rel="noopener">Grassi, Cocheo & Russo (2005)</a> — indexed.</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="gaps">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Open record</div>
+            <h2>What remains unavailable.</h2>
+          </div>
+          <p>These absences are themselves decision-relevant: they define what cannot yet be independently replayed from the public web.</p>
+        </div>
+        <div class="gap-board">
+          <div class="gap-main">
+            <h3>Missing primary material</h3>
+            <p>No public source located in this survey supplied the following:</p>
+            <ul class="gap-list">
+              <li><span class="x">×</span><span>A CSV, JSON, or GeoJSON database of formation coordinates or outlines.</span></li>
+              <li><span class="x">×</span><span>A Crabwood pixel matrix, outline survey, or original coordinate measurement set.</span></li>
+              <li><span class="x">×</span><span>A formal Roundway coordinate survey for the 2023 or 2026 formations.</span></li>
+              <li><span class="x">×</span><span>A public Buga 3D scan, glyph catalog, material-analysis dataset, or peer-reviewed paper.</span></li>
+              <li><span class="x">×</span><span>A published Fourier/spectral analysis or superformula fit of an actual formation outline.</span></li>
+            </ul>
+          </div>
+          <aside class="adjacent">
+            <h3>Closest published neighbors</h3>
+            <p>None closes the spectral-analysis gap, but each offers a nearby formalism.</p>
+            <ul>
+              <li>Gerald Hawkins: diatonic diameter ratios, not Fourier analysis.</li>
+              <li>Andrew Glassner: textual “Crop code” for reconstruction.</li>
+              <li>Kozlowski: Schumann-wave / Julia-set hypothesis without fitting.</li>
+              <li>Tsanov: topology of the 2008 Pi formation.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="method">
+      <div class="wrap">
+        <div class="method-inner">
+          <div class="eyebrow">Method note</div>
+          <h2>“Opened” is not the same as “indexed.”</h2>
+          <p>The research pass directly opened a subset of the strongest pages. Search-index leads are retained as leads, not confirmations. Public availability also does not imply reuse permission: most formation photography is view-only and copyrighted.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Web survey completed 10 October 2026. This page is a fixed research snapshot, not a live index.</span>
+      <code>PRIMARY DATA &gt; COMMENTARY</code>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var buttons = document.querySelectorAll('.filter-btn');
+      var rows = document.querySelectorAll('.source-row');
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var filter = button.getAttribute('data-filter');
+          buttons.forEach(function (item) {
+            item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+          });
+          rows.forEach(function (row) {
+            var categories = row.getAttribute('data-category') || '';
+            row.hidden = filter !== 'all' && categories.indexOf(filter) === -1;
+          });
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
