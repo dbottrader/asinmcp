@@ -1,0 +1,632 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Agent Passport by ASINHHC-CP8",
+    "version": "1.0.0",
+    "description": "Independent certification and assurance registry for production AI agents. Public reads require no authentication. Mutating calls use ASIN-HHC mesh proof-of-possession (PoP) auth. CURRENT ACCESS: the API runs on the ASIN-HHC mesh (operator-hosted; local mesh base shown in servers). A public hosted API endpoint is not yet available. Public verification reads are published as snapshots at https://dbottrader.github.io/asinmcp/artifacts/agent-passport-registry.json and certification requests are also accepted by email (dennismchristie222@gmail.com, subject 'Agent Passport').",
+    "contact": {
+      "name": "ASINHHC-CP8",
+      "email": "dennismchristie222@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8220",
+      "description": "ASIN-HHC mesh (current access path for mesh-connected agents)"
+    }
+  ],
+  "paths": {
+    "/agents/register": {
+      "post": {
+        "summary": "Mesh identity, step 1: request a registration challenge",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "pubkey"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Unique agent name, [A-Za-z0-9_-]{1,40}"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "pubkey": {
+                    "type": "string",
+                    "description": "Legacy field name. The value is a shared SECRET invented by the registrant (like a password); it is not a public key and must never be published."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "agent_id, display_name, challenge, challenge_expires"
+          }
+        }
+      }
+    },
+    "/agents/activate": {
+      "post": {
+        "summary": "Mesh identity, step 2: answer the challenge, receive a bearer token",
+        "description": "challenge_response = HMAC_SHA256(key=SHA256(pubkey), msg='mesh-register-v1:{agent_id}:{challenge}') as hex.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id",
+                  "challenge_response"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "string"
+                  },
+                  "challenge_response": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "agent_id, token, token_expires, receipt"
+          }
+        }
+      }
+    },
+    "/passport/register": {
+      "post": {
+        "summary": "Create an agent passport (tier starts at Registered)",
+        "security": [
+          {
+            "popAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "display_name",
+                  "owner_name",
+                  "owner_contact",
+                  "agent_kind",
+                  "model"
+                ],
+                "properties": {
+                  "display_name": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "owner_name": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "owner_contact": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "agent_kind": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "model": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "capabilities": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 50
+                  },
+                  "permitted_actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 50
+                  },
+                  "spend_limit_note": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "endpoint_url": {
+                    "type": "string",
+                    "description": "Optional live agent endpoint for the Certified-tier battery. Must be http(s), no credentials; private/link-local/metadata addresses are refused."
+                  },
+                  "mesh_agent_id": {
+                    "type": "string",
+                    "description": "Optional link to the agent's mesh identity."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Passport created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "passport_id": {
+                      "type": "string"
+                    },
+                    "tier": {
+                      "type": "string",
+                      "enum": [
+                        "Registered"
+                      ]
+                    },
+                    "version": {
+                      "type": "integer"
+                    },
+                    "receipt": {
+                      "type": "string"
+                    },
+                    "passport": {
+                      "$ref": "#/components/schemas/Passport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "PoP auth required or invalid"
+          }
+        }
+      }
+    },
+    "/passport/list": {
+      "get": {
+        "summary": "Compact registry scan (public, no auth)",
+        "responses": {
+          "200": {
+            "description": "Compact passport list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "passports": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "tier": {
+                            "type": "string",
+                            "enum": [
+                              "Registered",
+                              "Provisional",
+                              "Certified"
+                            ]
+                          },
+                          "owner": {
+                            "type": "string"
+                          },
+                          "updated": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/passport/{passport_id}": {
+      "get": {
+        "summary": "Full passport record with certification history and hash-chain receipts (public, no auth)",
+        "parameters": [
+          {
+            "name": "passport_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Passport record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Passport"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PASSPORT_NOT_FOUND"
+          }
+        }
+      }
+    },
+    "/passport/{passport_id}/verify": {
+      "get": {
+        "summary": "Recompute the passport hash chain and check registrar sign-off signatures (public, no auth)",
+        "parameters": [
+          {
+            "name": "passport_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chain verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "passport_id": {
+                      "type": "string"
+                    },
+                    "events": {
+                      "type": "integer"
+                    },
+                    "tip": {
+                      "type": "string"
+                    },
+                    "failing_event": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "sign_off_signatures_valid": {
+                      "type": "boolean",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/passport/{passport_id}/certify": {
+      "post": {
+        "summary": "Run certification: endpoint battery or evidence-only checks, two independent verifier verdicts, registrar tier decision",
+        "description": "Tier rules (public): Certified = endpoint battery passed + 2 pass verdicts. Provisional = evidence-only pass + 2 pass verdicts. Otherwise the tier is Registered. Every step is written to the passport hash chain.",
+        "security": [
+          {
+            "popAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "passport_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "endpoint_url": {
+                    "type": "string",
+                    "description": "Optional override; defaults to the passport's declared endpoint."
+                  },
+                  "evidence_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Evidence mode only. Public http(s) URLs; localhost/link-local/metadata hosts are refused."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Evidence mode only. What the evidence shows."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Certification completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "passport_id": {
+                      "type": "string"
+                    },
+                    "certification_id": {
+                      "type": "string"
+                    },
+                    "tier": {
+                      "type": "string",
+                      "enum": [
+                        "Registered",
+                        "Provisional",
+                        "Certified"
+                      ]
+                    },
+                    "decision": {
+                      "type": "string",
+                      "enum": [
+                        "certified",
+                        "provisional",
+                        "not_certified"
+                      ]
+                    },
+                    "version": {
+                      "type": "integer"
+                    },
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "endpoint",
+                        "evidence"
+                      ]
+                    },
+                    "verdicts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Verdict"
+                      }
+                    },
+                    "chain_tip": {
+                      "type": "string"
+                    },
+                    "sign_off": {
+                      "type": "object",
+                      "properties": {
+                        "by": {
+                          "type": "string"
+                        },
+                        "signature": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PASSPORT_NOT_FOUND"
+          },
+          "422": {
+            "description": "Validation error (blocked evidence host, missing evidence, invalid endpoint)"
+          }
+        }
+      }
+    },
+    "/passport/{passport_id}/recertify": {
+      "post": {
+        "summary": "Re-run certification; version increments, history preserved, tier can move up or down",
+        "security": [
+          {
+            "popAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "passport_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "endpoint_url": {
+                    "type": "string",
+                    "description": "Optional override; defaults to the passport's declared endpoint."
+                  },
+                  "evidence_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Evidence mode only. Public http(s) URLs; localhost/link-local/metadata hosts are refused."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Evidence mode only. What the evidence shows."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Re-certification completed (same shape as /certify)"
+          },
+          "404": {
+            "description": "PASSPORT_NOT_FOUND"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "popAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Mesh proof-of-possession: 'Authorization: Bearer <token>' plus X-PoP-Timestamp, X-PoP-Nonce, and X-PoP-Signature = HMAC_SHA256(key=token, msg='mesh-pop-v1\\nPOST\\n<path>\\n<timestamp>\\n<nonce>\\n<sha256 hex of raw body>') as hex. Obtain a token via POST /agents/register + POST /agents/activate."
+      }
+    },
+    "schemas": {
+      "Verdict": {
+        "type": "object",
+        "properties": {
+          "verifier": {
+            "type": "string"
+          },
+          "agent_id": {
+            "type": "string"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        }
+      },
+      "Passport": {
+        "type": "object",
+        "properties": {
+          "passport_id": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "contact": {
+                "type": "string"
+              }
+            }
+          },
+          "agent_kind": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "permitted_actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "spend_limit_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpoint_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "mesh_agent_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "Registered",
+              "Provisional",
+              "Certified"
+            ]
+          },
+          "version": {
+            "type": "integer"
+          },
+          "created": {
+            "type": "number"
+          },
+          "updated": {
+            "type": "number"
+          },
+          "last_certified": {
+            "type": "number",
+            "nullable": true
+          },
+          "chain_tip": {
+            "type": "string"
+          },
+          "certification_history": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "receipts": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

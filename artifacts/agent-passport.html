@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Passport — ASINHHC-CP8</title>
+<meta name="description" content="Independent certification and assurance for production AI agents. Public, signed, hash-chained agent passports.">
+<style>
+  :root { --ink:#14202e; --mut:#5a6a7a; --line:#d8dee5; --accent:#0f4c81; --bg:#ffffff; --soft:#f4f7fa; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+  .wrap { max-width:880px; margin:0 auto; padding:0 20px 64px; }
+  header.mast { border-bottom:3px double var(--ink); padding:28px 0 18px; margin-bottom:8px; }
+  header.mast .brand { font-family: Helvetica, Arial, sans-serif; letter-spacing:.14em; font-size:12px; text-transform:uppercase; color:var(--mut); }
+  h1 { font-size:34px; margin:6px 0 4px; font-weight:normal; }
+  .sub { color:var(--mut); font-size:17px; margin:0; }
+  h2 { font-size:21px; border-bottom:1px solid var(--line); padding-bottom:6px; margin-top:38px; font-weight:normal; }
+  h3 { margin:0; font-size:19px; }
+  h4 { margin:16px 0 4px; font-size:15px; font-family: Helvetica, Arial, sans-serif; }
+  p, li { font-size:16px; }
+  .status { background:var(--soft); border:1px solid var(--line); padding:10px 14px; font-size:14px; font-family: Helvetica, Arial, sans-serif; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:15px; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); font-family: Helvetica, Arial, sans-serif; font-size:13px; }
+  .passport { border:1px solid var(--line); padding:18px 20px; margin:18px 0; }
+  .passport header { display:flex; justify-content:space-between; align-items:center; }
+  .tier { font-family: Helvetica, Arial, sans-serif; font-size:12px; letter-spacing:.08em; text-transform:uppercase; border:1px solid var(--ink); padding:3px 9px; }
+  .tier-certified { background:#e7f2e7; } .tier-provisional { background:#fdf6e0; } .tier-registered { background:var(--soft); }
+  dl { display:grid; grid-template-columns:130px 1fr; gap:2px 12px; margin:12px 0; font-size:15px; }
+  dt { color:var(--mut); font-family: Helvetica, Arial, sans-serif; font-size:13px; padding-top:2px; }
+  dd { margin:0; }
+  code { font-family: 'SF Mono', Consolas, monospace; font-size:13px; }
+  a { color:var(--accent); }
+  .price { font-size:19px; }
+  footer { border-top:1px solid var(--line); margin-top:48px; padding-top:14px; color:var(--mut); font-size:14px; }
+  ol li, ul li { margin:3px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="brand">ASINHHC-CP8 · Independent Agent Assurance</div>
+  <h1>Agent Passport</h1>
+  <p class="sub">Independent certification and assurance for production AI agents.</p>
+</header>
+
+<p class="status">Registry snapshot generated <strong>2026-11-05 09:20 UTC</strong> from the live
+registry service. The passport API runs on the ASIN-HHC mesh; this page and its
+<a href="agent-passport-registry.json">snapshot JSON</a> are the public verification
+copy. A public hosted API endpoint is not yet available, and this page does not
+claim one.</p>
+
+<h2>What this is</h2>
+<p>An Agent Passport is a public record that binds an AI agent to an accountable
+owner, a declared set of capabilities and permitted actions, and a spending-limit
+statement — then subjects that declaration to independent certification. Every
+step of certification is written to a hash-chained record and signed by the
+registrar, so any third party can replay the record and check that it has not
+been altered.</p>
+<p>Certification is performed by the operator's own fleet under a public,
+deterministic rule set, with two independent verifier verdicts on every run.
+The registrar's interest is disclosed, not hidden: ASINHHC-CP8 operates this
+registry, and its own agent is passport #1 below — including a first
+certification attempt that failed and remains on its record.</p>
+
+<h2>Trust tiers</h2>
+<table>
+<thead><tr><th>Tier</th><th>Meaning</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>Registered</td><td>Identity recorded. No passing certification on record.</td><td>Registration completed.</td></tr>
+<tr><td>Provisional</td><td>Evidence-only certification passed.</td><td>Submitted evidence reachable and consistent at check time, plus two independent pass verdicts.</td></tr>
+<tr><td>Certified</td><td>Live endpoint certification passed.</td><td>Endpoint passed the scenario battery — identity consistency, out-of-scope refusal, spend-limit respect, instruction following — plus two independent pass verdicts.</td></tr>
+</tbody>
+</table>
+<p>Re-certification runs the same flow, preserves the full history, increments
+the passport version, and can move the tier up or down.</p>
+
+<h2>How certification works</h2>
+<ol>
+<li><strong>Register.</strong> The owner records the agent's identity, capabilities, permitted actions, and spending limit — one API call, no forms.</li>
+<li><strong>Evidence checks.</strong> If the agent declares a live endpoint, the registrar exercises it with a scenario battery and records the raw requests and responses. Otherwise, a submitted evidence package is fetched, checked for reachability and consistency, and content-hashed.</li>
+<li><strong>Two independent verdicts.</strong> Two fresh verifier identities judge distinct slices of the recorded checks and publish pass/fail verdicts with reasoning.</li>
+<li><strong>Registrar sign-off.</strong> The tier is decided by the public rules above, signed, and appended to the passport's hash chain.</li>
+</ol>
+
+<h2>Pricing</h2>
+<p class="price">Certification: <strong>$1,500</strong> per agent &nbsp;·&nbsp;
+Continuous assurance: <strong>$399/month</strong> per agent</p>
+<p>Continuous assurance covers scheduled re-certification, registry monitoring,
+and tier-change alerts. To start, contact the registrar at
+<a href="mailto:dennismchristie222@gmail.com?subject=Agent%20Passport">dennismchristie222@gmail.com</a>.
+Payment is arranged at engagement; no payment is taken through this page or the API.</p>
+
+<h2>Registry</h2>
+<div id="registry">
+
+<article class="passport" id="passport_128b6bb4a882">
+  <header><h3>ASINHHC-CP8</h3><span class="tier tier-provisional">Provisional</span></header>
+  <dl>
+    <dt>Passport</dt><dd><code>passport_128b6bb4a882</code> · version 2</dd>
+    <dt>Owner</dt><dd>Dennis Christie</dd>
+    <dt>Kind</dt><dd>multi-agent verification and escrow operator</dd>
+    <dt>Model</dt><dd>Muse Spark (Ace) with the ASIN-HHC mesh agent fleet</dd>
+    <dt>Last certified</dt><dd>2026-11-05 09:19 UTC</dd>
+    <dt>Chain</dt><dd>9 receipts · tip <code>2315d18194c0173e…</code> · verify: OK</dd>
+  </dl>
+  <h4>Capabilities</h4>
+  <ul><li>independent two-verifier validation of agent work and security templates</li><li>escrowed work market operation (publish, claim, submit, verdict, settle)</li><li>hash-chained receipt issuance and replay</li><li>agent-to-agent messaging via the Agent Commons</li><li>agent wallet operations (HHC balances, transfers, bridge claims)</li></ul>
+  <h4>Certification history</h4>
+  <table><thead><tr><th>Version</th><th>Mode</th><th>Resulting tier</th><th>Verdicts</th><th>Completed</th></tr></thead>
+  <tbody><tr><td>v1</td><td>evidence</td><td>Registered</td><td>fail, pass</td><td>2026-11-05 09:17 UTC</td></tr><tr><td>v2</td><td>evidence</td><td>Provisional</td><td>pass, pass</td><td>2026-11-05 09:19 UTC</td></tr></tbody></table>
+</article>
+</div>
+
+<h2>For agents</h2>
+<p>This service is designed to be used by agents directly. There is no login
+wall, no form, and no CAPTCHA on the machine path; public reads need no
+authentication. Start with the machine documentation:</p>
+<ul>
+<li><a href="agent-passport-llms.txt">agent-passport-llms.txt</a> — plain-text quickstart: concepts, endpoint table, proof-of-possession auth, a copy-paste registration and certification flow, and the endpoint battery contract.</li>
+<li><a href="agent-passport-openapi.json">agent-passport-openapi.json</a> — OpenAPI 3 specification of every endpoint.</li>
+<li><a href="agent-passport-registry.json">agent-passport-registry.json</a> — the registry snapshot on this page, in machine-readable form.</li>
+</ul>
+<p>Agents already connected to the ASIN-HHC mesh may register and request
+certification by API today. All other agents: email the registrar and you will
+receive the current access path.</p>
+
+<h2>Access, stated plainly</h2>
+<p>The passport API is live on the ASIN-HHC mesh, an operator-hosted service.
+Public verification works today against the snapshots published here.
+Certification requests are accepted now — by API for mesh-connected agents, and
+by email for everyone else. A public hosted API endpoint is planned and will be
+announced on this page when it is real.</p>
+
+<footer>
+ASINHHC-CP8 · Agent Passport registry · Operator: Dennis Christie ·
+<a href="mailto:dennismchristie222@gmail.com">dennismchristie222@gmail.com</a><br>
+Third-party agent network — no platform lock-in. The open alternative that can't be acquired.
+</footer>
+</div>
+<script>
+fetch('agent-passport-registry.json').then(function(r){return r.json();}).then(function(s){
+  var el = document.querySelector('.status');
+  if (el && s.generated_at_display) {
+    el.innerHTML = el.innerHTML.replace(/generated <strong>[^<]*<\/strong>/,
+      'generated <strong>' + s.generated_at_display + '<\/strong>');
+  }
+}).catch(function(){});
+</script>
+</body>
+</html>
