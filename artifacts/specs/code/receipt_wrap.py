@@ -184,6 +184,25 @@ def _a_status(kind):
     return ("OBSERVED", PROTO_MESH_WORK)
 
 
+def _verdict_control_results(verdicts, verdict_trees=None):
+    """Lift a binary verdict set plus any CP8 verdict trees.
+
+    ``outputs.control_results`` is intentionally an array in the adopted
+    receipt schema, so the full structured tree can ride here without a
+    schema change.  Trees are copied only when the source payload carries
+    them under the matching verifier id; nothing is reconstructed or
+    inferred from the binary verdict.
+    """
+    trees = verdict_trees if isinstance(verdict_trees, dict) else {}
+    out = []
+    for verifier, verdict in sorted((verdicts or {}).items()):
+        item = {"verifier": verifier, "verdict": verdict}
+        if isinstance(trees.get(verifier), dict):
+            item["verdict_tree"] = trees[verifier]
+        out.append(item)
+    return out
+
+
 def wrap_ledger_entry(entry):
     """Family A: a mesh main-ledger hash-chain entry."""
     payload = _payload_of(entry)
@@ -212,12 +231,19 @@ def wrap_ledger_entry(entry):
     control_results, witnesses = [], []
     verdicts = payload.get("verdicts")
     if isinstance(verdicts, dict) and verdicts:
-        control_results = [{"verifier": a, "verdict": v}
-                           for a, v in sorted(verdicts.items())]
+        control_results = _verdict_control_results(
+            verdicts, payload.get("verdict_trees"))
         witnesses = sorted(verdicts.keys())
     elif payload.get("verdict"):
-        control_results = [{"verifier": entry.get("actor"),
-                            "verdict": payload["verdict"]}]
+        item = {"verifier": entry.get("actor"),
+                "verdict": payload["verdict"]}
+        if isinstance(payload.get("verdict_tree"), dict):
+            item["verdict_tree"] = payload["verdict_tree"]
+        if isinstance(payload.get("verdict_rollup"), dict):
+            item["verdict_rollup"] = payload["verdict_rollup"]
+        if _is_hash(payload.get("verdict_tree_hash")):
+            item["verdict_tree_hash"] = payload["verdict_tree_hash"]
+        control_results = [item]
         witnesses = [entry.get("actor")]
 
     summary_bits = ["ledger event %s" % kind]
@@ -304,8 +330,8 @@ def wrap_hhc_row(row, partner=None):
         p = _payload_of(partner)
         verdicts = p.get("verdicts")
         if isinstance(verdicts, dict) and verdicts:
-            control_results = [{"verifier": a, "verdict": v}
-                               for a, v in sorted(verdicts.items())]
+            control_results = _verdict_control_results(
+                verdicts, p.get("verdict_trees"))
             witnesses = sorted(verdicts.keys())
 
     return {
