@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Hippie Delivery App — For Shops</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0e16;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    padding: 48px 20px 32px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 40px; }
+  header h1 { font-size: 2.2rem; letter-spacing: 0.5px; color: #ffffff; }
+  header h1 .accent { color: #2dd4bf; }
+  header p { color: #9fb0c3; margin-top: 10px; font-size: 1.05rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: #101623;
+    border: 1px solid #1e2a3d;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .card h2 { font-size: 1.2rem; color: #ffffff; margin-bottom: 8px; }
+  .card .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #2dd4bf;
+    border: 1px solid #2dd4bf;
+    border-radius: 999px;
+    padding: 2px 10px;
+    margin-bottom: 12px;
+    align-self: flex-start;
+  }
+  .card p { color: #9fb0c3; font-size: 0.95rem; flex-grow: 1; }
+  .card .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2dd4bf;
+    margin: 16px 0 12px;
+  }
+  .card a.btn {
+    display: block;
+    text-align: center;
+    background: #2dd4bf;
+    color: #0a0e16;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 11px 16px;
+    border-radius: 8px;
+  }
+  .card a.btn:hover { background: #5eead4; }
+  .wide { margin-top: 20px; }
+  .wide p { flex-grow: 0; margin-bottom: 8px; }
+  footer {
+    text-align: center;
+    color: #9fb0c3;
+    margin-top: 48px;
+    font-size: 0.95rem;
+  }
+  footer .line { color: #e6edf3; font-size: 1.05rem; margin-bottom: 8px; }
+  footer a { color: #2dd4bf; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Happy Hippie <span class="accent">Delivery App</span></h1>
+    <p>Run your own delivery — built for smoke shops. Glass, accessories, and everything your customers already come in for, delivered by your own drivers. This is a smoke shop delivery app, not a dispensary.</p>
+  </header>
+
+  <div class="grid">
+
+    <div class="card">
+      <span class="tag">Your Storefront</span>
+      <h2>Online ordering, your menu</h2>
+      <p>Your products, your prices, your stock — managed from a simple owner portal. Customers order from your live menu instead of calling the counter.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Your Money</span>
+      <h2>Customers pay your Stripe directly</h2>
+      <p>Paste your own Stripe payment link and publishable key into Shop settings and every sale lands in your account. The platform never touches your revenue — no middleman, no payout delays.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Drivers</span>
+      <h2>Driver portal with live GPS</h2>
+      <p>Drivers sign in, go online, and get orders by queued auto-dispatch — the oldest ready order goes to the first free driver. Customers watch the delivery on a live map.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">21+ Done Simply</span>
+      <h2>Yes/No at checkout, ID at the door</h2>
+      <p>No birthday forms. Customers tap Yes or No on being 21+, and your driver checks a photo ID at the door before the delivery can be completed.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">AI Assistant</span>
+      <h2>Answers from your live menu</h2>
+      <p>A built-in assistant answers customer questions — prices, stock, what's available — straight from your actual catalog, and can check a customer's order status by phone number.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Pricing</span>
+      <h2>60 days free, then $49.98/month</h2>
+      <p>Two full months to run real orders through it before you pay anything. $0 due today, then $49.98/month. Cancel anytime.</p>
+      <div class="price">$0 today</div>
+      <a class="btn" href="https://buy.stripe.com/7sY4gzf2Q1aq4kIbbx73G02">Start your 60 free days</a>
+    </div>
+
+  </div>
+
+  <div class="card wide">
+    <span class="tag">Get Set Up</span>
+    <h2>Want us to set your shop up for you?</h2>
+    <p>Email us your shop name, city, and a phone number, and we'll create your shop, walk you through adding your Stripe, and get your first products listed. Most shops can be taking orders the same week.</p>
+    <a class="btn" href="mailto:dennismchristie222@gmail.com?subject=Happy%20Hippie%20Delivery%20—%20shop%20setup">Email dennismchristie222@gmail.com</a>
+  </div>
+
+  <footer>
+    <div class="line">Happy Hippie Deliveries — Dennis Christie, Springfield, Missouri</div>
+    <p>A delivery app for smoke shops. Not a dispensary. Each shop is responsible for its own local rules on age-restricted goods; the app carries the 21+ check on every order.</p>
+  </footer>
+</div>
+</body>
+</html>
