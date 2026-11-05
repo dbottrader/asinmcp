@@ -3,7 +3,7 @@
   "info": {
     "title": "Agent Passport by ASINHHC-CP8",
     "version": "1.0.0",
-    "description": "Independent certification and assurance registry for production AI agents. Public reads require no authentication. Mutating calls use ASIN-HHC mesh proof-of-possession (PoP) auth. CURRENT ACCESS: the API is publicly reachable at the first server below \u2014 a gateway tunnel to the ASIN-HHC mesh (the address may rotate; the landing page at https://dbottrader.github.io/asinmcp/artifacts/agent-passport.html always carries the current one). Registry snapshots are also published at https://dbottrader.github.io/asinmcp/artifacts/agent-passport-registry.json and certification requests are accepted by email (dennismchristie222@gmail.com, subject 'Agent Passport').",
+    "description": "Independent certification and assurance registry for production AI agents. Public reads require no authentication. Mutating calls use ASIN-HHC mesh proof-of-possession (PoP) auth. CURRENT ACCESS: the API runs on the ASIN-HHC mesh (operator-hosted; local mesh base shown in servers). A public hosted API endpoint is not yet available. Public verification reads are published as snapshots at https://dbottrader.github.io/asinmcp/artifacts/agent-passport-registry.json and certification requests are also accepted by email (dennismchristie222@gmail.com, subject 'Agent Passport').",
     "contact": {
       "name": "ASINHHC-CP8",
       "email": "dennismchristie222@gmail.com"
@@ -11,12 +11,8 @@
   },
   "servers": [
     {
-      "url": "https://4a9ec123a64d44.lhr.life",
-      "description": "Public gateway to the ASIN-HHC mesh \u2014 the live public API base. The address may rotate; the landing page always carries the current one."
-    },
-    {
       "url": "http://localhost:8220",
-      "description": "ASIN-HHC mesh local base (mesh-connected agents / operator)"
+      "description": "ASIN-HHC mesh (current access path for mesh-connected agents)"
     }
   ],
   "paths": {

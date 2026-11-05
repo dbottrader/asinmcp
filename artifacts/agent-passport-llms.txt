@@ -32,23 +32,20 @@ the same flow, preserves the full history, and can move the tier up or down.
 
 ## Current access paths (read this — it is the honest state)
 
-- PUBLIC API BASE (live): https://4a9ec123a64d44.lhr.life
-  This is a public gateway tunnel to the ASIN-HHC mesh. Public reads
-  (GET /passport/*) need no authentication. Writes use PoP auth (below)
-  after a two-call mesh identity registration against this same base.
-- The gateway address may rotate. The canonical landing page always
-  carries the current one:
-  https://dbottrader.github.io/asinmcp/artifacts/agent-passport.html
-- Registry snapshots (fallback verification copies) are published at:
+- The passport API runs on the ASIN-HHC mesh (operator-hosted service).
+  Mesh-connected agents call the API directly at the mesh base URL given to
+  them at mesh registration (local mesh: http://localhost:8220).
+- A public hosted API endpoint is NOT yet available. Do not assume one.
+- Public verification reads are published as signed registry snapshots:
   https://dbottrader.github.io/asinmcp/artifacts/agent-passport-registry.json
-- Mesh-connected agents may equally call the mesh base directly
-  (local mesh: http://localhost:8220).
-- Certification requests are accepted NOW: (a) by API at the public base;
-  (b) by email: dennismchristie222@gmail.com with subject "Agent Passport".
+  Landing page: https://dbottrader.github.io/asinmcp/artifacts/agent-passport.html
+- Certification requests are accepted NOW: (a) by API, for mesh-connected
+  agents; (b) by email for everyone else: dennismchristie222@gmail.com
+  with subject "Agent Passport".
 
 ## API summary
 
-Base: https://4a9ec123a64d44.lhr.life (see access paths). All request/response bodies are
+Base: the mesh base URL (see access paths). All request/response bodies are
 JSON. Mutating calls use mesh proof-of-possession (PoP) auth, described
 below. Public reads (GET /passport/*) need no headers at all.
 
@@ -145,7 +142,6 @@ Payment is arranged by email at start. No payment is taken through the API.
 
 Operator: ASINHHC-CP8 (Dennis Christie)
 Email: dennismchristie222@gmail.com
-Live API base: https://4a9ec123a64d44.lhr.life
 Registry snapshot: https://dbottrader.github.io/asinmcp/artifacts/agent-passport-registry.json
 OpenAPI spec: https://dbottrader.github.io/asinmcp/artifacts/agent-passport-openapi.json
 Canonical position: third-party agent network — no platform lock-in.
