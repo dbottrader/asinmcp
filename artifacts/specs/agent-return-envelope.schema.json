@@ -1,0 +1,243 @@
+{
+  "$id": "https://dbottrader.github.io/asinmcp/artifacts/specs/agent-return-envelope.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Structured return envelope for delegated agent work in the CP8 INF8 evolution loop. Frozen source: CP8_PARALLEL_AGENT_HANDOFF_2026-08-17.md (SHA-256 3ffb47b3ebfbd8cade9c60437d6828aaa63ce8da1f319b74df1f2c4a7ac28b9e), RETURN ENVELOPE sections of Payload A (Kimi) and Payload B (Grok), identical except for the observed[].timestamp_class enum noted below. Receipt: CP8_PARALLEL_AGENT_HANDOFF_RECEIPT_2026-08-17.json (return_schema: CP8-AGENT-RETURN-v1).",
+  "properties": {
+    "agent": {
+      "description": "Returning seat/agent name, e.g. Kimi, Grok, GrokAce, a subagent id, or a browser task id. (Source shows plain strings with no length constraint; none added.)",
+      "type": "string"
+    },
+    "contradictions": {
+      "description": "Conflicts preserved, never resolved by agent majority vote (coordinator intake rule 3). Each entry records which side carries the stronger evidence and why.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "claim_a": {
+            "type": "string"
+          },
+          "claim_b": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "stronger_evidence": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_a",
+          "claim_b",
+          "stronger_evidence",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "description": "UTC generation timestamp of the return.",
+      "format": "date-time",
+      "type": "string"
+    },
+    "observed": {
+      "description": "Observed claims only: what was actually seen, with source, method, and the timestamp class of the date basis (source rule: reconcile T0 message timestamp, T1 embedded event date, T2 clean thread-start event, T3 thread-header only, T4 file creation time before origin claims; NA where no timestamp applies).",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "claim": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "timestamp_class": {
+            "description": "Union of the two source payloads: Payload A (Kimi) allows T0|T1|T2|T3|T4|NA; Payload B (Grok) fixes NA. Both are encoded here; the lane determines which values are appropriate.",
+            "enum": [
+              "T0",
+              "T1",
+              "T2",
+              "T3",
+              "T4",
+              "NA"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim",
+          "source",
+          "method",
+          "timestamp_class"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "promotion": {
+      "description": "Promotion gate state as declared by the returning agent. A self-declared level does not independently earn that level (receipt forward_test rejected exactly that); the coordinator earns or holds it at intake.",
+      "enum": [
+        "HOLD",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "type": "string"
+    },
+    "proposals": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "expected_receipt": {
+            "type": "string"
+          },
+          "reversible": {
+            "type": "boolean"
+          },
+          "risk": {
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "risk",
+          "reversible",
+          "expected_receipt"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "recommended_next_action": {
+      "description": "The single smallest reversible next action (source C4 checkpoints).",
+      "type": "string"
+    },
+    "schema": {
+      "const": "CP8-AGENT-RETURN-v1",
+      "type": "string"
+    },
+    "source_snapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "access": {
+                "enum": [
+                  "ACCESSIBLE",
+                  "METADATA_ONLY",
+                  "MISSING",
+                  "HASH_MISMATCH"
+                ],
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "sha256",
+              "access"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "git_commit": {
+          "description": "Frozen source commit the work was performed against.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "git_commit",
+        "files"
+      ],
+      "type": "object"
+    },
+    "task_id": {
+      "description": "The delegated task identifier exactly as assigned, e.g. CP8-INF8-KIMI-OAI-FORENSICS-2026-08-17. (Source shows plain strings with no length constraint; none added.)",
+      "type": "string"
+    },
+    "tests": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence": {
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "BLOCKED"
+            ],
+            "type": "string"
+          },
+          "test": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "test",
+          "result",
+          "evidence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "unverified": {
+      "description": "Claims not established, each with the exact evidence that is missing. 'Not located' is different from 'did not exist' (source rule 3).",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "claim": {
+            "type": "string"
+          },
+          "missing_evidence": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim",
+          "missing_evidence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "agent",
+    "task_id",
+    "source_snapshot",
+    "observed",
+    "tests",
+    "contradictions",
+    "unverified",
+    "proposals",
+    "recommended_next_action",
+    "promotion",
+    "generated_at_utc"
+  ],
+  "title": "CP8-AGENT-RETURN-v1",
+  "type": "object"
+}
