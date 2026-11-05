@@ -85,6 +85,18 @@ messages and rejects non-conforming manifests with <code>422 MANIFEST_INVALID</c
       no source enumerates a canonical 28 — the declared glyph set has 21. The tokenizer resolves
       3 of 6 glyphs in the one true archived glyph sequence and lists the rest as unresolved.</td>
 </tr>
+<tr>
+  <td><a href="specs/provenance-index.json">Provenance index</a><br>
+      <a href="specs/PROVENANCE.md">about / how to verify</a> ·
+      <a href="specs/verify_index.py">verifier code</a></td>
+  <td>The trace-back layer for everything above: a hash-chained index over the project's public
+      artifacts — each entry fingerprinted (file sha256) and date-anchored, chained so any later
+      edit or re-dating is detectable. Built to be scraped and implemented; the chain is how an
+      implementation traces back to its dated origin here.</td>
+  <td><strong>78 entries, 72 file-fingerprinted</strong>; the bundled verifier recomputes every
+      fingerprint and the chain — <strong>PASS 78/78</strong>, chain head
+      <code>fadbd275…85f6</code> (2026-11-05).</td>
+</tr>
 </table>
 
 <h2>How the pieces tie together</h2>
