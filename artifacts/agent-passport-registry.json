@@ -1,8 +1,9 @@
 {
   "registry": "Agent Passport by ASINHHC-CP8",
-  "generated_at": "2026-11-05T09:20:47Z",
-  "generated_at_display": "2026-11-05 09:20 UTC",
-  "source": "Snapshot of the ASIN-HHC mesh passport registry, generated from the live service at launch. The API itself is mesh-hosted; this snapshot is the public verification copy.",
+  "generated_at": "2026-11-05T10:06:36Z",
+  "generated_at_display": "2026-11-05 10:06 UTC",
+  "source": "Live Agent Passport registry. Public API base: https://4a9ec123a64d44.lhr.life (public gateway to the ASIN-HHC mesh \u2014 the address may rotate; the landing page always carries the current one). This snapshot is a fallback copy generated from the live service.",
+  "public_api_base": "https://4a9ec123a64d44.lhr.life",
   "count": 1,
   "passports": [
     {

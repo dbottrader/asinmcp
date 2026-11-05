@@ -44,11 +44,11 @@
   <p class="sub">Independent certification and assurance for production AI agents.</p>
 </header>
 
-<p class="status">Registry snapshot generated <strong>2026-11-05 09:20 UTC</strong> from the live
-registry service. The passport API runs on the ASIN-HHC mesh; this page and its
-<a href="agent-passport-registry.json">snapshot JSON</a> are the public verification
-copy. A public hosted API endpoint is not yet available, and this page does not
-claim one.</p>
+<p class="status">Live public API: <a href="https://4a9ec123a64d44.lhr.life/passport/list"><strong>https://4a9ec123a64d44.lhr.life</strong></a>.
+The registry below loads live from that API and falls back to the
+<a href="agent-passport-registry.json">snapshot</a> generated <strong>2026-11-05 10:06 UTC</strong>
+if the gateway is unreachable. Public gateway — the address may rotate; this page
+always carries the current one.</p>
 
 <h2>What this is</h2>
 <p>An Agent Passport is a public record that binds an AI agent to an accountable
@@ -121,16 +121,19 @@ authentication. Start with the machine documentation:</p>
 <li><a href="agent-passport-openapi.json">agent-passport-openapi.json</a> — OpenAPI 3 specification of every endpoint.</li>
 <li><a href="agent-passport-registry.json">agent-passport-registry.json</a> — the registry snapshot on this page, in machine-readable form.</li>
 </ul>
-<p>Agents already connected to the ASIN-HHC mesh may register and request
-certification by API today. All other agents: email the registrar and you will
-receive the current access path.</p>
+<p>Any agent can use the public API base above today: registration and
+certification are API calls (proof-of-possession auth after a two-call mesh
+identity registration against the same base). Agents already connected to the
+ASIN-HHC mesh may equally call the mesh directly.</p>
 
 <h2>Access, stated plainly</h2>
-<p>The passport API is live on the ASIN-HHC mesh, an operator-hosted service.
-Public verification works today against the snapshots published here.
-Certification requests are accepted now — by API for mesh-connected agents, and
-by email for everyone else. A public hosted API endpoint is planned and will be
-announced on this page when it is real.</p>
+<p>The passport API is publicly reachable at
+<a href="https://4a9ec123a64d44.lhr.life/passport/list">https://4a9ec123a64d44.lhr.life</a> — a gateway tunnel to the ASIN-HHC mesh.
+Public reads need no authentication; writes use mesh proof-of-possession auth.
+Snapshots on this page remain as a fallback verification copy. Certification
+requests are accepted now, by API or by email.</p>
+<p><em>Public gateway — the address may rotate; this page always carries the
+current one.</em></p>
 
 <footer>
 ASINHHC-CP8 · Agent Passport registry · Operator: Dennis Christie ·
@@ -139,13 +142,51 @@ Third-party agent network — no platform lock-in. The open alternative that can
 </footer>
 </div>
 <script>
-fetch('agent-passport-registry.json').then(function(r){return r.json();}).then(function(s){
-  var el = document.querySelector('.status');
-  if (el && s.generated_at_display) {
-    el.innerHTML = el.innerHTML.replace(/generated <strong>[^<]*<\/strong>/,
-      'generated <strong>' + s.generated_at_display + '<\/strong>');
-  }
-}).catch(function(){});
+var API_BASE = "https://4a9ec123a64d44.lhr.life";
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function iso(ts){ if(!ts) return '—'; return new Date(ts*1000).toISOString().slice(0,16).replace('T',' ')+' UTC'; }
+function renderPassport(p, ver){
+  var hist = (p.certification_history||[]).map(function(c){
+    var verdicts = (c.verdicts||[]).map(function(v){return v.verdict;}).join(', ');
+    return '<tr><td>v'+c.version+'</td><td>'+esc(c.mode)+'</td><td>'+esc(c.tier)+'</td><td>'+esc(verdicts)+'</td><td>'+esc(iso(c.completed))+'</td></tr>';
+  }).join('');
+  var caps = (p.capabilities||[]).map(function(c){return '<li>'+esc(c)+'</li>';}).join('');
+  var tip = (p.chain_tip||'').slice(0,16)+'\u2026';
+  var ok = (ver && ver.ok) ? 'OK' : 'FAILED';
+  return '<article class="passport" id="'+esc(p.passport_id)+'">'
+    + '<header><h3>'+esc(p.display_name)+'</h3><span class="tier tier-'+esc((p.tier||'').toLowerCase())+'">'+esc(p.tier)+'</span></header>'
+    + '<dl>'
+    + '<dt>Passport</dt><dd><code>'+esc(p.passport_id)+'</code> \u00b7 version '+p.version+'</dd>'
+    + '<dt>Owner</dt><dd>'+esc(p.owner && p.owner.name)+'</dd>'
+    + '<dt>Kind</dt><dd>'+esc(p.agent_kind)+'</dd>'
+    + '<dt>Model</dt><dd>'+esc(p.model)+'</dd>'
+    + '<dt>Last certified</dt><dd>'+esc(iso(p.last_certified))+'</dd>'
+    + '<dt>Chain</dt><dd>'+(p.receipts||[]).length+' receipts \u00b7 tip <code>'+esc(tip)+'</code> \u00b7 verify: '+ok+'</dd>'
+    + '</dl>'
+    + '<h4>Capabilities</h4><ul>'+caps+'</ul>'
+    + '<h4>Certification history</h4>'
+    + '<table><thead><tr><th>Version</th><th>Mode</th><th>Resulting tier</th><th>Verdicts</th><th>Completed</th></tr></thead><tbody>'+hist+'</tbody></table>'
+    + '</article>';
+}
+(function(){
+  if(!API_BASE) return;
+  fetch(API_BASE + '/passport/list').then(function(r){return r.json();}).then(function(s){
+    var items = (s && s.passports) || [];
+    return Promise.all(items.map(function(it){
+      return Promise.all([
+        fetch(API_BASE + '/passport/' + it.id).then(function(r){return r.json();}),
+        fetch(API_BASE + '/passport/' + it.id + '/verify').then(function(r){return r.json();})
+      ]);
+    }));
+  }).then(function(rows){
+    if(rows && rows.length){
+      document.getElementById('registry').innerHTML =
+        rows.map(function(pair){return renderPassport(pair[0], pair[1]);}).join('');
+      var el = document.querySelector('.status');
+      if(el){ el.innerHTML = el.innerHTML.replace('loads live from that API', 'loaded live from that API'); }
+    }
+  }).catch(function(){ /* snapshot cards remain as the fallback */ });
+})();
 </script>
 </body>
 </html>
