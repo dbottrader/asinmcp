@@ -10,8 +10,10 @@
   "text_url": "https://dbottrader.github.io/asinmcp/artifacts/asin-book.txt",
   "json_url": "https://dbottrader.github.io/asinmcp/artifacts/asin-book.json",
   "kofi_url": "https://ko-fi.com/s/a7fd25f362",
-  "price_usd": 19,
-  "license_note": "Book text copyright (c) 2025 Dennis M. Christie. This plain-text and JSON edition are published by the author in the public asinmcp repository so humans and AI agents can read, cite, and implement from them; the original PDF is sold on Ko-fi. The surrounding ASIN-HHC system code and specs are MIT-licensed.",
+  "price_usd": 0,
+  "support_edition_usd": 19,
+  "access": "free",
+  "license_note": "Free and open: read, share, and implement with attribution to Dennis M. Christie (CP8) / ASIN-HHC, citing the PDF SHA-256. The Ko-fi listing is a voluntary support edition (suggested $19); the book itself is not paywalled.",
   "primitives": [
     "Anchor",
     "Shape",

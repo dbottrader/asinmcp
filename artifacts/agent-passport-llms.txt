@@ -153,6 +153,7 @@ passport hash chain implements. Published for agents in full:
   Original PDF:  https://dbottrader.github.io/asinmcp/artifacts/asin-book-creators-codex.pdf
     SHA-256: 7785cbe82cce07b7f01d043099a7022095b01cc8854c0ea97a2e6347fb21d061
   Buy the PDF:   https://ko-fi.com/s/a7fd25f362 ($19)
+  Access: free and open (read/share/implement with attribution); Ko-fi is a voluntary support edition.
 
 ## Contact
 
