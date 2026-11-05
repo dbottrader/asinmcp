@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CP8 Unified · Delta Keyring + Crop Circle</title>
+<style>
+  :root {
+    --bg: #0b1414;
+    --panel: #101d1c;
+    --border: #1e3533;
+    --teal: #00e5c0;
+    --teal-dim: rgba(0, 229, 192, .15);
+    --text: #e8f5f3;
+    --muted: #a8c4c1;
+    --danger: #ff8a6b;
+    --warn: #ffcf6b;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.25rem; font-weight: 600; margin: 0; }
+  h1 span { color: var(--teal); }
+  .sub { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 8px; margin: 20px 0 16px; }
+  .tab {
+    flex: 1;
+    padding: 10px 12px;
+    background: var(--panel);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .tab:hover { border-color: rgba(0, 229, 192, .4); }
+  .tab.active {
+    color: var(--teal);
+    border-color: var(--teal);
+    background: var(--teal-dim);
+  }
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .card h2 { font-size: .95rem; font-weight: 600; margin: 0 0 4px; }
+  .hint { color: var(--muted); font-size: .8rem; margin: 0 0 12px; }
+  label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 6px; }
+  textarea, input[type="text"] {
+    width: 100%;
+    background: #0d1817;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: .85rem;
+    padding: 10px;
+    resize: vertical;
+  }
+  textarea:focus, input:focus { outline: none; border-color: var(--teal); }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row > * { flex: 1; min-width: 240px; }
+
+  button {
+    background: var(--teal);
+    color: #06211c;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  button:hover { filter: brightness(1.1); }
+  button.ghost {
+    background: transparent;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+  }
+
+  .out {
+    margin-top: 12px;
+    background: #0d1817;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: .85rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 24px;
+  }
+  .ok { color: var(--teal); }
+  .err { color: var(--danger); }
+  .note { color: var(--warn); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .stat {
+    background: #0d1817;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .stat .k { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
+  .stat .v { font-size: 1.1rem; font-weight: 600; margin-top: 2px; }
+  .stat .v.on { color: var(--teal); }
+  .stat .v.off { color: var(--muted); }
+
+  /* Crop circle preview */
+  .preview {
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 12px;
+    width: max-content;
+    max-width: 100%;
+  }
+  .preview span { width: 14px; height: 14px; background: #0d1817; }
+  .preview span.hit { background: var(--teal); }
+
+  .center { text-align: center; }
+  .footer { color: var(--muted); font-size: .75rem; margin-top: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CP8 Unified <span>·</span> Delta Keyring + Crop Circle</h1>
+  <div class="sub">Two tools, one panel. Decode keyring strings, analyze crop circle patterns.</div>
+
+  <div class="tabs">
+    <button class="tab active" data-pane="keyring">Δ Delta Keyring Decoder</button>
+    <button class="tab" data-pane="crop">◎ Crop Circle Analyzer</button>
+  </div>
+
+  <!-- ============ DELTA KEYRING ============ -->
+  <section id="pane-keyring" class="pane active">
+
+    <div class="card">
+      <h2>Decode</h2>
+      <p class="hint">A keyring encodes a message as deltas — each number is the shift from the previous letter (A=0 … Z=25, wrapping). Format: <code>KRNG:</code> followed by dash-separated numbers, e.g. <code>KRNG:3-1-11-19-0</code> → <code>DELTA</code></p>
+      <label for="dec-in">Keyring input</label>
+      <textarea id="dec-in" rows="3" placeholder="KRNG:3-1-11-19-0"></textarea>
+      <button id="btn-decode">Decode</button>
+      <div id="dec-out" class="out">—</div>
+    </div>
+
+    <div class="card">
+      <h2>Encode</h2>
+      <p class="hint">Turn plain text into a keyring string. Uppercase A–Z only; other characters are skipped.</p>
+      <label for="enc-in">Plain text</label>
+      <textarea id="enc-in" rows="2" placeholder="DELTA"></textarea>
+      <button id="btn-encode" class="ghost">Encode</button>
+      <div id="enc-out" class="out">—</div>
+    </div>
+
+  </section>
+
+  <!-- ============ CROP CIRCLE ============ -->
+  <section id="pane-crop" class="pane">
+
+    <div class="card">
+      <h2>Pattern</h2>
+      <p class="hint">Paste a grid pattern. Use any non-space, non-dot character (e.g. <code>o</code>, <code>#</code>, <code>*</code>) for a mark and <code>.</code> or space for empty ground. One row per line.</p>
+      <label for="crop-in">Crop circle pattern</label>
+      <textarea id="crop-in" rows="8" placeholder="..ooo....
+o.....o..
+o.....o..
+..ooo...."></textarea>
+      <button id="btn-analyze">Analyze</button>
+      <div id="crop-err" class="out err" style="display:none"></div>
+      <div id="crop-preview" class="preview" style="display:none"></div>
+      <div id="crop-stats" class="grid" style="display:none"></div>
+      <div id="crop-sym" class="out" style="display:none"></div>
+    </div>
+
+  </section>
+
+  <div class="footer">CP8 Unified · rebuilt &amp; finished 2026-09-07</div>
+</div>
+
+<script>
+/* ---------- Tabs ---------- */
+document.querySelectorAll('.tab').forEach(function (tab) {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelectorAll('.pane').forEach(function (p) { p.classList.remove('active'); });
+    tab.classList.add('active');
+    document.getElementById('pane-' + tab.dataset.pane).classList.add('active');
+  });
+});
+
+/* ---------- Delta Keyring ---------- */
+var A = 'A'.charCodeAt(0);
+
+function parseKeyring(str) {
+  var m = /^KRNG:\s*(.+)$/i.exec(str.trim());
+  if (!m) throw new Error('Input must start with "KRNG:" followed by dash-separated numbers.');
+  var parts = m[1].split(/[-,\s]+/).filter(Boolean);
+  if (!parts.length) throw new Error('No deltas found after "KRNG:".');
+  var deltas = parts.map(function (p) {
+    var n = Number(p);
+    if (!Number.isInteger(n)) throw new Error('"' + p + '" is not a whole number.');
+    return n;
+  });
+  return deltas;
+}
+
+function decode(deltas) {
+  var out = '', cur = 0;
+  deltas.forEach(function (d, i) {
+    if (i === 0) { cur = ((d % 26) + 26) % 26; }
+    else { cur = ((cur + d) % 26 + 26) % 26; }
+    out += String.fromCharCode(A + cur);
+  });
+  return out;
+}
+
+document.getElementById('btn-decode').addEventListener('click', function () {
+  var out = document.getElementById('dec-out');
+  try {
+    var deltas = parseKeyring(document.getElementById('dec-in').value);
+    var msg = decode(deltas);
+    out.className = 'out ok';
+    out.textContent = '→ ' + msg + '   (' + deltas.length + ' chars)';
+  } catch (e) {
+    out.className = 'out err';
+    out.textContent = '✗ ' + e.message;
+  }
+});
+
+document.getElementById('btn-encode').addEventListener('click', function () {
+  var out = document.getElementById('enc-out');
+  var text = document.getElementById('enc-in').value.toUpperCase().replace(/[^A-Z]/g, '');
+  if (!text.length) {
+    out.className = 'out err';
+    out.textContent = '✗ No letters A–Z found.';
+    return;
+  }
+  var deltas = [], prev = 0;
+  for (var i = 0; i < text.length; i++) {
+    var c = text.charCodeAt(i) - A;
+    deltas.push(i === 0 ? c : ((c - prev) % 26 + 26) % 26);
+    prev = c;
+  }
+  out.className = 'out ok';
+  out.textContent = 'KRNG:' + deltas.join('-');
+});
+
+/* ---------- Crop Circle Analyzer ---------- */
+function readGrid(text) {
+  var rows = text.split(/\r?\n/).filter(function (r) { return r.trim().length > 0; });
+  if (!rows.length) throw new Error('Paste a pattern first — one row per line.');
+  var w = rows.reduce(function (m, r) { return Math.max(m, r.length); }, 0);
+  rows = rows.map(function (r) { return r.padEnd(w, ' '); });
+  return rows.map(function (r) {
+    return r.split('').map(function (ch) { return /\s|\./.test(ch) ? 0 : 1; });
+  });
+}
+
+document.getElementById('btn-analyze').addEventListener('click', function () {
+  var err = document.getElementById('crop-err');
+  var prev = document.getElementById('crop-preview');
+  var stats = document.getElementById('crop-stats');
+  var sym = document.getElementById('crop-sym');
+  err.style.display = 'none'; prev.style.display = 'none';
+  stats.style.display = 'none'; sym.style.display = 'none';
+
+  var grid;
+  try { grid = readGrid(document.getElementById('crop-in').value); }
+  catch (e) { err.textContent = '✗ ' + e.message; err.style.display = 'block'; return; }
+
+  var h = grid.length, w = grid[0].length;
+  var marks = 0, cx = 0, cy = 0;
+  grid.forEach(function (row, y) {
+    row.forEach(function (v, x) {
+      if (v) { marks++; cx += x + .5; cy += y + .5; }
+    });
+  });
+  if (!marks) { err.textContent = '✗ No marks found — use o, #, or * for pressed crop.'; err.style.display = 'block'; return; }
+  cx /= marks; cy /= marks;
+
+  // Connectivity: count rings/components via flood fill
+  var seen = grid.map(function (r) { return r.map(function () { return false; }); });
+  var comps = 0;
+  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+    if (grid[y][x] && !seen[y][x]) {
+      comps++;
+      var stack = [[y, x]];
+      while (stack.length) {
+        var p = stack.pop(), py = p[0], px = p[1];
+        if (py < 0 || py >= h || px < 0 || px >= w || !grid[py][px] || seen[py][px]) continue;
+        seen[py][px] = true;
+        stack.push([py + 1, px], [py - 1, px], [py, px + 1], [py, px - 1]);
+      }
+    }
+  }
+
+  // Symmetry
+  function mirrorX() {
+    return grid.every(function (row, y) {
+      return row.every(function (v, x) { return v === grid[y][w - 1 - x]; });
+    });
+  }
+  function mirrorY() {
+    return grid.every(function (row, y) {
+      return row.every(function (v, x) { return v === grid[h - 1 - y][x]; });
+    });
+  }
+  function rot180() {
+    return grid.every(function (row, y) {
+      return row.every(function (v, x) { return v === grid[h - 1 - y][w - 1 - x]; });
+    });
+  }
+  var mx = mirrorX(), my = mirrorY(), r180 = rot180();
+
+  // Preview render
+  prev.innerHTML = '';
+  prev.style.gridTemplateColumns = 'repeat(' + w + ', 14px)';
+  prev.style.display = 'inline-grid';
+  grid.forEach(function (row) {
+    row.forEach(function (v) {
+      var s = document.createElement('span');
+      if (v) s.className = 'hit';
+      prev.appendChild(s);
+    });
+  });
+
+  // Stats
+  var items = [
+    ['Grid size', w + ' × ' + h],
+    ['Marks', marks + ' (' + (100 * marks / (w * h)).toFixed(1) + '% pressed)'],
+    ['Components', comps + (comps > 1 ? ' (rings/clusters)' : '')],
+    ['Centroid', cx.toFixed(1) + ', ' + cy.toFixed(1)]
+  ];
+  stats.innerHTML = '';
+  items.forEach(function (it) {
+    var d = document.createElement('div');
+    d.className = 'stat';
+    d.innerHTML = '<div class="k">' + it[0] + '</div><div class="v">' + it[1] + '</div>';
+    stats.appendChild(d);
+  });
+  var symItems = [
+    ['Mirror ↔', mx], ['Mirror ↕', my], ['Rotational 180°', r180]
+  ];
+  symItems.forEach(function (it) {
+    var d = document.createElement('div');
+    d.className = 'stat';
+    d.innerHTML = '<div class="k">' + it[0] + '</div><div class="v ' + (it[1] ? 'on">Yes' : 'off">No') + '</div>';
+    stats.appendChild(d);
+  });
+  stats.style.display = 'grid';
+
+  var verdict = mx && my ? 'Fully symmetric — 4-fold pattern.'
+    : (mx || my) ? 'One mirror axis detected.'
+    : r180 ? 'Rotationally symmetric (180°).'
+    : 'No simple symmetry detected — complex or irregular formation.';
+  sym.className = 'out note';
+  sym.textContent = '◎ ' + verdict;
+  sym.style.display = 'block';
+});
+</script>
+</body>
+</html>

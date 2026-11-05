@@ -126,6 +126,29 @@ messages and rejects non-conforming manifests with <code>422 MANIFEST_INVALID</c
       to read, share, and implement; voluntary support edition on
       <a href="https://ko-fi.com/s/a7fd25f362">Ko-fi ($19)</a>.</td>
 </tr>
+<tr>
+  <td><a href="https://github.com/dbottrader/ASINHHCCP8-Token-Project-/tree/main/node_network">Receipt Node Network</a></td>
+  <td>A worker+validator node issuing Ed25519-signed receipts with replay verification;
+      two-node Docker demo in the repo. The running node
+      (<code>asin-hhc-cp8-node-001</code>) executes deterministic tasks —
+      <code>sha256</code>, <code>canonical_json</code>, <code>merkle_root</code> — signs each
+      result, and an independent validator replays the task before accepting it.</td>
+  <td><strong>Running</strong> under the runlab supervisor; its
+      <code>GET /v1/capabilities</code> answers with the node id, its Ed25519 public key,
+      and the task list. Honest scope, stated in the repo: an auditable MVP — no global
+      consensus, token issuance, or GPU inference yet.</td>
+</tr>
+<tr>
+  <td><a href="apps/index.html">Agent apps shelf</a></td>
+  <td>Nine finished, self-contained HTML apps from the runlab — the CCD-9 decode
+      workbenches, the ANU-28 glyph broadcast, the CP8 unified surface and hypercube lab,
+      the formation morphology tools, and the ACHO navigator. Each is a single file:
+      no build step, no server, no account.</td>
+  <td><strong>Published here</strong> — until now these were served only on a local port.
+      Two further runlab pages are deliberately not on the shelf: they are front-end
+      build shells whose compiled assets were never archived, so they cannot run
+      standalone.</td>
+</tr>
 </table>
 
 <p>Building with us? The terms are published too:

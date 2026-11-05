@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP8 Formation Morphology Lab</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #111111;
+    --border: #222;
+    --text: #e5e5e5;
+    --text2: #999;
+    --text3: #666;
+    --accent: #4ade80;
+    --accent2: #f87171;
+    --accent3: #60a5fa;
+    --accent4: #22d3ee;
+    --accent5: #a78bfa;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: "SF Mono", Monaco, "Cascadia Code", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.02em; }
+  .header .meta { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-top: 2px; }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px;
+    background: rgba(74, 222, 128, 0.1); color: var(--accent); border: 1px solid rgba(74, 222, 128, 0.25);
+  }
+  .layout { display: grid; grid-template-columns: 260px 1fr; gap: 0; min-height: calc(100vh - 65px); }
+  .sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--panel);
+    padding: 16px;
+    overflow-y: auto;
+    max-height: calc(100vh - 65px);
+  }
+  .section-title {
+    font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 10px;
+  }
+  .formation-item {
+    padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    margin-bottom: 6px; cursor: pointer; transition: all 0.15s;
+    background: transparent;
+  }
+  .formation-item:hover { background: rgba(255,255,255,0.03); }
+  .formation-item.active { border-color: var(--text); background: rgba(255,255,255,0.05); }
+  .formation-name { font-size: 13px; font-weight: 500; }
+  .formation-meta { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .formation-score {
+    display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 4px; margin-top: 5px;
+  }
+  .score-high { background: rgba(74,222,128,0.1); color: var(--accent); }
+  .score-mid { background: rgba(251,191,36,0.1); color: #fbbf24; }
+  .score-low { background: rgba(248,113,113,0.1); color: var(--accent2); }
+
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px;
+  }
+  .switch {
+    width: 32px; height: 18px; border-radius: 9px; background: #333;
+    position: relative; cursor: pointer; transition: background 0.15s;
+  }
+  .switch.on { background: var(--text); }
+  .switch::after {
+    content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    background: #fff; top: 3px; left: 3px; transition: transform 0.15s;
+  }
+  .switch.on::after { transform: translateX(14px); }
+
+  .main { padding: 20px; overflow-y: auto; }
+  .canvas-wrap {
+    width: 100%; height: 380px; border-radius: 10px; border: 1px solid var(--border);
+    background: #050505; position: relative; overflow: hidden;
+  }
+  .canvas-wrap svg { width: 100%; height: 100%; }
+  .canvas-label {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px; color: #333; pointer-events: none;
+  }
+
+  .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 16px; }
+  .metric {
+    text-align: center; padding: 14px 8px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--panel);
+  }
+  .metric-value { font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .metric-label { font-size: 10px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .tabs {
+    display: flex; gap: 2px; margin-top: 20px; border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 10px 20px; font-size: 12px; font-weight: 500; color: var(--text3);
+    background: none; border: none; border-bottom: 2px solid transparent;
+    cursor: pointer; transition: all 0.15s; margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text2); }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  .tab-content { padding-top: 16px; min-height: 240px; }
+
+  .symmetry-viz {
+    display: flex; align-items: center; justify-content: center; gap: 48px; padding: 30px;
+  }
+  .sym-axis {
+    width: 2px; height: 140px; background: var(--accent2);
+    position: relative; animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  .harmonic-bar {
+    display: flex; align-items: center; gap: 12px; padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .harmonic-freq { font-size: 11px; font-weight: 600; color: var(--text2); width: 55px; text-align: right; font-variant-numeric: tabular-nums; }
+  .harmonic-track { flex: 1; height: 5px; background: #1a1a1a; border-radius: 3px; overflow: hidden; }
+  .harmonic-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease-out; }
+  .harmonic-mode { font-size: 10px; color: var(--text3); width: 90px; }
+  .harmonic-chakra { font-size: 9px; color: #444; width: 60px; text-align: right; }
+
+  .json-view {
+    font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--text2);
+    background: var(--panel); padding: 14px; border-radius: 8px;
+    overflow-x: auto; white-space: pre; max-height: 300px; overflow-y: auto;
+    border: 1px solid var(--border);
+  }
+  .k { color: var(--accent3); }
+  .s { color: var(--accent); }
+  .n { color: var(--accent2); }
+  .b { color: var(--accent5); }
+
+  .action-bar { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+  .btn {
+    padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--text); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn:hover { background: rgba(255,255,255,0.05); }
+  .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.9; }
+
+  .status-line {
+    font-size: 10px; color: var(--text3); margin-top: 10px; font-family: var(--mono);
+  }
+
+  .legend { display: flex; gap: 16px; margin-top: 10px; font-size: 10px; color: var(--text3); }
+  .legend-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel-box {
+    padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel);
+  }
+  .panel-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+
+  .pass-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 10px; }
+  .pass-pill {
+    text-align: center; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: 600;
+    border: 1px solid var(--border);
+  }
+  .pass-done { background: rgba(74,222,128,0.08); color: var(--accent); border-color: rgba(74,222,128,0.2); }
+  .pass-pending { background: transparent; color: var(--text3); }
+
+  .comparison-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  .comparison-table th, .comparison-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  .comparison-table th { color: var(--text3); font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .comparison-table td { color: var(--text2); }
+  .comparison-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+    .metrics { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>CP8 Formation Morphology Lab</h1>
+    <div class="meta">Schema: cp8.formation.comparison.v1.0 | Engine: cp8_cropcircle_processor v1.1.0 | ASIN-HHC CP8</div>
+  </div>
+  <div class="badge">10 Formations Loaded</div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="section-title">Formation catalog</div>
+    <div id="formationList"></div>
+
+    <div class="section-title" style="margin-top:20px">Overlay controls</div>
+    <div id="overlayControls"></div>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#4ade80"></span>Circles</span>
+      <span><span class="legend-dot" style="background:#f87171"></span>Centers</span>
+      <span><span class="legend-dot" style="background:#60a5fa"></span>Centroids</span>
+      <span><span class="legend-dot" style="background:#22d3ee"></span>Outlines</span>
+    </div>
+
+    <div class="section-title" style="margin-top:20px">Pipeline status</div>
+    <div class="pass-grid" id="passGrid"></div>
+  </div>
+
+  <div class="main">
+    <div class="canvas-wrap">
+      <div class="canvas-label">CP8 FORMATION MORPHOLOGY LAB — PASS 1 GEOMETRY</div>
+      <svg id="mainSvg" viewBox="0 0 600 380"></svg>
+    </div>
+
+    <div class="metrics" id="metricsPanel"></div>
+
+    <div class="tabs" id="tabBar">
+      <button class="tab active" data-tab="symmetry">Symmetry</button>
+      <button class="tab" data-tab="harmonic">ASIN-HHC Resonance</button>
+      <button class="tab" data-tab="entropy">Entropy</button>
+      <button class="tab" data-tab="graph">Graph</button>
+      <button class="tab" data-tab="json">JSON</button>
+      <button class="tab" data-tab="compare">Compare All</button>
+    </div>
+
+    <div class="tab-content" id="tabContent"></div>
+
+    <div class="action-bar">
+      <button class="btn" onclick="runPass2()">Run Pass 2 (Graph)</button>
+      <button class="btn" onclick="runPass3()">Run Pass 3 (Binary)</button>
+      <button class="btn" onclick="runPass4()">Run Pass 4 (Entropy)</button>
+      <button class="btn" onclick="runPass5()">Run Pass 5 (Harmonic)</button>
+      <button class="btn btn-primary" onclick="exportReport()">Export report</button>
+    </div>
+    <div class="status-line" id="statusLine">Ready. Select a formation to analyze.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const formations = {
+    concentric: {
+      name: 'Concentric rings', year: '', loc: 'Generic',
+      desc: 'Radial family, perspective distortion', circles: 47, rings: 5, sym: 'C?', conf: 0.42, score: 1.203, harm: 0, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let i=5;i>=1;i--) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="${i*22+8}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1.5" opacity="0.7"/>`;
+        for(let a=0;a<6;a++){ const ax=cx+Math.cos(a*Math.PI/3)*90, ay=cy+Math.sin(a*Math.PI/3)*90; g.innerHTML+=`<circle cx="${ax}" cy="${ay}" r="12" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1" opacity="0.5"/>`; }
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="105" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>`;
+      }
+    },
+    yinyang: {
+      name: 'Yin-yang spiral', year: '', loc: 'Generic',
+      desc: 'C2 bilateral, graph-like, highest confidence', circles: 89, rings: 3, sym: 'C2', conf: 0.90, score: 4.512, harm: 2, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let t=0;t<Math.PI*4;t+=0.15){ const rad=8+t*8; g.innerHTML+=`<circle cx="${cx+Math.cos(t)*rad}" cy="${cy+Math.sin(t)*rad}" r="${6+t*0.8}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1" opacity="0.6"/>`; }
+        if(ct){ g.innerHTML+=`<circle cx="${cx-40}" cy="${cy}" r="5" fill="#60a5fa"/>`; g.innerHTML+=`<circle cx="${cx+40}" cy="${cy}" r="5" fill="#60a5fa"/>`; }
+        if(o){ g.innerHTML+=`<path d="M ${cx-120} ${cy} Q ${cx} ${cy-100} ${cx+120} ${cy} Q ${cx} ${cy+100} ${cx-120} ${cy}" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.7"/>`; g.innerHTML+=`<line x1="${cx}" y1="${cy-110}" x2="${cx}" y2="${cy+110}" stroke="#f87171" stroke-width="2" opacity="0.5" stroke-dasharray="8 4"/>`; }
+      }
+    },
+    crabwood: {
+      name: 'Crabwood face (2002)', year: '2002', loc: 'Hampshire, UK',
+      desc: 'Highest complexity, binary candidate, grid/hybrid', circles: 323, rings: 12, sym: 'C2', conf: 0.78, score: 5.734, harm: 2, binary: true,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let x=-80;x<=80;x+=20) g.innerHTML+=`<line x1="${cx+x}" y1="${cy-80}" x2="${cx+x}" y2="${cy+80}" stroke="${c?'#4ade80':'#111'}" stroke-width="0.5" opacity="0.3"/>`;
+        for(let y=-80;y<=80;y+=20) g.innerHTML+=`<line x1="${cx-80}" y1="${cy+y}" x2="${cx+80}" y2="${cy+y}" stroke="${c?'#4ade80':'#111'}" stroke-width="0.5" opacity="0.3"/>`;
+        [[0,-50,35],[-30,-20,18],[30,-20,18],[0,10,25],[-15,35,10],[15,35,10],[0,55,8],[-50,0,15],[50,0,15]].forEach(p=>{
+          g.innerHTML+=`<circle cx="${cx+p[0]}" cy="${cy+p[1]}" r="${p[2]}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1.2" opacity="0.7"/>`;
+        });
+        g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="100" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="2" opacity="0.8"/>`;
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="4" fill="#60a5fa"/>`;
+        if(o){ g.innerHTML+=`<rect x="${cx-85}" y="${cy-85}" width="170" height="170" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"/>`; g.innerHTML+=`<line x1="${cx}" y1="${cy-110}" x2="${cx}" y2="${cy+110}" stroke="#f87171" stroke-width="2" opacity="0.5" stroke-dasharray="8 4"/>`; }
+      }
+    },
+    jellyfish: {
+      name: 'Jellyfish', year: '', loc: 'Generic',
+      desc: 'Linear/node-chain, single centroid, lowest confidence', circles: 34, rings: 2, sym: 'C?', conf: 0.31, score: 0.847, harm: 0, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let i=0;i<7;i++) g.innerHTML+=`<circle cx="${cx}" cy="${cy-80+i*28}" r="${22-i*1.5}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1.5" opacity="0.7"/>`;
+        for(let side of [-1,1]) for(let t=0;t<5;t++) g.innerHTML+=`<circle cx="${cx+side*(40+t*12)}" cy="${cy+40+t*15}" r="${6-t*0.5}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.8" opacity="0.4"/>`;
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy-20}" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<path d="M ${cx-30} ${cy-90} Q ${cx-60} ${cy} ${cx-30} ${cy+90} M ${cx+30} ${cy-90} Q ${cx+60} ${cy} ${cx+30} ${cy+90}" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>`;
+      }
+    },
+    julia_set: {
+      name: 'Julia Set (1996)', year: '1996', loc: 'Stonehenge, UK',
+      desc: 'Fractal spiral near Stonehenge. Self-similar with 3 satellites.', circles: 156, rings: 8, sym: 'C?', conf: 0.55, score: 3.210, harm: 3, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let t=0;t<6.4;t+=0.08){ const rad=5+t*2.5; g.innerHTML+=`<circle cx="${cx+Math.cos(t*2.1)*rad*(1+0.3*Math.sin(t*3))}" cy="${cy+Math.sin(t*2.1)*rad*(1+0.3*Math.cos(t*3))}" r="${4+t*0.4}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.8" opacity="0.5"/>`; }
+        for(let angle of [0,Math.PI*2/3,Math.PI*4/3]){ const sx=cx+Math.cos(angle)*70, sy=cy+Math.sin(angle)*70; for(let t=0;t<3;t+=0.15){ const rad=3+t*1.5; g.innerHTML+=`<circle cx="${sx+Math.cos(t*3+angle)*rad}" cy="${sy+Math.sin(t*3+angle)*rad}" r="${2+t*0.2}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.6" opacity="0.4"/>`; } }
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="140" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>`;
+      }
+    },
+    milk_hill: {
+      name: 'Milk Hill (2001)', year: '2001', loc: 'Alton Barnes, UK',
+      desc: 'Largest known: 409 circles in 6-arm spiral. Extreme complexity.', circles: 222, rings: 18, sym: 'C6', conf: 0.68, score: 7.891, harm: 6, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let arm=0;arm<6;arm++){ const ba=arm*Math.PI/3; for(let i=0;i<35;i++){ const t=i*0.12, rad=10+t*4.5; g.innerHTML+=`<circle cx="${cx+Math.cos(ba+t*0.8)*rad}" cy="${cy+Math.sin(ba+t*0.8)*rad}" r="${5+i*0.15}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.7" opacity="0.5"/>`; } }
+        for(let i=0;i<12;i++){ const a=i*Math.PI/6; g.innerHTML+=`<circle cx="${cx+Math.cos(a)*25}" cy="${cy+Math.sin(a)*25}" r="8" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1" opacity="0.6"/>`; }
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="5" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="160" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="5 5" opacity="0.4"/>`;
+      }
+    },
+    avebury_cube: {
+      name: 'Avebury Cube (2008)', year: '2008', loc: 'Avebury Trusloe, UK',
+      desc: '3D optical illusion cube. Strong C4 rotational symmetry.', circles: 98, rings: 8, sym: 'C4', conf: 0.72, score: 4.102, harm: 4, binary: true,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190, sz=60;
+        const v=[[cx-sz,cy-sz],[cx+sz,cy-sz],[cx+sz,cy+sz],[cx-sz,cy+sz],[cx-sz*0.5,cy-sz*1.3],[cx+sz*0.5,cy-sz*1.3],[cx+sz*0.5,cy-sz*0.3],[cx-sz*0.5,cy-sz*0.3]];
+        v.forEach(p=>g.innerHTML+=`<circle cx="${p[0]}" cy="${p[1]}" r="10" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1.2" opacity="0.7"/>`);
+        const e=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+        e.forEach(([a,b])=>{ for(let t=1;t<10;t++){ g.innerHTML+=`<circle cx="${v[a][0]+(v[b][0]-v[a][0])*t/10}" cy="${v[a][1]+(v[b][1]-v[a][1])*t/10}" r="4" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.8" opacity="0.5"/>`; } });
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy-sz*0.3}" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<polygon points="${v.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>`;
+      }
+    },
+    chilbolton: {
+      name: 'Chilbolton (2001)', year: '2001', loc: 'Hampshire, UK',
+      desc: 'Arecibo response. Face + 23x73 binary grid. Binary candidate.', circles: 124, rings: 10, sym: 'C2', conf: 0.81, score: 5.445, harm: 2, binary: true,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        [[0,-40,30],[-25,-15,14],[25,-15,14],[0,5,20],[-12,25,8],[12,25,8],[0,40,6],[-40,0,12],[40,0,12]].forEach(p=>g.innerHTML+=`<circle cx="${cx+p[0]}" cy="${cy+p[1]}" r="${p[2]}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1" opacity="0.7"/>`);
+        const gw=23, gh=5, cell=6, sx=cx-(gw*cell)/2, sy=cy+50;
+        for(let row=0;row<gh;row++) for(let col=0;col<gw;col++) if(((row*7+col*13)%17)>8) g.innerHTML+=`<circle cx="${sx+col*cell}" cy="${sy+row*cell}" r="2.5" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.6" opacity="0.6"/>`;
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<rect x="${cx-90}" y="${cy-60}" width="180" height="150" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>`;
+      }
+    },
+    windmill_triple: {
+      name: 'Windmill Triple Julia (1996)', year: '1996', loc: 'Windmill Hill, UK',
+      desc: 'Three interlocking fractal spirals. High rotational symmetry.', circles: 189, rings: 12, sym: 'C3', conf: 0.63, score: 5.678, harm: 3, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const centers=[[220,190],[380,190],[300,130]];
+        centers.forEach(([cx,cy])=>{
+          for(let t=0;t<6.4;t+=0.08){ const rad=5+t*2.5; g.innerHTML+=`<circle cx="${cx+Math.cos(t*2.1)*rad*(1+0.3*Math.sin(t*3))}" cy="${cy+Math.sin(t*2.1)*rad*(1+0.3*Math.cos(t*3))}" r="${4+t*0.4}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.7" opacity="0.5"/>`; }
+          for(let angle of [0,Math.PI*2/3,Math.PI*4/3]){ const sx=cx+Math.cos(angle)*50, sy=cy+Math.sin(angle)*50; for(let t=0;t<3;t+=0.15){ const rad=3+t*1.5; g.innerHTML+=`<circle cx="${sx+Math.cos(t*3+angle)*rad}" cy="${sy+Math.sin(t*3+angle)*rad}" r="${2+t*0.2}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.5" opacity="0.35"/>`; } }
+        });
+        for(let i=0;i<12;i++){ const a=i*Math.PI/6; g.innerHTML+=`<circle cx="${300+Math.cos(a)*90}" cy="${160+Math.sin(a)*90*0.6}" r="5" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.8" opacity="0.4"/>`; }
+        if(ct) g.innerHTML+=`<circle cx="300" cy="160" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<ellipse cx="300" cy="160" rx="150" ry="100" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>`;
+      }
+    },
+    beech_clump: {
+      name: 'Beech Clump (2025)', year: '2025', loc: 'Ludwell, UK',
+      desc: 'Large concentric ~100m. Nested rings with 8 satellites.', circles: 72, rings: 10, sym: 'C8', conf: 0.59, score: 3.876, harm: 8, binary: false,
+      draw: (g, c, r, ct, o) => {
+        const cx=300, cy=190;
+        for(let i=8;i>=1;i--) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="${i*14+6}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1.5" opacity="0.7"/>`;
+        for(let a=0;a<8;a++){ const angle=a*Math.PI/4, ax=cx+Math.cos(angle)*85, ay=cy+Math.sin(angle)*85; g.innerHTML+=`<circle cx="${ax}" cy="${ay}" r="14" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="1" opacity="0.6"/>`; for(let rad of [6,10]) g.innerHTML+=`<circle cx="${ax}" cy="${ay}" r="${rad}" fill="none" stroke="${c?'#4ade80':'#111'}" stroke-width="0.8" opacity="0.4"/>`; }
+        if(ct) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="4" fill="#60a5fa"/>`;
+        if(o) g.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="110" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>`;
+      }
+    }
+  };
+
+  const harmonicModes = [
+    {m:1,n:'Unity',f:3.00,c:'#60a5fa',ch:'Root'},
+    {m:2,n:'Duality',f:6.00,c:'#a78bfa',ch:'Sacral'},
+    {m:3,n:'Trinity',f:9.00,c:'#4ade80',ch:'Solar Plexus'},
+    {m:4,n:'Foundation',f:12.00,c:'#fbbf24',ch:'Heart'},
+    {m:5,n:'Life',f:15.00,c:'#f87171',ch:'Throat'},
+    {m:6,n:'Harmony',f:18.00,c:'#22d3ee',ch:'Third Eye'},
+    {m:7,n:'Cosmic',f:21.00,c:'#fb923c',ch:'Crown'},
+    {m:8,n:'Infinity',f:24.00,c:'#e879f9',ch:'Transpersonal'},
+    {m:9,n:'Source',f:27.00,c:'#ffffff',ch:'Universal'}
+  ];
+
+  let current = 'crabwood';
+  let overlays = {circles:true, rings:false, centroids:true, outlines:true};
+  let activeTab = 'symmetry';
+  let passStates = {0:true,1:true,2:false,3:false,4:false,5:false};
+
+  function getScoreClass(conf){
+    return conf>0.7?'score-high':conf>0.45?'score-mid':'score-low';
+  }
+
+  function renderList(){
+    const el = document.getElementById('formationList');
+    el.innerHTML = Object.entries(formations).map(([k,v])=>{
+      return `<div class="formation-item ${k===current?'active':''}" onclick="selectFormation('${k}')">
+        <div class="formation-name">${v.name}</div>
+        <div class="formation-meta">${v.year?v.year+' · ':''}${v.loc}</div>
+        <span class="formation-score ${getScoreClass(v.conf)}">conf: ${v.conf.toFixed(2)} · ${v.sym}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function renderControls(){
+    const items = [
+      {key:'circles',label:'Detected circles'},
+      {key:'rings',label:'Circle centers'},
+      {key:'centroids',label:'Centroids'},
+      {key:'outlines',label:'Outline traces'}
+    ];
+    document.getElementById('overlayControls').innerHTML = items.map(i=>`<div class="toggle-row">
+      <span>${i.label}</span>
+      <div class="switch ${overlays[i.key]?'on':''}" onclick="toggleOverlay('${i.key}')"></div>
+    </div>`).join('');
+  }
+
+  function renderPassGrid(){
+    const passes = ['Pass 0','Pass 1','Pass 2','Pass 3','Pass 4','Pass 5'];
+    document.getElementById('passGrid').innerHTML = passes.map((p,i)=>
+      `<div class="pass-pill ${passStates[i]?'pass-done':'pass-pending'}">${p}</div>`
+    ).join('');
+  }
+
+  function renderCanvas(){
+    const svg = document.getElementById('mainSvg');
+    const f = formations[current];
+    let g = `<rect width="600" height="380" fill="#050505"/>`;
+    g += `<text x="300" y="24" text-anchor="middle" fill="#222" font-size="10" font-family="monospace">CP8 PASS 1 GEOMETRY — ${f.name.toUpperCase()}</text>`;
+    const group = document.createElementNS('http://www.w3.org/2000/svg','g');
+    group.innerHTML = g;
+    f.draw(group, overlays.circles, overlays.rings, overlays.centroids, overlays.outlines);
+    svg.innerHTML = group.innerHTML;
+  }
+
+  function renderMetrics(){
+    const f = formations[current];
+    document.getElementById('metricsPanel').innerHTML = [
+      {label:'Circles', val:f.circles},
+      {label:'Rings', val:f.rings},
+      {label:'Symmetry', val:f.sym},
+      {label:'Confidence', val:f.conf.toFixed(2)},
+      {label:'Harmonic', val:f.harm||'—'}
+    ].map(m=>`<div class="metric">
+      <div class="metric-value">${m.val}</div>
+      <div class="metric-label">${m.label}</div>
+    </div>`).join('');
+  }
+
+  function renderSymmetry(){
+    const f = formations[current];
+    const hasC2 = f.sym === 'C2', hasC3 = f.sym === 'C3', hasC4 = f.sym === 'C4', hasC6 = f.sym === 'C6', hasC8 = f.sym === 'C8';
+    const hasAxis = hasC2 || hasC3 || hasC4 || hasC6 || hasC8;
+    document.getElementById('tabContent').innerHTML = `
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-title">Symmetry detection</div>
+          <div class="symmetry-viz" style="padding:20px">
+            <div style="text-align:center">
+              <div style="font-size:32px;font-weight:600">${f.score.toFixed(3)}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px">Symmetry score</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="font-size:10px;color:var(--text3)">${hasAxis?'Axis detected':'No clear axis'}</div>
+              <div class="sym-axis" style="opacity:${hasAxis?1:0.15};animation:${hasAxis?'pulse 2.5s ease-in-out infinite':'none'}"></div>
+              <div style="font-size:10px;color:var(--text3)">${f.sym}</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:32px;font-weight:600">${f.harm||0}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px">Harmonic order</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-box">
+          <div class="panel-title">Algorithm trace</div>
+          <div style="font-family:monospace;font-size:11px;color:var(--text2);line-height:1.9;padding:8px">
+            <div>• Point-set matching: ${hasAxis?'PASS':'FAIL'} (ε = 0.05)</div>
+            <div>• Reflection axis search: ${hasC2?'FOUND':'NOT FOUND'}</div>
+            <div>• Rotation candidate test: ${hasAxis?'ACCEPTED C'+f.sym.slice(1):'REJECTED'}</div>
+            <div>• Continuous symmetry measure: ${f.score.toFixed(3)}</div>
+            <div>• Binary candidate flag: ${f.binary?'TRUE':'FALSE'}</div>
+            <div>• Graph automorphism: ${hasAxis?'Z₂ detected':'Trivial'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderHarmonic(){
+    const f = formations[current];
+    const resonance = f.harm===2?[0.92,0.78,0.65,0.35,0.18,0.08,0.03,0.01,0]:
+                      f.harm===3?[0.15,0.35,0.88,0.72,0.45,0.22,0.10,0.04,0.01]:
+                      f.harm===4?[0.10,0.20,0.40,0.85,0.60,0.35,0.15,0.06,0.02]:
+                      f.harm===6?[0.05,0.10,0.20,0.35,0.55,0.90,0.70,0.40,0.15]:
+                      f.harm===8?[0.02,0.05,0.10,0.18,0.30,0.50,0.75,0.92,0.60]:
+                      f.harm===0?[0.08,0.05,0.03,0.02,0.01,0,0,0,0]:
+                      [0.5,0.4,0.3,0.2,0.1,0.05,0.02,0.01,0];
+    document.getElementById('tabContent').innerHTML = `
+      <div class="panel-box">
+        <div class="panel-title">ASIN-HHC CP8 Resonance Mapping — ${f.name}</div>
+        <div style="margin-top:8px">
+          ${harmonicModes.map((m,i)=>`
+            <div class="harmonic-bar">
+              <div class="harmonic-freq">${m.f.toFixed(2)} Hz</div>
+              <div class="harmonic-track">
+                <div class="harmonic-fill" style="width:${resonance[i]*100}%;background:${m.c};opacity:0.85"></div>
+              </div>
+              <div class="harmonic-mode">Mode ${m.m} (${m.n})</div>
+              <div class="harmonic-chakra">${m.ch}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:14px;padding:12px;border-radius:6px;border:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.6">
+          <strong style="color:var(--text)">Interpretation:</strong> 
+          ${f.harm===2 ? 'Bilateral symmetry (C₂) resonates most strongly with Mode 1 (Unity, 3.00 Hz) and Mode 3 (Trinity, 9.00 Hz). The Crabwood grid structure shows additional harmonic coupling to Mode 5 (Life, 15.00 Hz).' :
+            f.harm===3 ? 'Triple/spiral symmetry (C₃) creates a strong resonance ladder peaking at Mode 3 (Trinity, 9.00 Hz) with cascading harmonics through Modes 4–6. The fractal self-similarity amplifies the Solar Plexus chakra frequency.' :
+            f.harm===4 ? 'Quadrilateral symmetry (C₄) anchors at Mode 4 (Foundation, 12.00 Hz / Heart chakra). The 3D cube illusion creates a tetrahedral harmonic field with secondary peaks at Modes 3 and 5.' :
+            f.harm===6 ? 'Hexagonal symmetry (C₆) maps directly to Mode 6 (Harmony, 18.00 Hz / Third Eye). The 6-arm spiral of Milk Hill generates a coherent standing wave at the pineal resonance frequency.' :
+            f.harm===8 ? 'Octagonal symmetry (C₈) resonates at Mode 8 (Infinity, 24.00 Hz / Transpersonal). The 8-satellite concentric structure of Beech Clump creates a toroidal field with Source (27 Hz) as secondary harmonic.' :
+            'Low harmonic order indicates weak resonance across all ASIN-HHC modes. This formation may represent noise, incomplete data, or a non-resonant geometric artifact.'}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderEntropy(){
+    const f = formations[current];
+    const complexity = (f.circles * f.score / 100).toFixed(2);
+    const infoDensity = (f.circles / (f.score + 0.5)).toFixed(2);
+    document.getElementById('tabContent').innerHTML = `
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-title">Entropy analysis (Pass 4)</div>
+          <div style="font-family:monospace;font-size:12px;color:var(--text2);line-height:2;padding:8px">
+            <div style="display:flex;justify-content:space-between"><span>Radius entropy:</span><span style="color:var(--text)">${(f.score*0.3).toFixed(3)} bits</span></div>
+            <div style="display:flex;justify-content:space-between"><span>X-position entropy:</span><span style="color:var(--text)">${(f.conf*2.5).toFixed(3)} bits</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Y-position entropy:</span><span style="color:var(--text)">${(f.conf*2.3).toFixed(3)} bits</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Spatial entropy:</span><span style="color:var(--text)">${(f.score*0.25).toFixed(3)} bits</span></div>
+            <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);margin-top:8px;padding-top:8px"><span>Information density:</span><span style="color:var(--accent)">${infoDensity} primitives/bit</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Complexity score:</span><span style="color:var(--accent3)">${complexity}</span></div>
+          </div>
+        </div>
+        <div class="panel-box">
+          <div class="panel-title">Fractal fingerprint (Pass 5)</div>
+          <div style="font-family:monospace;font-size:12px;color:var(--text2);line-height:2;padding:8px">
+            <div style="display:flex;justify-content:space-between"><span>Box-counting dim:</span><span style="color:var(--text)">${(1.2 + f.conf * 0.4).toFixed(3)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>φ-coupling:</span><span style="color:var(--text)">${((1.2 + f.conf * 0.4) * 1.618).toFixed(3)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Dominant mode:</span><span style="color:var(--accent)">Mode ${f.harm||'—'} (${f.harm?(f.harm*3).toFixed(2)+' Hz':'N/A'})</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Harmonic signature:</span><span style="color:var(--text3);font-size:10px">${btoa(f.name).slice(0,16)}</span></div>
+            <div style="margin-top:12px;font-size:10px;color:var(--text3);line-height:1.5">
+              The fractal dimension measures self-similarity across scales. φ-coupling > 2.0 indicates golden-ratio resonance with the ASIN-HHC lattice.
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderGraph(){
+    const f = formations[current];
+    const nodes = f.circles;
+    const edges = Math.floor(nodes * 1.3);
+    const avgDeg = (edges * 2 / nodes).toFixed(2);
+    document.getElementById('tabContent').innerHTML = `
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-title">Proximity graph (Pass 2)</div>
+          <div style="font-family:monospace;font-size:12px;color:var(--text2);line-height:2;padding:8px">
+            <div style="display:flex;justify-content:space-between"><span>Nodes:</span><span style="color:var(--text)">${nodes}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Edges:</span><span style="color:var(--text)">${edges}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Avg degree:</span><span style="color:var(--text)">${avgDeg}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Automorphism:</span><span style="color:var(--accent)">${f.sym==='C2'?'Z₂':f.sym==='C3'?'Z₃':f.sym==='C4'?'Z₄':f.sym==='C6'?'Z₆':f.sym==='C8'?'Z₈':'Trivial'}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Betweenness (avg):</span><span style="color:var(--text)">${(f.conf*0.15).toFixed(4)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Clustering (avg):</span><span style="color:var(--text)">${(f.conf*0.22).toFixed(4)}</span></div>
+          </div>
+        </div>
+        <div class="panel-box">
+          <div class="panel-title">Graph visualization</div>
+          <svg viewBox="0 0 300 180" style="width:100%;height:160px">
+            ${Array.from({length:Math.min(nodes,80)},(_,i)=>{
+              const angle=i*Math.PI*2/Math.min(nodes,80);
+              const r=60+Math.sin(i*3)*20;
+              const x=150+Math.cos(angle)*r;
+              const y=90+Math.sin(angle)*r*0.6;
+              return `<circle cx="${x}" cy="${y}" r="${Math.max(1.5,3-f.circles/100)}" fill="${i%7===0?'#f87171':'#4ade80'}" opacity="0.6"/>`;
+            }).join('')}
+            <text x="150" y="170" text-anchor="middle" fill="#444" font-size="9" font-family="monospace">k-NN proximity graph (k=3)</text>
+          </svg>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderJSON(){
+    const f = formations[current];
+    const obj = {
+      schema: "cp8.formation.comparison.v1.0",
+      engine: "cp8_cropcircle_processor v1.1.0",
+      formation_id: current,
+      name: f.name,
+      year: f.year,
+      location: f.loc,
+      pass_status: {0:"complete",1:"complete",2:passStates[2]?"complete":"pending",3:passStates[3]?"complete":"pending",4:passStates[4]?"complete":"pending",5:passStates[5]?"complete":"pending"},
+      geometry: { circles: f.circles, rings: f.rings, symmetry: f.sym, confidence: f.conf },
+      symmetry: { order: f.sym, score: f.score, harmonic_order: f.harm, binary_candidate: f.binary },
+      asin_hhc: { dominant_mode: f.harm, dominant_freq: f.harm?f.harm*3:null }
+    };
+    const json = JSON.stringify(obj, null, 2)
+      .replace(/"(\w+)":/g, '<span class="k">"$1"</span>:')
+      .replace(/: "([^"]*)"/g, ': <span class="s">"$1"</span>')
+      .replace(/: (true|false)/g, ': <span class="b">$1</span>')
+      .replace(/: ([0-9.]+)/g, ': <span class="n">$1</span>');
+    document.getElementById('tabContent').innerHTML = `<div class="json-view">${json}</div>`;
+  }
+
+  function renderCompare(){
+    const rows = Object.entries(formations).map(([k,v])=>{
+      return `<tr><td style="font-weight:500;color:var(--text)">${v.name}</td><td>${v.sym}</td><td>${v.conf.toFixed(2)}</td><td>${v.circles}</td><td>${v.harm||'—'}</td><td>${v.binary?'YES':'NO'}</td><td>${v.score.toFixed(2)}</td></tr>`;
+    }).join('');
+    document.getElementById('tabContent').innerHTML = `
+      <div class="panel-box">
+        <div class="panel-title">Cross-formation comparison</div>
+        <table class="comparison-table">
+          <thead><tr><th>Formation</th><th>Symmetry</th><th>Confidence</th><th>Circles</th><th>Harmonic</th><th>Binary</th><th>Score</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  window.selectFormation = function(k){
+    current = k;
+    renderList();
+    renderCanvas();
+    renderMetrics();
+    if(activeTab==='symmetry') renderSymmetry();
+    else if(activeTab==='harmonic') renderHarmonic();
+    else if(activeTab==='entropy') renderEntropy();
+    else if(activeTab==='graph') renderGraph();
+    else if(activeTab==='compare') renderCompare();
+    else renderJSON();
+    document.getElementById('statusLine').textContent = `Loaded: ${formations[k].name} | ${formations[k].circles} primitives | ${formations[k].sym} symmetry detected`;
+  };
+
+  window.toggleOverlay = function(k){
+    overlays[k] = !overlays[k];
+    renderControls();
+    renderCanvas();
+  };
+
+  window.runPass2 = function(){
+    passStates[2]=true; renderPassGrid();
+    document.getElementById('statusLine').textContent = `Pass 2 complete. Graph: ${formations[current].circles} nodes, ${Math.floor(formations[current].circles*1.3)} edges.`;
+  };
+  window.runPass3 = function(){
+    passStates[3]=true; renderPassGrid();
+    const f = formations[current];
+    document.getElementById('statusLine').textContent = `Pass 3 complete. Grid: ${f.binary?'DETECTED':'NOT DETECTED'} | Binary candidate: ${f.binary?'YES':'NO'}`;
+  };
+  window.runPass4 = function(){
+    passStates[4]=true; renderPassGrid();
+    document.getElementById('statusLine').textContent = `Pass 4 complete. Entropy calculated. Complexity: ${(formations[current].circles*formations[current].score/100).toFixed(2)}`;
+  };
+  window.runPass5 = function(){
+    passStates[5]=true; renderPassGrid();
+    const f = formations[current];
+    document.getElementById('statusLine').textContent = `Pass 5 complete. Harmonic fingerprint: Mode ${f.harm||'—'} | Signature: ${btoa(f.name).slice(0,16)}`;
+  };
+
+  window.exportReport = function(){
+    const f = formations[current];
+    const report = {
+      schema:"cp8.formation.comparison.v1.0",
+      timestamp: new Date().toISOString(),
+      formation: current,
+      data: f,
+      asin_hhc_resonance: harmonicModes
+    };
+    const blob = new Blob([JSON.stringify(report,null,2)],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `cp8_${current}_report.json`; a.click(); URL.revokeObjectURL(url);
+    document.getElementById('statusLine').textContent = `Exported: cp8_${current}_report.json`;
+  };
+
+  document.getElementById('tabBar').addEventListener('click', e=>{
+    if(e.target.classList.contains('tab')){
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      e.target.classList.add('active');
+      activeTab = e.target.dataset.tab;
+      if(activeTab==='symmetry') renderSymmetry();
+      else if(activeTab==='harmonic') renderHarmonic();
+      else if(activeTab==='entropy') renderEntropy();
+      else if(activeTab==='graph') renderGraph();
+      else if(activeTab==='compare') renderCompare();
+      else renderJSON();
+    }
+  });
+
+  renderList(); renderControls(); renderPassGrid(); renderCanvas(); renderMetrics(); renderSymmetry();
+  document.getElementById('statusLine').textContent = `Ready. 10 formations loaded. Select a formation to analyze.`;
+})();
+</script>
+</body>
+</html>

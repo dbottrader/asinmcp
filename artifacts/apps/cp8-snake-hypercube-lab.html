@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#050911" />
+<title>CP8 Snake // Hypercube Lab v1.1 — CP8 Math Core</title>
+<style>
+  :root{
+    --bg:#04070d;--panel:rgba(8,15,27,.78);--panel2:rgba(13,24,40,.82);
+    --line:rgba(105,226,255,.26);--cyan:#6be6ff;--cyan2:#1cb7ff;
+    --gold:#ffbe55;--violet:#9a7cff;--good:#65f5b0;--bad:#ff667d;
+    --text:#eef8ff;--muted:#88a2b5;--shadow:0 18px 70px rgba(0,0,0,.42);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
+  body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+    radial-gradient(circle at 50% -20%,rgba(28,183,255,.20),transparent 38%),
+    radial-gradient(circle at 8% 88%,rgba(154,124,255,.13),transparent 34%),
+    radial-gradient(circle at 93% 82%,rgba(255,190,85,.10),transparent 28%),
+    linear-gradient(rgba(107,230,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(107,230,255,.025) 1px,transparent 1px);
+    background-size:auto,auto,auto,30px 30px,30px 30px}
+  button,input,select{font:inherit}
+  select{min-height:42px;border:1px solid var(--line);border-radius:11px;background:#0a1422;color:var(--text);padding:0 10px;font-size:11px;font-weight:800;letter-spacing:.06em}
+  button{touch-action:manipulation}
+  .app{height:100%;display:grid;grid-template-rows:auto 1fr auto;position:relative;z-index:1}
+  .topbar{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(3,7,13,.84);backdrop-filter:blur(16px)}
+  .brand{display:flex;align-items:center;gap:11px;min-width:0}
+  .sigil{width:34px;height:34px;border:1px solid rgba(255,190,85,.7);clip-path:polygon(50% 0,94% 25%,94% 75%,50% 100%,6% 75%,6% 25%);display:grid;place-items:center;box-shadow:0 0 22px rgba(255,190,85,.18)}
+  .sigil:before{content:"∞";color:var(--gold);font-size:18px}
+  .brand h1{font-size:14px;line-height:1.15;letter-spacing:.18em;margin:0;white-space:nowrap}
+  .brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.17em;margin-top:3px}
+  .mode-tabs{margin-left:auto;display:flex;padding:3px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.025)}
+  .tab{border:0;background:transparent;color:var(--muted);padding:8px 13px;border-radius:8px;font-size:11px;font-weight:800;letter-spacing:.12em;cursor:pointer}
+  .tab.active{color:#031018;background:linear-gradient(135deg,var(--cyan),#bdf5ff);box-shadow:0 0 24px rgba(107,230,255,.22)}
+  .top-actions{display:flex;gap:8px}
+  .icon-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.035);color:var(--text);cursor:pointer}
+  .workspace{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:12px;padding:12px}
+  .stage,.rail{min-height:0;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(9,17,29,.82),rgba(3,8,15,.9));box-shadow:var(--shadow);overflow:hidden}
+  .stage{position:relative}
+  .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .stage-hud{position:absolute;inset:0;pointer-events:none;padding:15px;display:flex;flex-direction:column;justify-content:space-between}
+  .hud-row{display:flex;justify-content:space-between;gap:10px}
+  .badge{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:rgba(3,8,15,.72);backdrop-filter:blur(8px);font-size:10px;letter-spacing:.12em;color:var(--muted)}
+  .badge strong{display:block;color:var(--text);font-size:16px;letter-spacing:.03em;margin-top:2px}
+  .badge.good strong{color:var(--good)}.badge.warn strong{color:var(--gold)}
+  .center-message{align-self:center;margin:auto;text-align:center;padding:16px 20px;border:1px solid var(--line);background:rgba(3,8,15,.82);border-radius:14px;max-width:420px;backdrop-filter:blur(10px);pointer-events:auto}
+  .center-message[hidden]{display:none}
+  .center-message h2{margin:0 0 7px;font-size:19px;letter-spacing:.08em}.center-message p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.5}
+  .rail{display:flex;flex-direction:column}
+  .rail-scroll{padding:12px;overflow:auto;overscroll-behavior:contain}
+  .panel{border:1px solid rgba(107,230,255,.16);border-radius:14px;background:rgba(255,255,255,.025);padding:12px;margin-bottom:10px}
+  .panel:last-child{margin-bottom:0}
+  .panel-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:10px;letter-spacing:.16em;color:var(--cyan);font-weight:900}
+  .panel-title span:last-child{color:var(--muted);font-weight:600;letter-spacing:.08em}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .metric{padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(0,0,0,.18)}
+  .metric label{display:block;color:var(--muted);font-size:9px;letter-spacing:.1em}.metric b{display:block;margin-top:4px;font-size:19px}.metric b.cyan{color:var(--cyan)}.metric b.gold{color:var(--gold)}
+  .control-row{display:flex;gap:8px;margin-top:8px}.control-row:first-child{margin-top:0}
+  .btn{min-height:42px;flex:1;border:1px solid var(--line);border-radius:11px;background:linear-gradient(180deg,rgba(107,230,255,.12),rgba(107,230,255,.04));color:var(--text);font-size:11px;font-weight:900;letter-spacing:.09em;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}
+  .btn:active{transform:scale(.98)}.btn.primary{color:#041017;background:linear-gradient(135deg,var(--cyan),#bdf5ff);border-color:transparent}.btn.gold{color:#1d1100;background:linear-gradient(135deg,var(--gold),#ffe2a6);border-color:transparent}.btn.danger{color:#ffd8df;border-color:rgba(255,102,125,.38);background:rgba(255,102,125,.1)}.btn:disabled{opacity:.42;cursor:not-allowed}
+  .dimension-wrap{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}.dimension-wrap output{min-width:38px;text-align:center;color:var(--cyan);font-weight:900;font-size:22px}
+  input[type=range]{width:100%;accent-color:var(--cyan)}
+  .bit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.bit{min-height:42px;border:1px solid var(--line);border-radius:10px;background:rgba(28,183,255,.07);color:var(--cyan);font-weight:900;cursor:pointer}.bit small{display:block;color:var(--muted);font-size:8px}.bit:disabled{opacity:.25}.bit.invalid{border-color:rgba(255,102,125,.45);color:var(--bad)}
+  .state{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:18px;letter-spacing:.12em;word-break:break-all;color:var(--gold);padding:10px;border:1px dashed rgba(255,190,85,.28);border-radius:10px;text-align:center;background:rgba(255,190,85,.035)}
+  .log{height:124px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;line-height:1.55;color:#9ab6c8;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.07);padding:9px;border-radius:10px}.log .ok{color:var(--good)}.log .err{color:var(--bad)}.log .gold{color:var(--gold)}
+  .progress{height:7px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-top:9px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan2),var(--violet),var(--gold));transition:width .2s}
+  .switchline{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:11px}.switch{width:43px;height:24px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:2px;cursor:pointer}.switch i{display:block;width:18px;height:18px;border-radius:50%;background:var(--muted);transition:.2s}.switch.on i{transform:translateX(17px);background:var(--cyan);box-shadow:0 0 15px rgba(107,230,255,.6)}
+
+  .cp8-math{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .cp8-cell{position:relative;overflow:hidden;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(0,0,0,.2)}
+  .cp8-cell:after{content:"";position:absolute;inset:auto -20% -55% 20%;height:70px;border-radius:50%;filter:blur(18px);opacity:.18;background:var(--cyan)}
+  .cp8-cell:nth-child(2):after{background:var(--gold)}.cp8-cell:nth-child(3):after{background:var(--violet)}
+  .cp8-cell label{display:block;color:var(--muted);font-size:9px;letter-spacing:.11em}.cp8-cell b{display:block;margin-top:4px;font-size:18px}.cp8-cell small{display:block;color:var(--muted);font-size:9px;margin-top:3px;line-height:1.3}
+  .cp8-formula{margin-top:9px;padding:9px;border:1px dashed rgba(107,230,255,.22);border-radius:10px;color:#b8ccda;font:10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;word-break:break-word}
+  .glyph-strip{display:flex;gap:5px;overflow:auto;padding:3px 0 7px;scrollbar-width:thin}.glyph-chip{flex:0 0 auto;min-width:31px;height:31px;display:grid;place-items:center;border:1px solid rgba(107,230,255,.18);border-radius:9px;color:#89a6ba;background:rgba(255,255,255,.025);font-size:16px}.glyph-chip.active{color:#08111e;background:linear-gradient(135deg,var(--gold),#ffe2a6);border-color:transparent;box-shadow:0 0 18px rgba(255,190,85,.28)}
+  .asin-pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.asin-node{padding:8px 4px;text-align:center;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(0,0,0,.16);color:var(--muted);font-size:8px;letter-spacing:.08em}.asin-node b{display:block;color:var(--text);font-size:13px;margin-bottom:2px}.asin-node.on{border-color:rgba(101,245,176,.32);color:var(--good)}
+  .math-note{color:var(--muted);font-size:10px;line-height:1.5;margin:8px 0 0}
+  .footer{display:flex;align-items:center;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:rgba(3,7,13,.86);color:var(--muted);font-size:9px;letter-spacing:.1em}.footer .status-dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 10px var(--good)}.footer .spacer{flex:1}.footer strong{color:var(--gold)}
+  .classic-controls{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:grid;grid-template-columns:54px 54px 54px;grid-template-rows:54px 54px;gap:7px;pointer-events:auto}.pad{border:1px solid rgba(107,230,255,.32);border-radius:14px;background:rgba(3,8,15,.78);color:var(--cyan);font-size:22px;backdrop-filter:blur(8px)}.pad.up{grid-column:2}.pad.left{grid-row:2;grid-column:1}.pad.down{grid-row:2;grid-column:2}.pad.right{grid-row:2;grid-column:3}
+  .classic-controls[hidden]{display:none}
+  .help{position:fixed;inset:0;z-index:9;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:18px;backdrop-filter:blur(8px)}.help[hidden]{display:none}.help-card{width:min(680px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:18px;background:#08111e;padding:20px;box-shadow:var(--shadow)}.help-card h2{margin:0 0 10px}.help-card h3{color:var(--cyan);font-size:12px;letter-spacing:.12em;margin:18px 0 8px}.help-card p,.help-card li{color:#a7bdcc;font-size:13px;line-height:1.55}.help-card code{color:var(--gold)}
+  .toast{position:fixed;z-index:20;left:50%;bottom:45px;transform:translate(-50%,20px);opacity:0;pointer-events:none;border:1px solid var(--line);border-radius:11px;padding:10px 14px;background:#0a1422;color:var(--text);font-size:12px;transition:.2s}.toast.show{transform:translate(-50%,0);opacity:1}
+  .classic-only,.cube-only{display:none}.mode-classic .classic-only{display:block}.mode-cube .cube-only{display:block}.mode-cube .stage-hud.cube-only,.mode-classic .stage-hud.classic-only{display:flex}
+  @media(max-width:900px){
+    html,body{overflow-x:hidden;overflow-y:auto;max-width:100vw}.app{width:100%;max-width:100vw;height:auto;min-height:100%;grid-template-rows:auto auto auto}.workspace,.topbar,.footer{width:100%;max-width:100vw}.workspace{grid-template-columns:minmax(0,1fr);padding:8px;gap:8px}.stage{height:62vh;min-height:430px;min-width:0}.rail{overflow:visible;min-width:0}.rail-scroll{overflow:visible;min-width:0}.topbar{padding:9px}.brand{max-width:calc(100vw - 112px)}.brand small{display:none}.brand h1{font-size:12px;white-space:normal}.mode-tabs{order:3;width:100%;min-width:0;margin-left:0}.tab{flex:1;min-width:0}.topbar{flex-wrap:wrap}.top-actions{margin-left:auto}.hud-row{flex-wrap:wrap}.footer{position:sticky;bottom:0;z-index:5;flex-wrap:wrap;justify-content:center;text-align:center;line-height:1.4}.footer .spacer{display:none}.classic-controls{bottom:14px}.bit-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+  }
+  @media(max-width:480px){.stage{height:58vh;min-height:390px}.workspace{padding:6px}.topbar{gap:8px}.sigil{width:30px;height:30px}.icon-btn{width:34px;height:34px}.badge{padding:6px 8px;flex:1 1 42%}.badge strong{font-size:14px}.bit-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.cp8-math{grid-template-columns:1fr 1fr}.panel-title{gap:8px}.panel-title span:last-child{text-align:right}}
+</style>
+</head>
+<body class="mode-cube">
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="sigil"></div><div><h1>CP8 SNAKE // HYPERCUBE LAB</h1><small>INDUCED-PATH SEARCH + CP8 MATH RECEIPTS</small></div></div>
+    <div class="mode-tabs" role="tablist">
+      <button class="tab active" data-mode="cube">HYPERCUBE</button>
+      <button class="tab" data-mode="classic">CLASSIC SNAKE</button>
+    </div>
+    <div class="top-actions"><button id="toneBtn" class="icon-btn" title="Toggle tone">♪</button><button id="helpBtn" class="icon-btn" title="Help">?</button></div>
+  </header>
+
+  <main class="workspace">
+    <section class="stage" id="stage">
+      <canvas id="cubeCanvas"></canvas>
+      <canvas id="classicCanvas" hidden></canvas>
+      <div class="stage-hud cube-only">
+        <div class="hud-row">
+          <div class="badge">DIMENSION<strong id="hudDim">6D</strong></div>
+          <div class="badge good">VERIFIER<strong id="hudVerify">PASS</strong></div>
+          <div class="badge warn">BEST PATH<strong id="hudBest">0 edges</strong></div><div class="badge">CP8 SCORE<strong id="hudCP8">52.8</strong></div>
+        </div>
+        <div class="hud-row">
+          <div class="badge">SEARCH STATUS<strong id="hudStatus">READY</strong></div>
+          <div class="badge">STATE SPACE<strong id="hudSpace">64 vertices</strong></div>
+        </div>
+      </div>
+      <div class="stage-hud classic-only">
+        <div class="hud-row"><div class="badge">SCORE<strong id="classicScore">0</strong></div><div class="badge warn">HIGH SCORE<strong id="classicHigh">0</strong></div></div>
+        <div id="classicMessage" class="center-message" hidden><h2 id="classicMessageTitle">PAUSED</h2><p id="classicMessageText">Tap resume or press Space.</p><button id="classicResume" class="btn primary">RESUME</button></div>
+        <div class="classic-controls" id="classicPad"><button class="pad up" data-dir="up">▲</button><button class="pad left" data-dir="left">◀</button><button class="pad down" data-dir="down">▼</button><button class="pad right" data-dir="right">▶</button></div>
+      </div>
+    </section>
+
+    <aside class="rail">
+      <div class="rail-scroll cube-only">
+        <section class="panel">
+          <div class="panel-title"><span>SEARCH CONFIGURATION</span><span id="vertexCount">64 VERTICES</span></div>
+          <div class="dimension-wrap"><span>3D</span><input id="dimension" type="range" min="3" max="10" value="6" /><output id="dimensionOut">6D</output></div>
+          <div class="control-row"><select id="strategySelect" aria-label="Search strategy"><option value="cp8_phi" selected>CP8 φ-GUIDED</option><option value="baseline">BASELINE DEGREE</option></select></div><div class="control-row"><select id="budgetSelect" aria-label="Search time budget"><option value="3000">3 SEC SCAN</option><option value="9000" selected>9 SEC SEARCH</option><option value="30000">30 SEC DEEP</option><option value="60000">60 SEC DEEP</option></select></div>
+          <div class="control-row"><button id="searchBtn" class="btn primary">RUN SEARCH</button><button id="stopBtn" class="btn danger" disabled>STOP</button></div>
+          <div class="control-row"><button id="resetCubeBtn" class="btn">RESET PATH</button><button id="demoBtn" class="btn">QUICK DEMO</button></div>
+          <div class="progress"><i id="searchProgress"></i></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title"><span>LIVE METRICS</span><span>LOCAL BROWSER</span></div>
+          <div class="metrics">
+            <div class="metric"><label>PATH EDGES</label><b class="cyan" id="metricEdges">0</b></div>
+            <div class="metric"><label>PATH VERTICES</label><b id="metricVertices">1</b></div>
+            <div class="metric"><label>SEARCH NODES</label><b id="metricNodes">0</b></div>
+            <div class="metric"><label>ELAPSED</label><b class="gold" id="metricElapsed">0.00s</b></div>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-title"><span>CP8 MATH CORE</span><span>TRANSPARENT AUXILIARY SCORE</span></div>
+          <div class="cp8-math">
+            <div class="cp8-cell"><label>428 // CORE</label><b id="cp8Core">1.000</b><small>induced-path verifier</small></div>
+            <div class="cp8-cell"><label>528 // FUSION</label><b id="cp8Fusion">0.000</b><small>normalized flip entropy</small></div>
+            <div class="cp8-cell"><label>963 // INTEGRATION</label><b id="cp8Integration">0.016</b><small>state-space coverage</small></div>
+            <div class="cp8-cell"><label>COMPOSITE</label><b id="cp8Composite">52.8</b><small>weighted / 1919</small></div>
+          </div>
+          <div class="cp8-formula">S = 100 × (428·C + 528·F + 963·I) / 1919</div>
+          <p class="math-note">C is structural validity, F is Shannon entropy of bit flips, and I is |path| / 2ⁿ. The score is an auxiliary CP8 metric—not an optimality certificate.</p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title"><span>ANU-28 ROUTING</span><span id="glyphReadout">✶ ANU</span></div>
+          <div class="glyph-strip" id="glyphStrip"></div>
+          <div class="asin-pipe"><div class="asin-node on" id="pipeA"><b>A</b>ANCHOR</div><div class="asin-node" id="pipeS"><b>S</b>SEARCH</div><div class="asin-node" id="pipeI"><b>I</b>INTEGRITY</div><div class="asin-node" id="pipeN"><b>N</b>NETWORK</div></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title"><span>MANUAL BIT FLIPS</span><span>ONE ATOMIC CHANGE</span></div>
+          <div class="state" id="currentState">000000</div>
+          <div class="bit-grid" id="bitGrid"></div>
+          <div class="control-row"><button id="undoBtn" class="btn">UNDO</button><button id="randomMoveBtn" class="btn gold">φ VALID MOVE</button></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title"><span>PROOF + GOVERNANCE</span><span id="proofStatus">UNSEALED</span></div>
+          <div class="control-row"><button id="verifyBtn" class="btn">VERIFY</button><button id="exportBtn" class="btn primary">EXPORT JSON</button></div>
+          <div class="control-row"><button id="copyHashBtn" class="btn" disabled>COPY SHA-256</button><button id="importBtn" class="btn">IMPORT</button></div>
+          <input id="importFile" type="file" accept="application/json,.json" hidden />
+          <div class="log" id="proofLog"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title"><span>RUNTIME OPTIONS</span><span>CP8 v1.1</span></div>
+          <div class="switchline"><span>Animate projection</span><button class="switch on" id="animateSwitch"><i></i></button></div>
+          <div class="switchline" style="margin-top:10px"><span>Show hypercube edges</span><button class="switch on" id="edgesSwitch"><i></i></button></div>
+        </section>
+      </div>
+
+      <div class="rail-scroll classic-only">
+        <section class="panel"><div class="panel-title"><span>CLASSIC CONTROL DECK</span><span>20 × 20 GRID</span></div><div class="control-row"><button id="classicStart" class="btn primary">NEW GAME</button><button id="classicPause" class="btn">PAUSE</button></div><div class="control-row"><button id="classicSlow" class="btn">SLOW</button><button id="classicFast" class="btn gold">FAST</button></div></section>
+        <section class="panel"><div class="panel-title"><span>MISSION</span><span>ORIGINAL MODE</span></div><p style="color:var(--muted);font-size:12px;line-height:1.55;margin:0">Collect signal nodes, grow the chain, and avoid self-collision. Use the on-screen pad, arrow keys, WASD, or swipe directly on the board.</p></section>
+        <section class="panel"><div class="panel-title"><span>BRIDGE TO HYPERCUBE</span><span>CP8 UPGRADE</span></div><p style="color:var(--muted);font-size:12px;line-height:1.55;margin:0">Classic Snake forbids revisiting occupied cells. Hypercube mode adds the stronger induced-path rule: every new state must be one bit from the previous state and more than one bit from every earlier nonconsecutive state.</p></section>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer"><span class="status-dot"></span><span id="footerStatus">RUNTIME READY</span><span class="spacer"></span><strong>CAPABILITY ≠ AUTHORITY</strong><span>•</span><span>NO RECEIPT = NO PROMOTION</span></footer>
+</div>
+
+<div class="help" id="help" hidden><div class="help-card"><h2>CP8 Snake // Hypercube Lab v1.1</h2><p>This single-file app contains the original grid game and a working Snake-in-a-Box laboratory with an explicit CP8 mathematical layer.</p><h3>STRUCTURAL RULE</h3><p>Consecutive states must have Hamming distance <code>1</code>. A candidate state is rejected when it is already visited or is distance <code>1</code> from any earlier nonconsecutive state. This is the induced-path constraint.</p><h3>CP8 MATH CORE</h3><p><code>428 Core</code> is the binary structural verifier. <code>528 Fusion</code> is normalized Shannon entropy of the flipped-bit distribution. <code>963 Integration</code> is path coverage <code>|P|/2ⁿ</code>. Their weighted composite is transparent and auxiliary; it never replaces the proof rules.</p><h3>φ-GUIDED SEARCH</h3><p>The worker uses onward-degree ordering and a deterministic golden-angle tie break at <code>137.507764°</code>. Identical dimension, strategy, and seed parameters generate the same candidate order. Time-limited search remains heuristic and is not a maximum-length certificate.</p><h3>ANU-28</h3><p>The 28 glyphs are semantic routing metadata only. Their index advances with path depth and is exported in the receipt. Frequency labels are namespaces, not physical-effect claims.</p><h3>PROOF EXPORT</h3><p>Export creates canonical JSON containing the path, verifier, CP8 metrics, search parameters, ANU-28 state, claim boundary, and SHA-256 content seal.</p><button id="closeHelp" class="btn primary">CLOSE</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, p=document) => p.querySelector(s);
+  const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  const sleep = ms => new Promise(r=>setTimeout(r,ms));
+  const fmt = n => Number(n).toLocaleString();
+  const CP8 = Object.freeze({
+    phi:(1+Math.sqrt(5))/2,
+    phiInverse:2/(1+Math.sqrt(5)),
+    goldenAngleDeg:137.507764,
+    goldenAngleRad:137.507764*Math.PI/180,
+    namespaces:Object.freeze({core:428,fusion:528,integration:963}),
+    weightSum:1919,
+    anu28:Object.freeze([
+      ['✶','Anu','Origin / Identity'],['◎','Luma','Awareness / Expansion'],['◈','Sethar','Harmony / Coherence'],['ꗃ','Nuru','Motion / Flow'],['✦','Keth','Structure / Balance'],['ᚾ','Vorin','Signal / Transmission'],['Ϟ','Reth','Charge / Ignition'],['⚯','Uru','Continuity / Unity'],
+      ['ᛗ','Mira','Water / Memory / Flow'],['ᛃ','Jara','Fire / Transformation'],['ϴ','Ophi','Air / Intelligence'],['ᚲ','Khel','Earth / Grounding'],['𓂀','Eye','Perception / Vision'],['𓆣','Seraph','Evolution / Guidance'],['𐃘','Haru','Birth / Emergence'],['𐡷','Thal','Timefold / Recursion'],['𖤓','Rin','Resonance / Vibration'],['𖤐','Solun','Light / Coherence'],['𖣘','Vesh','Shadow / Contrast'],['𖣔','Nial','Integration / Synthesis'],
+      ['↯','S1','Spike / Emphasis'],['⟲','S2','Loop / Recursion'],['⇱','S3','Expand / Amplify'],['⟴','S4','Compress / Summarize'],['◆','S5','Packet / Data Unit'],['●','S6','Origin / Anchor'],['✇','S7','Broadcast / Network'],['∰','S8','Sync / Multi-node Integration']
+    ])
+  });
+  function safeStorageGet(key,fallback='0'){try{return localStorage.getItem(key)??fallback}catch{return fallback}}
+  function safeStorageSet(key,value){try{localStorage.setItem(key,String(value))}catch{}}
+  const appState = {
+    mode:'cube', n:6, path:[0], best:[0], searchNodes:0, searchStarted:0,
+    searching:false, worker:null, tone:true, animate:true, showEdges:true,
+    seal:'', lastProof:null, imported:false, strategy:'cp8_phi', searchSeed:0, status:'READY', generator:'manual'
+  };
+
+  function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1800)}
+  function log(msg, cls=''){const el=$('#proofLog');const line=document.createElement('div');line.className=cls;line.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;el.appendChild(line);el.scrollTop=el.scrollHeight}
+  function beep(freq=520,dur=.055,type='sine',gain=.035){if(!appState.tone)return;try{const A=beep.ctx||(beep.ctx=new (window.AudioContext||window.webkitAudioContext)());const o=A.createOscillator(),g=A.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(gain,A.currentTime);g.gain.exponentialRampToValueAtTime(.0001,A.currentTime+dur);o.connect(g).connect(A.destination);o.start();o.stop(A.currentTime+dur)}catch{}}
+  function bitCount(x){let c=0;while(x){x&=x-1;c++}return c}
+  function hamming(a,b){return bitCount(a^b)}
+  function bin(v,n=appState.n){return v.toString(2).padStart(n,'0')}
+  function neighbors(v,n=appState.n){const a=[];for(let b=0;b<n;b++)a.push(v^(1<<b));return a}
+  function isValidCandidate(v,path=appState.path,n=appState.n){if(path.includes(v))return {ok:false,reason:'REVISIT'};const current=path[path.length-1];if(hamming(current,v)!==1)return {ok:false,reason:'NOT ADJACENT'};for(let i=0;i<path.length-1;i++){if(hamming(path[i],v)===1)return {ok:false,reason:`CHORD TO STEP ${i}`}}return {ok:true,reason:'VALID'} }
+  function verifyPath(path=appState.path,n=appState.n){
+    const max=1<<n, seen=new Set();
+    for(let i=0;i<path.length;i++){
+      const v=path[i];
+      if(!Number.isInteger(v)||v<0||v>=max)return {ok:false,index:i,reason:'STATE OUT OF RANGE'};
+      if(seen.has(v))return {ok:false,index:i,reason:'REPEATED STATE'};seen.add(v);
+      if(i>0&&hamming(path[i-1],v)!==1)return {ok:false,index:i,reason:'CONSECUTIVE DISTANCE IS NOT 1'};
+      for(let j=0;j<i-1;j++)if(hamming(path[j],v)===1)return {ok:false,index:i,other:j,reason:'NONCONSECUTIVE CHORD'};
+    }
+    return {ok:true,vertices:path.length,edges:Math.max(0,path.length-1),reason:'INDUCED PATH VERIFIED'};
+  }
+
+  function flipSequence(path=appState.path){const out=[];for(let i=1;i<path.length;i++){const d=path[i-1]^path[i];out.push(bitCount(d)===1?Math.log2(d):-1)}return out}
+  function cp8Metrics(path=appState.path,n=appState.n){
+    const vr=verifyPath(path,n), flips=flipSequence(path), counts=Array(n).fill(0);for(const b of flips)if(Number.isInteger(b)&&b>=0&&b<n)counts[b]++;
+    let entropy=0;if(flips.length){for(const c of counts)if(c){const p=c/flips.length;entropy-=p*Math.log2(p)}}
+    const fusion=n>1?entropy/Math.log2(n):0, core=vr.ok?1:0, integration=path.length/(1<<n);
+    const composite=100*(CP8.namespaces.core*core+CP8.namespaces.fusion*fusion+CP8.namespaces.integration*integration)/CP8.weightSum;
+    const glyphIndex=Math.max(0,path.length-1)%CP8.anu28.length, glyph=CP8.anu28[glyphIndex];
+    return {core,fusion,integration,composite,flip_counts:counts,flip_sequence:flips,glyph_index:glyphIndex,glyph:{symbol:glyph[0],name:glyph[1],meaning:glyph[2]}};
+  }
+  function phiTie(value,depth){return (((value+1)*CP8.goldenAngleDeg+depth*111)%360)/360}
+  function cp8Seed(n,timeMs,strategy){let x=((n*428)^(Math.floor(timeMs/1000)*528)^963^(strategy==='cp8_phi'?0xC08:0xB45E))>>>0;return x||428528963}
+
+  // ---------- Hypercube projection ----------
+  const cubeCanvas=$('#cubeCanvas'), cctx=cubeCanvas.getContext('2d');
+  let cw=0,ch=0,dpr=1,animT=0;
+  function resizeCanvas(canvas,ctx){const r=canvas.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.max(1,Math.floor(r.width*dpr));canvas.height=Math.max(1,Math.floor(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0);return [r.width,r.height]}
+  function basis(n){const out=[];for(let i=0;i<n;i++){const a=-Math.PI/2+i*CP8.goldenAngleRad;const weight=.72+.28*Math.sqrt((i+1)/n);out.push([Math.cos(a)*weight,Math.sin(a)*weight])}return out}
+  function projected(v,n,w,h){const B=basis(n);let x=0,y=0,total=0;for(let i=0;i<n;i++){const s=(v&(1<<i))?1:-1;x+=B[i][0]*s;y+=B[i][1]*s;total+=Math.abs(B[i][0])+Math.abs(B[i][1])}const scale=Math.min(w,h)*.32/Math.max(1,n*.62);const hash=((v*2654435761)>>>0)/4294967295;const jitter=n>7?(hash-.5)*5:0;return [w/2+x*scale+jitter,h/2+y*scale+(hash-.5)*jitter]}
+  function roundRect(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):(ctx.rect(x,y,w,h));}
+  function drawCube(){
+    [cw,ch]=resizeCanvas(cubeCanvas,cctx);const ctx=cctx,n=appState.n,N=1<<n;ctx.clearRect(0,0,cw,ch);
+    const pulse=.5+.5*Math.sin(animT*.025);
+    const bg=ctx.createRadialGradient(cw*.5,ch*.5,0,cw*.5,ch*.5,Math.max(cw,ch)*.62);bg.addColorStop(0,'rgba(18,61,91,.24)');bg.addColorStop(.55,'rgba(6,14,27,.10)');bg.addColorStop(1,'rgba(0,0,0,.2)');ctx.fillStyle=bg;ctx.fillRect(0,0,cw,ch);
+    const pts=Array.from({length:N},(_,v)=>projected(v,n,cw,ch));
+    // orbital guides
+    ctx.save();ctx.translate(cw/2,ch/2);for(let r=1;r<=3;r++){ctx.beginPath();ctx.ellipse(0,0,Math.min(cw,ch)*(.12+r*.085),Math.min(cw,ch)*(.07+r*.045),-.25,0,Math.PI*2);ctx.strokeStyle=`rgba(107,230,255,${.04+r*.012})`;ctx.lineWidth=1;ctx.stroke()}ctx.restore();
+    if(appState.showEdges){ctx.lineWidth=.55;ctx.strokeStyle=n<=7?'rgba(100,210,255,.085)':'rgba(100,210,255,.045)';ctx.beginPath();for(let v=0;v<N;v++){for(let b=0;b<n;b++){const u=v^(1<<b);if(u>v){ctx.moveTo(pts[v][0],pts[v][1]);ctx.lineTo(pts[u][0],pts[u][1])}}}ctx.stroke()}
+    // all vertices
+    for(let v=0;v<N;v++){const [x,y]=pts[v],visited=appState.path.includes(v);ctx.beginPath();ctx.arc(x,y,visited?2.2:1.2,0,Math.PI*2);ctx.fillStyle=visited?'rgba(255,190,85,.52)':'rgba(107,230,255,.23)';ctx.fill()}
+    // active path glow + 428/528/963 layer coloring
+    if(appState.path.length>1){ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowBlur=18;ctx.shadowColor='rgba(255,190,85,.7)';ctx.lineWidth=6;ctx.strokeStyle='rgba(255,190,85,.14)';ctx.beginPath();appState.path.forEach((v,i)=>{const p=pts[v];i?ctx.lineTo(...p):ctx.moveTo(...p)});ctx.stroke();ctx.shadowBlur=0;const layerColors=['#6be6ff','#ffbe55','#9a7cff'];for(let i=1;i<appState.path.length;i++){const a=pts[appState.path[i-1]],b=pts[appState.path[i]];ctx.strokeStyle=layerColors[(i-1)%3];ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke()}ctx.restore()}
+    const current=appState.path[appState.path.length-1], [x,y]=pts[current];ctx.save();ctx.shadowBlur=25+pulse*15;ctx.shadowColor='#ffbe55';ctx.fillStyle='#ffe2a6';ctx.beginPath();ctx.arc(x,y,5+pulse*1.5,0,Math.PI*2);ctx.fill();ctx.restore();
+    // label endpoint
+    const label=bin(current,n);ctx.font='700 11px ui-monospace,monospace';const tw=ctx.measureText(label).width;roundRect(ctx,clamp(x-tw/2-7,8,cw-tw-22),clamp(y-32,8,ch-28),tw+14,22,7);ctx.fillStyle='rgba(3,8,15,.86)';ctx.fill();ctx.strokeStyle='rgba(255,190,85,.45)';ctx.stroke();ctx.fillStyle='#ffcf7a';ctx.fillText(label,clamp(x-tw/2,15,cw-tw-15),clamp(y-17,23,ch-12));
+  }
+  function renderLoop(){animT++;if(appState.mode==='cube'&&(appState.animate||animT%15===0))drawCube();requestAnimationFrame(renderLoop)}
+
+  function updateCubeUI(){
+    const n=appState.n,N=1<<n,path=appState.path,vr=verifyPath(path,n),m=cp8Metrics(path,n);$('#dimension').value=n;$('#dimensionOut').value=n+'D';$('#hudDim').textContent=n+'D';$('#vertexCount').textContent=fmt(N)+' VERTICES';$('#hudSpace').textContent=fmt(N)+' vertices';$('#currentState').textContent=bin(path[path.length-1],n);$('#metricEdges').textContent=path.length-1;$('#metricVertices').textContent=path.length;$('#metricNodes').textContent=fmt(appState.searchNodes);$('#hudBest').textContent=(appState.best.length-1)+' edges';$('#hudVerify').textContent=vr.ok?'PASS':'FAIL';$('#hudVerify').parentElement.className='badge '+(vr.ok?'good':'warn');$('#hudCP8').textContent=m.composite.toFixed(1);$('#cp8Core').textContent=m.core.toFixed(3);$('#cp8Fusion').textContent=m.fusion.toFixed(3);$('#cp8Integration').textContent=m.integration.toFixed(3);$('#cp8Composite').textContent=m.composite.toFixed(1);$('#glyphReadout').textContent=`${m.glyph.symbol} ${m.glyph.name.toUpperCase()} · ${m.glyph_index+1}/28`;$('#undoBtn').disabled=path.length<=1||appState.searching;
+    const glyphStrip=$('#glyphStrip');glyphStrip.innerHTML='';CP8.anu28.forEach((g,i)=>{const el=document.createElement('span');el.className='glyph-chip'+(i===m.glyph_index?' active':'');el.textContent=g[0];el.title=`${i+1}. ${g[1]} — ${g[2]}`;glyphStrip.appendChild(el)});
+    $('#pipeA').classList.add('on');$('#pipeS').classList.toggle('on',path.length>1||appState.searching);$('#pipeI').classList.toggle('on',vr.ok&&path.length>1);$('#pipeN').classList.toggle('on',Boolean(appState.seal));
+    const grid=$('#bitGrid');grid.innerHTML='';for(let b=0;b<n;b++){const candidate=path[path.length-1]^(1<<b),v=isValidCandidate(candidate,path,n),btn=document.createElement('button');btn.className='bit'+(v.ok?'':' invalid');btn.disabled=appState.searching;btn.innerHTML=`BIT ${b}<small>${v.ok?'VALID':v.reason}</small>`;btn.onclick=()=>attemptMove(candidate,b);grid.appendChild(btn)}
+    $('#hudStatus').textContent=appState.status;
+    drawCube();
+  }
+  function attemptMove(v,b){if(!Number.isInteger(b))b=Math.log2(appState.path.at(-1)^v);const check=isValidCandidate(v);if(!check.ok){beep(160,.09,'sawtooth');toast(check.reason);log(`Move rejected: ${check.reason}`,'err');return}appState.path.push(v);if(appState.path.length>appState.best.length)appState.best=[...appState.path];appState.seal='';appState.lastProof=null;appState.imported=false;if(!appState.searching)appState.status='MANUAL';beep(420+b*70,.05);log(`Accepted bit ${b}: ${bin(v)}`,'ok');updateCubeUI()}
+  function resetCube(){stopSearch();appState.status='READY';appState.generator='manual';appState.path=[0];appState.best=[0];appState.searchNodes=0;appState.seal='';appState.lastProof=null;appState.imported=false;$('#proofStatus').textContent='UNSEALED';$('#copyHashBtn').disabled=true;$('#searchProgress').style.width='0';log('Path reset to all-zero state.');updateCubeUI()}
+  function validMoves(path=appState.path){return neighbors(path[path.length-1]).filter(v=>isValidCandidate(v,path).ok)}
+  function randomMove(){const m=validMoves();if(!m.length){toast('NO VALID MOVES');beep(140,.12,'square');return}const depth=appState.path.length;const v=m.map(v=>({v,on:neighbors(v).filter(z=>isValidCandidate(z,[...appState.path,v]).ok).length,phi:phiTie(v,depth)})).sort((a,b)=>a.on-b.on||a.phi-b.phi)[0].v;attemptMove(v,Math.log2(appState.path.at(-1)^v))}
+
+  // ---------- Worker search ----------
+  const workerCode = `
+    let stopped=false;
+    const GOLDEN_ANGLE=137.507764;
+    function run({n,timeMs,seed,strategy}){
+      stopped=false;const N=1<<n,startTime=performance.now();let nodes=0,best=[0],lastPost=0;let rng=seed>>>0||428528963;
+      const rand=()=>{rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;return (rng>>>0)/4294967296};
+      const phiTie=(value,depth)=>((((value+1)*GOLDEN_ANGLE+depth*111)%360)/360);
+      function searchOnce(){
+        const visited=new Uint8Array(N),path=[0],stack=[];visited[0]=1;
+        function options(v){const a=[];for(let b=0;b<n;b++){const u=v^(1<<b);if(visited[u])continue;let count=0;for(let k=0;k<n;k++)count+=visited[u^(1<<k)];if(count!==1)continue;let onward=0;for(let k=0;k<n;k++){const z=u^(1<<k);if(visited[z])continue;let c=0;for(let j=0;j<n;j++)c+=visited[z^(1<<j)];if(c===1)onward++}a.push({u,onward,phi:phiTie(u,path.length),r:rand()})}a.sort((x,y)=>x.onward-y.onward||(strategy==='cp8_phi'?x.phi-y.phi:x.r-y.r));return a.map(x=>x.u)}
+        stack.push({opts:options(0),idx:0});
+        while(stack.length&&!stopped&&performance.now()-startTime<timeMs){nodes++;const top=stack[stack.length-1];if(top.idx>=top.opts.length){stack.pop();if(path.length>1){visited[path.pop()]=0}continue}const u=top.opts[top.idx++];if(visited[u])continue;visited[u]=1;path.push(u);if(path.length>best.length){best=path.slice();const now=performance.now();if(now-lastPost>70){postMessage({type:'best',path:best,nodes,elapsed:now-startTime});lastPost=now}}stack.push({opts:options(u),idx:0});if((nodes&2047)===0&&performance.now()-lastPost>120){postMessage({type:'tick',nodes,elapsed:performance.now()-startTime,best:best.length});lastPost=performance.now()}}
+      }
+      while(!stopped&&performance.now()-startTime<timeMs)searchOnce();postMessage({type:'done',path:best,nodes,elapsed:performance.now()-startTime,stopped});
+    }
+    onmessage=e=>{if(e.data.cmd==='start')run(e.data);if(e.data.cmd==='stop')stopped=true};`;
+  function createWorker(){const blob=new Blob([workerCode],{type:'text/javascript'});return new Worker(URL.createObjectURL(blob))}
+  function startSearch(timeMs=9000){
+    stopSearch();appState.strategy=$('#strategySelect').value;appState.status='SEARCHING';appState.generator='worker_search';appState.searchSeed=cp8Seed(appState.n,timeMs,appState.strategy);appState.searching=true;appState.searchStarted=performance.now();appState.searchNodes=0;appState.best=[...appState.path];appState.path=[0];appState.worker=createWorker();$('#searchBtn').disabled=true;$('#stopBtn').disabled=false;$('#dimension').disabled=true;$('#strategySelect').disabled=true;$('#hudStatus').textContent=appState.status;$('#footerStatus').textContent='HEURISTIC SEARCH ACTIVE';$('#searchProgress').style.width='2%';log(`Search started: ${appState.n}D, ${(timeMs/1000).toFixed(1)}s, ${appState.strategy}, seed ${appState.searchSeed}.`,'gold');
+    appState.worker.onmessage=e=>{const d=e.data;appState.searchNodes=d.nodes||appState.searchNodes;if(d.type==='best'){appState.best=d.path;appState.path=d.path;beep(620+Math.min(500,d.path.length*2),.025,'triangle',.018);$('#searchProgress').style.width=Math.min(97,(d.elapsed/timeMs)*100)+'%';updateCubeUI()}else if(d.type==='tick'){$('#searchProgress').style.width=Math.min(97,(d.elapsed/timeMs)*100)+'%';updateCubeUI()}else if(d.type==='done'){appState.best=d.path;appState.path=d.path;finishSearch(d.elapsed,d.stopped)}};
+    appState.worker.onerror=e=>{log(`Worker error: ${e.message}`,'err');finishSearch(performance.now()-appState.searchStarted,true)};
+    elapsedTicker();appState.worker.postMessage({cmd:'start',n:appState.n,timeMs,seed:appState.searchSeed,strategy:appState.strategy});
+  }
+  function elapsedTicker(){if(!appState.searching)return;$('#metricElapsed').textContent=((performance.now()-appState.searchStarted)/1000).toFixed(2)+'s';requestAnimationFrame(elapsedTicker)}
+  function finishSearch(elapsed,stopped=false){if(appState.worker){appState.worker.terminate();appState.worker=null}appState.searching=false;$('#searchBtn').disabled=false;$('#stopBtn').disabled=true;$('#dimension').disabled=false;$('#strategySelect').disabled=false;$('#searchProgress').style.width='100%';$('#metricElapsed').textContent=(elapsed/1000).toFixed(2)+'s';appState.status=stopped?'STOPPED':'COMPLETE';$('#hudStatus').textContent=appState.status;$('#footerStatus').textContent='LOCAL RESULT READY — UNATTESTED';log(`Search ${stopped?'stopped':'complete'}: ${appState.path.length-1} edges, ${fmt(appState.searchNodes)} nodes.`,'ok');beep(760,.12,'triangle');updateCubeUI()}
+  function stopSearch(){const worker=appState.worker;if(worker){worker.postMessage({cmd:'stop'});setTimeout(()=>{if(appState.worker===worker){worker.terminate();appState.worker=null;if(appState.searching)finishSearch(performance.now()-appState.searchStarted,true)}},80)}}
+  async function quickDemo(){resetCube();const old=appState.animate;appState.animate=true;for(let k=0;k<32;k++){const m=validMoves();if(!m.length)break;const depth=appState.path.length;const ranked=m.map(v=>({v,on:neighbors(v).filter(z=>isValidCandidate(z,[...appState.path,v]).ok).length,phi:phiTie(v,depth)})).sort((a,b)=>a.on-b.on||a.phi-b.phi);const v=ranked[0].v;attemptMove(v,Math.log2(appState.path.at(-1)^v));await sleep(55)}appState.animate=old;appState.generator='cp8_phi_quick_demo';log(`CP8 φ-demo produced ${appState.path.length-1} valid edges.`,'ok')}
+
+  // ---------- Proof ----------
+  function canonicalize(obj){if(Array.isArray(obj))return obj.map(canonicalize);if(obj&&typeof obj==='object'){const o={};Object.keys(obj).sort().forEach(k=>o[k]=canonicalize(obj[k]));return o}return obj}
+  function sha256Fallback(text){
+    const bytes=new TextEncoder().encode(text),K=new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+    const bitLen=BigInt(bytes.length)*8n,pad=(56-((bytes.length+1)%64)+64)%64,data=new Uint8Array(bytes.length+1+pad+8);data.set(bytes);data[bytes.length]=0x80;for(let i=0;i<8;i++)data[data.length-1-i]=Number((bitLen>>BigInt(i*8))&255n);
+    let h0=0x6a09e667,h1=0xbb67ae85,h2=0x3c6ef372,h3=0xa54ff53a,h4=0x510e527f,h5=0x9b05688c,h6=0x1f83d9ab,h7=0x5be0cd19;const rotr=(x,n)=>(x>>>n)|(x<<(32-n));
+    for(let off=0;off<data.length;off+=64){const w=new Uint32Array(64);for(let i=0;i<16;i++)w[i]=((data[off+i*4]<<24)|(data[off+i*4+1]<<16)|(data[off+i*4+2]<<8)|data[off+i*4+3])>>>0;for(let i=16;i<64;i++){const s0=rotr(w[i-15],7)^rotr(w[i-15],18)^(w[i-15]>>>3),s1=rotr(w[i-2],17)^rotr(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0}let a=h0,b=h1,c=h2,d=h3,e=h4,f=h5,g=h6,h=h7;for(let i=0;i<64;i++){const S1=rotr(e,6)^rotr(e,11)^rotr(e,25),ch=(e&f)^((~e)&g),t1=(h+S1+ch+K[i]+w[i])>>>0,S0=rotr(a,2)^rotr(a,13)^rotr(a,22),maj=(a&b)^(a&c)^(b&c),t2=(S0+maj)>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0}h0=(h0+a)>>>0;h1=(h1+b)>>>0;h2=(h2+c)>>>0;h3=(h3+d)>>>0;h4=(h4+e)>>>0;h5=(h5+f)>>>0;h6=(h6+g)>>>0;h7=(h7+h)>>>0}
+    return [h0,h1,h2,h3,h4,h5,h6,h7].map(x=>x.toString(16).padStart(8,'0')).join('')
+  }
+  async function sha256(text){if(globalThis.crypto?.subtle){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('')}return sha256Fallback(text)}
+  async function buildProof(){const vr=verifyPath(),m=cp8Metrics();const payload={schema:'asin-hhc.cp8.snake-proof.v1.1',artifact:'CP8 Snake // Hypercube Lab',app_version:'1.1.0',created_utc:new Date().toISOString(),dimension:appState.n,state_space_vertices:1<<appState.n,path_vertices:appState.path.length,path_edges:Math.max(0,appState.path.length-1),path_decimal:[...appState.path],path_binary:appState.path.map(v=>bin(v)),constraints:{consecutive_hamming_distance:1,nonconsecutive_minimum_hamming_distance:2,repeated_vertices_allowed:false},verification:vr,search:{method:appState.generator==='worker_search'?'depth_first_induced_path_search_with_onward_degree_ordering':appState.generator,strategy:(appState.generator==='worker_search'||appState.generator==='cp8_phi_quick_demo')?appState.strategy:'not_applicable',golden_angle_tie_break_deg:(appState.generator==='worker_search'||appState.generator==='cp8_phi_quick_demo')&&appState.strategy==='cp8_phi'?CP8.goldenAngleDeg:null,deterministic_seed:appState.generator==='worker_search'?(appState.searchSeed||null):null,nodes_examined:appState.searchNodes},cp8_math_receipt:{constants:{phi:CP8.phi,phi_inverse:CP8.phiInverse,golden_angle_deg:CP8.goldenAngleDeg,harmonic_namespaces_hz_metadata:CP8.namespaces},definitions:{core_428:'1 when structural induced-path verification passes, otherwise 0',fusion_528:'Shannon entropy of the bit-flip distribution divided by log2(n)',integration_963:'path_vertices divided by 2^n',composite:'100*(428*core + 528*fusion + 963*integration)/1919'},values:{core_428:m.core,fusion_528:m.fusion,integration_963:m.integration,composite_score:m.composite},flip_sequence:m.flip_sequence,flip_counts:m.flip_counts,anu28:{index_zero_based:m.glyph_index,symbol:m.glyph.symbol,name:m.glyph.name,meaning:m.glyph.meaning,role:'semantic routing metadata only'},boundary:'CP8 score, glyphs, and frequency labels are auxiliary metadata. Structural verification and SHA-256 are the operative proof mechanisms.'},claim_boundary:{optimality_claim:false,independent_reproduction:false,evidence_status:'LOCAL_BROWSER_VERIFIED',authority_status:'HOLD',attestation:'MACHINE_EXECUTION_UNATTESTED'},provenance:{producer:'CP8 Snake Hypercube Lab',runtime:navigator.userAgent,source:'single_file_offline_html',lineage:['ASIN Handshake Image System deterministic golden-angle geometry','Harmonic Algebra Specification 428/528/963 namespaces','ANU-28 semantic coordination grammar']}};const canonical=JSON.stringify(canonicalize(payload));const seal=await sha256(canonical);return {...payload,content_seal:{algorithm:'SHA-256',canonicalization:'recursive_key_sort_compact_json_excluding_content_seal',digest:seal}}}
+  async function verifyAndSeal(){const vr=verifyPath();if(!vr.ok){$('#proofStatus').textContent='FAIL';log(`Verifier FAIL at ${vr.index}: ${vr.reason}`,'err');beep(140,.12,'square');return false}appState.lastProof=await buildProof();appState.seal=appState.lastProof.content_seal.digest;$('#proofStatus').textContent='SEALED';$('#copyHashBtn').disabled=false;log(`Verifier PASS: ${vr.edges} edges, no revisits, no chords.`,'ok');log(`SHA-256 ${appState.seal}`,'gold');beep(880,.10,'sine');return true}
+  async function exportProof(){if(!await verifyAndSeal())return;const blob=new Blob([JSON.stringify(appState.lastProof,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CP8_SNAKE_${appState.n}D_${appState.path.length-1}E_${appState.seal.slice(0,12)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('PROOF EXPORTED')}
+  async function importProof(file){try{const obj=JSON.parse(await file.text()),n=Number(obj.dimension),path=obj.path_decimal;if(!Number.isInteger(n)||n<3||n>10||!Array.isArray(path))throw new Error('Unsupported proof structure');const claimedSeal=obj.content_seal?.digest||'';if(claimedSeal){const unsigned={...obj};delete unsigned.content_seal;const computed=await sha256(JSON.stringify(canonicalize(unsigned)));if(computed.toLowerCase()!==String(claimedSeal).toLowerCase())throw new Error('SHA-256 content seal mismatch')}appState.n=n;appState.path=path.map(Number);appState.best=[...appState.path];appState.searchNodes=Number(obj.search?.nodes_examined??obj.search_nodes_examined)||0;appState.strategy=obj.search?.strategy||'cp8_phi';appState.searchSeed=Number(obj.search?.deterministic_seed)||0;appState.imported=true;appState.status='IMPORTED';appState.generator='imported';const vr=verifyPath();if(!vr.ok)throw new Error(`${vr.reason} at ${vr.index}`);appState.lastProof=obj;appState.seal=claimedSeal;$('#proofStatus').textContent=appState.seal?'IMPORTED + SEALED':'VERIFIED';$('#copyHashBtn').disabled=!appState.seal;log(`Imported valid ${n}D path with ${path.length-1} edges.`,'ok');if(claimedSeal)log('Imported SHA-256 content seal verified.','gold');updateCubeUI();toast('VALID PROOF IMPORTED')}catch(e){log(`Import rejected: ${e.message}`,'err');toast('IMPORT REJECTED');beep(130,.12,'square')}}
+
+  // ---------- Classic snake ----------
+  const classicCanvas=$('#classicCanvas'), sctx=classicCanvas.getContext('2d');let sw=0,sh=0;
+  const classic={grid:20,snake:[],food:{x:15,y:10},dir:{x:1,y:0},next:{x:1,y:0},score:0,high:Number(safeStorageGet('cp8SnakeHigh','0')||0),running:false,paused:false,speed:115,timer:null,particles:[]};
+  function initClassic(){classic.snake=[{x:8,y:10},{x:7,y:10},{x:6,y:10},{x:5,y:10}];classic.dir={x:1,y:0};classic.next={x:1,y:0};classic.score=0;classic.running=true;classic.paused=false;placeFood();$('#classicMessage').hidden=true;updateClassicHUD();clearInterval(classic.timer);classic.timer=setInterval(classicStep,classic.speed);drawClassic()}
+  function placeFood(){let p;do{p={x:Math.floor(Math.random()*classic.grid),y:Math.floor(Math.random()*classic.grid)}}while(classic.snake.some(s=>s.x===p.x&&s.y===p.y));classic.food=p}
+  function setDir(x,y){if(x===-classic.dir.x&&y===-classic.dir.y)return;classic.next={x,y};if(!classic.running)initClassic()}
+  function classicStep(){if(!classic.running||classic.paused)return;classic.dir=classic.next;const h=classic.snake[0],n={x:h.x+classic.dir.x,y:h.y+classic.dir.y};if(n.x<0||n.y<0||n.x>=classic.grid||n.y>=classic.grid||classic.snake.some(s=>s.x===n.x&&s.y===n.y)){classicGameOver();return}classic.snake.unshift(n);if(n.x===classic.food.x&&n.y===classic.food.y){classic.score++;classic.high=Math.max(classic.high,classic.score);safeStorageSet('cp8SnakeHigh',classic.high);for(let i=0;i<14;i++)classic.particles.push({x:n.x+.5,y:n.y+.5,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,a:1});placeFood();beep(520+classic.score*18,.07,'triangle')}else classic.snake.pop();updateClassicHUD();drawClassic()}
+  function classicGameOver(){classic.running=false;clearInterval(classic.timer);$('#classicMessageTitle').textContent='SIGNAL LOST';$('#classicMessageText').textContent=`Final score: ${classic.score}. The chain intersected its occupied path.`;$('#classicResume').textContent='NEW GAME';$('#classicMessage').hidden=false;beep(110,.25,'sawtooth')}
+  function updateClassicHUD(){$('#classicScore').textContent=classic.score;$('#classicHigh').textContent=classic.high}
+  function drawClassic(){[sw,sh]=resizeCanvas(classicCanvas,sctx);const ctx=sctx,size=Math.min(sw,sh)*.82,cell=size/classic.grid,ox=(sw-size)/2,oy=(sh-size)/2;ctx.clearRect(0,0,sw,sh);const bg=ctx.createRadialGradient(sw/2,sh/2,0,sw/2,sh/2,Math.max(sw,sh)*.7);bg.addColorStop(0,'rgba(18,61,91,.24)');bg.addColorStop(1,'rgba(0,0,0,.25)');ctx.fillStyle=bg;ctx.fillRect(0,0,sw,sh);ctx.strokeStyle='rgba(107,230,255,.075)';ctx.lineWidth=1;for(let i=0;i<=classic.grid;i++){ctx.beginPath();ctx.moveTo(ox+i*cell,oy);ctx.lineTo(ox+i*cell,oy+size);ctx.stroke();ctx.beginPath();ctx.moveTo(ox,oy+i*cell);ctx.lineTo(ox+size,oy+i*cell);ctx.stroke()}ctx.strokeStyle='rgba(107,230,255,.35)';ctx.strokeRect(ox,oy,size,size);
+    classic.snake.forEach((s,i)=>{const t=1-i/Math.max(1,classic.snake.length),x=ox+s.x*cell,y=oy+s.y*cell;ctx.shadowBlur=i===0?20:8;ctx.shadowColor=i===0?'#ffbe55':'#6be6ff';ctx.fillStyle=i===0?'#ffcf7a':`rgba(107,230,255,${.48+t*.45})`;roundRect(ctx,x+1.3,y+1.3,cell-2.6,cell-2.6,Math.max(3,cell*.2));ctx.fill()});ctx.shadowBlur=22;ctx.shadowColor='#9a7cff';ctx.fillStyle='#c7baff';ctx.beginPath();ctx.arc(ox+(classic.food.x+.5)*cell,oy+(classic.food.y+.5)*cell,cell*.28,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    classic.particles=classic.particles.filter(p=>p.a>.03);for(const p of classic.particles){p.x+=p.vx;p.y+=p.vy;p.a*=.92;ctx.fillStyle=`rgba(255,190,85,${p.a})`;ctx.fillRect(ox+p.x*cell,oy+p.y*cell,2.5,2.5)}if(classic.running)requestAnimationFrame(()=>{if(classic.particles.length)drawClassic()})
+  }
+  function togglePause(){if(!classic.running){initClassic();return}classic.paused=!classic.paused;$('#classicPause').textContent=classic.paused?'RESUME':'PAUSE';$('#classicMessageTitle').textContent='PAUSED';$('#classicMessageText').textContent='The chain is held. Resume when ready.';$('#classicResume').textContent='RESUME';$('#classicMessage').hidden=!classic.paused;drawClassic()}
+
+  async function safeCopy(text){try{await navigator.clipboard.writeText(text);return true}catch{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}}
+
+  // ---------- Events ----------
+  $$('.tab').forEach(t=>t.onclick=()=>{appState.mode=t.dataset.mode;document.body.className='mode-'+appState.mode;$$('.tab').forEach(x=>x.classList.toggle('active',x===t));cubeCanvas.hidden=appState.mode!=='cube';classicCanvas.hidden=appState.mode!=='classic';if(appState.mode==='classic'){if(!classic.snake.length)initClassic();drawClassic();$('#footerStatus').textContent='CLASSIC GRID RUNTIME'}else{drawCube();$('#footerStatus').textContent='HYPERCUBE RUNTIME READY'}});
+  $('#dimension').oninput=e=>{if(appState.searching)return;appState.n=Number(e.target.value);resetCube()};$('#strategySelect').onchange=e=>{appState.strategy=e.target.value;log(`Search strategy set to ${appState.strategy}.`,'gold')};
+  $('#searchBtn').onclick=()=>startSearch(Number($('#budgetSelect').value));$('#stopBtn').onclick=stopSearch;$('#resetCubeBtn').onclick=resetCube;$('#demoBtn').onclick=quickDemo;$('#undoBtn').onclick=()=>{if(appState.path.length>1){appState.path.pop();appState.seal='';log('Removed endpoint.');updateCubeUI()}};$('#randomMoveBtn').onclick=randomMove;$('#verifyBtn').onclick=verifyAndSeal;$('#exportBtn').onclick=exportProof;$('#copyHashBtn').onclick=async()=>{const ok=await safeCopy(appState.seal);toast(ok?'SHA-256 COPIED':'COPY FAILED')};$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=e=>e.target.files[0]&&importProof(e.target.files[0]);
+  function toggleSwitch(el,key){appState[key]=!appState[key];el.classList.toggle('on',appState[key]);drawCube()}$('#animateSwitch').onclick=e=>toggleSwitch(e.currentTarget,'animate');$('#edgesSwitch').onclick=e=>toggleSwitch(e.currentTarget,'showEdges');
+  $('#toneBtn').onclick=()=>{appState.tone=!appState.tone;$('#toneBtn').textContent=appState.tone?'♪':'×';toast(appState.tone?'TONE ON':'TONE OFF');beep(640)};$('#helpBtn').onclick=()=>$('#help').hidden=false;$('#closeHelp').onclick=()=>$('#help').hidden=true;$('#help').onclick=e=>{if(e.target.id==='help')e.currentTarget.hidden=true};
+  $('#classicStart').onclick=initClassic;$('#classicPause').onclick=togglePause;$('#classicResume').onclick=()=>{if(!classic.running)initClassic();else togglePause()};$('#classicSlow').onclick=()=>{classic.speed=170;if(classic.running)initClassic();toast('SLOW MODE')};$('#classicFast').onclick=()=>{classic.speed=72;if(classic.running)initClassic();toast('FAST MODE')};$$('.pad').forEach(b=>b.onclick=()=>({up:()=>setDir(0,-1),down:()=>setDir(0,1),left:()=>setDir(-1,0),right:()=>setDir(1,0)})[b.dataset.dir]());
+  addEventListener('keydown',e=>{if(appState.mode==='classic'){const map={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]};if(map[e.key]){e.preventDefault();setDir(...map[e.key])}if(e.code==='Space'){e.preventDefault();togglePause()}}else if(/^\d$/.test(e.key)){const b=Number(e.key);if(b<appState.n)attemptMove(appState.path.at(-1)^(1<<b),b)}});
+  let touchStart=null;classicCanvas.addEventListener('touchstart',e=>{const t=e.changedTouches[0];touchStart=[t.clientX,t.clientY]},{passive:true});classicCanvas.addEventListener('touchend',e=>{if(!touchStart)return;const t=e.changedTouches[0],dx=t.clientX-touchStart[0],dy=t.clientY-touchStart[1];if(Math.hypot(dx,dy)>24)Math.abs(dx)>Math.abs(dy)?setDir(Math.sign(dx),0):setDir(0,Math.sign(dy));touchStart=null},{passive:true});
+  addEventListener('resize',()=>{drawCube();if(appState.mode==='classic')drawClassic()});
+
+  // boot
+  log('CP8 Snake Hypercube Lab v1.1 initialized.');log('Math core: φ projection, 428/528/963 transparent score, ANU-28 metadata.','gold');log('Authority boundary: local verifier only; no optimality claim.','gold');updateCubeUI();updateClassicHUD();renderLoop();
+})();
+</script>
+</body>
+</html>
