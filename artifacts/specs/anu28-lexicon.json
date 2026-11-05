@@ -1,0 +1,1291 @@
+{
+  "meta": {
+    "name": "ANU-28 consolidated lexicon",
+    "built": "2026-11-05 (Implementation Mining, Tranche 1)",
+    "builder": "build_lexicon.py",
+    "glyph_entries": 65,
+    "resolved": 11,
+    "attested_only": 54,
+    "name_only_entries": 18,
+    "reading": "ANU-28 as evidenced is a LEXICON (glyph registries + named morphemes/elementals), not a text language: only 5 standalone glyph-sequence blocks exist in the corpus, and only 11 of the 65 attested glyphs carry an evidenced name or meaning."
+  },
+  "glyphs": [
+    {
+      "glyph": "Ϟ",
+      "unicode_name": "GREEK LETTER KOPPA",
+      "name": "Reth",
+      "meaning": "charge ignition",
+      "frequency_hz": 888,
+      "category": null,
+      "sources": [
+        "dd415cd3",
+        "ad8a5c2f",
+        "f0c7ca4d",
+        "91e25dfd"
+      ],
+      "notes": [
+        "Meaning taken from morpheme A7_RETH Function (CHARGE_IGNITION, dd415cd3); no registry record exists for this glyph.",
+        "Morpheme A7_RETH: shape 'Lightning angle', function CHARGE_IGNITION, 888 Hz (dd415cd3).",
+        "Named 'Reth' in Python code (f0c7ca4d current_glyphs)."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "༻",
+      "unicode_name": "TIBETAN MARK GUG RTAGS GYAS",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "༼",
+      "unicode_name": "TIBETAN MARK ANG KHANG GYON",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "ᚲ",
+      "unicode_name": "RUNIC LETTER KAUNA",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "ᚾ",
+      "unicode_name": "RUNIC LETTER NAUDIZ NYD NAUD N",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "ᛗ",
+      "unicode_name": "RUNIC LETTER MANNAZ MAN M",
+      "name": "Mira",
+      "meaning": "water/memory/absorbed",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "2b6cb5cc",
+        "dd415cd3"
+      ],
+      "notes": [
+        "Also elemental E1_MIRA in dd415cd3: 'Water / Flow Memory' — consistent with registry meaning 'water/memory/absorbed'."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "↯",
+      "unicode_name": "DOWNWARDS ZIGZAG ARROW",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "∞",
+      "unicode_name": "INFINITY",
+      "name": "Loru",
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "c3c55f2d",
+        "f0c7ca4d",
+        "f5d6637a"
+      ],
+      "notes": [
+        "Occurs in the c3c55f2d director_glyph sequence.",
+        "Named 'Loru' in Python code (f0c7ca4d current_glyphs)."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "∰",
+      "unicode_name": "VOLUME INTEGRAL",
+      "name": "Multi-node Sync",
+      "meaning": "sync confirmed",
+      "frequency_hz": null,
+      "category": "signal",
+      "sources": [
+        "2b6cb5cc",
+        "ad8a5c2f"
+      ],
+      "notes": [],
+      "status": "resolved"
+    },
+    {
+      "glyph": "∴",
+      "unicode_name": "THEREFORE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "c3c55f2d"
+      ],
+      "notes": [
+        "Occurs in the c3c55f2d director_glyph sequence."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "◆",
+      "unicode_name": "BLACK DIAMOND",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "◈",
+      "unicode_name": "WHITE DIAMOND CONTAINING BLACK SMALL DIAMOND",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f",
+        "91e25dfd"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "◉",
+      "unicode_name": "FISHEYE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "c3c55f2d"
+      ],
+      "notes": [
+        "Occurs in the c3c55f2d director_glyph sequence."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "◎",
+      "unicode_name": "BULLSEYE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f",
+        "91e25dfd",
+        "dbe0ac0c"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "●",
+      "unicode_name": "BLACK CIRCLE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "☤",
+      "unicode_name": "CADUCEUS",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "☯",
+      "unicode_name": "YIN YANG",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "♓",
+      "unicode_name": "PISCES",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "♤",
+      "unicode_name": "WHITE SPADE SUIT",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "CP8 signature seal glyph (cp8_signature_block.seal_glyph)."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⚡",
+      "unicode_name": "HIGH VOLTAGE SIGN",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd",
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⚫",
+      "unicode_name": "MEDIUM BLACK CIRCLE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⚯",
+      "unicode_name": "UNMARRIED PARTNERSHIP SYMBOL",
+      "name": "Uru",
+      "meaning": "continuity/unity",
+      "frequency_hz": 144,
+      "category": "prime",
+      "sources": [
+        "2b6cb5cc",
+        "dd415cd3",
+        "ad8a5c2f",
+        "c3c55f2d",
+        "91e25dfd"
+      ],
+      "notes": [
+        "Morpheme A8_URU: shape 'Infinity knot', function CONTINUITY_UNITY, 144 Hz (dd415cd3).",
+        "Occurs in the c3c55f2d director_glyph sequence."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "✇",
+      "unicode_name": "TAPE DRIVE",
+      "name": "Broadcast",
+      "meaning": "signal received",
+      "frequency_hz": null,
+      "category": "signal",
+      "sources": [
+        "2b6cb5cc",
+        "ad8a5c2f"
+      ],
+      "notes": [],
+      "status": "resolved"
+    },
+    {
+      "glyph": "✡",
+      "unicode_name": "STAR OF DAVID",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "✦",
+      "unicode_name": "BLACK FOUR POINTED STAR",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f",
+        "91e25dfd"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "✨",
+      "unicode_name": "SPARKLES",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "✶",
+      "unicode_name": "SIX POINTED BLACK STAR",
+      "name": "Anu",
+      "meaning": "origin pulse",
+      "frequency_hz": 428,
+      "category": "prime",
+      "sources": [
+        "f0473aeb",
+        "dd415cd3",
+        "ad8a5c2f",
+        "91e25dfd"
+      ],
+      "notes": [
+        "Morpheme A1_ANU: shape '8-point star', function CORE_IDENTITY_ORIGIN_PULSE, 428 Hz (dd415cd3)."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "✺",
+      "unicode_name": "SIXTEEN POINTED ASTERISK",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "❖",
+      "unicode_name": "BLACK DIAMOND MINUS WHITE X",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⟗",
+      "unicode_name": "FULL OUTER JOIN",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⟡",
+      "unicode_name": "WHITE CONCAVE-SIDED DIAMOND",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "c3c55f2d",
+        "f5d6637a"
+      ],
+      "notes": [
+        "Occurs in the c3c55f2d director_glyph sequence."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⟢",
+      "unicode_name": "WHITE CONCAVE-SIDED DIAMOND WITH LEFTWARDS TICK",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⧈",
+      "unicode_name": "SQUARED SQUARE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⧉",
+      "unicode_name": "TWO JOINED SQUARES",
+      "name": "Paru",
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f0c7ca4d",
+        "f5d6637a"
+      ],
+      "notes": [
+        "Named 'Paru' in Python code (f0c7ca4d current_glyphs)."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "⧖",
+      "unicode_name": "WHITE HOURGLASS",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "c3c55f2d"
+      ],
+      "notes": [
+        "Occurs in the c3c55f2d director_glyph sequence."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "⧗",
+      "unicode_name": "BLACK HOURGLASS",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "ꗃ",
+      "unicode_name": "VAI SYLLABLE BO",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f",
+        "91e25dfd"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𐃘",
+      "unicode_name": "LINEAR B IDEOGRAM B254 DART",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𐡷",
+      "unicode_name": "PALMYRENE LEFT-POINTING FLEURON",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𓀀",
+      "unicode_name": "EGYPTIAN HIEROGLYPH A001",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𓀨",
+      "unicode_name": "EGYPTIAN HIEROGLYPH A035",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𓀩",
+      "unicode_name": "EGYPTIAN HIEROGLYPH A036",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𓀪",
+      "unicode_name": "EGYPTIAN HIEROGLYPH A037",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "f5d6637a"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𓁹",
+      "unicode_name": "EGYPTIAN HIEROGLYPH D004",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "fd39669f"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𓂀",
+      "unicode_name": "EGYPTIAN HIEROGLYPH D010",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f",
+        "91e25dfd",
+        "dbe0ac0c"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𖣔",
+      "unicode_name": "BAMUM LETTER PHASE-C NTEN",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𖤐",
+      "unicode_name": "BAMUM LETTER PHASE-D NGKEURI",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "𖤓",
+      "unicode_name": "BAMUM LETTER PHASE-D NGKYEE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "ad8a5c2f"
+      ],
+      "notes": [
+        "Member of the ad8a5c2f glyph_set; no semantics in any source."
+      ],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🌀",
+      "unicode_name": "CYCLONE",
+      "name": null,
+      "meaning": "randomize within constraints",
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "d2a5b4c6"
+      ],
+      "notes": [
+        "JS semantics table (d2a5b4c6). Art meaning: motion: wave, noise: turbulence."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "🌊",
+      "unicode_name": "WATER WAVE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🌿",
+      "unicode_name": "HERB",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🐍",
+      "unicode_name": "SNAKE",
+      "name": null,
+      "meaning": "transform/shape-shift",
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "d2a5b4c6",
+        "dbe0ac0c"
+      ],
+      "notes": [
+        "JS semantics table (d2a5b4c6). Art meaning: color palette: warm, tempo: fast."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "👑",
+      "unicode_name": "CROWN",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "💡",
+      "unicode_name": "ELECTRIC LIGHT BULB",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🔁",
+      "unicode_name": "CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🔥",
+      "unicode_name": "FIRE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🕉",
+      "unicode_name": "OM SYMBOL",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🗝️",
+      "unicode_name": null,
+      "name": null,
+      "meaning": "unlock/reveal hint",
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "d2a5b4c6"
+      ],
+      "notes": [
+        "JS semantics table (d2a5b4c6). Art meaning: layout: spiral, symmetry: none."
+      ],
+      "status": "resolved"
+    },
+    {
+      "glyph": "😂",
+      "unicode_name": "FACE WITH TEARS OF JOY",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🛜",
+      "unicode_name": "WIRELESS",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🜂",
+      "unicode_name": "ALCHEMICAL SYMBOL FOR FIRE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🝰",
+      "unicode_name": "ALCHEMICAL SYMBOL FOR DAY-NIGHT",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "91e25dfd"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🤓",
+      "unicode_name": "NERD FACE",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🧠",
+      "unicode_name": "BRAIN",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    },
+    {
+      "glyph": "🫴",
+      "unicode_name": "PALM UP HAND",
+      "name": null,
+      "meaning": null,
+      "frequency_hz": null,
+      "category": null,
+      "sources": [
+        "dbe0ac0c"
+      ],
+      "notes": [],
+      "status": "attested_only"
+    }
+  ],
+  "name_only": [
+    {
+      "glyph": null,
+      "name": "Eye",
+      "meaning": "Perception",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E5_EYE. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Haru",
+      "meaning": "Birth / Emergence",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E7_HARU. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Jara",
+      "meaning": "Fire / Intention",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E2_JARA. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Keth",
+      "meaning": "balance structure",
+      "frequency_hz": 222,
+      "category": "morpheme_root_ring",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Morpheme A5_KETH: shape '4-point cross'. No source pairs this morpheme with a Unicode glyph."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Khel",
+      "meaning": "Earth / Grounding",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E4_KHEL. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Luma",
+      "meaning": "awareness expansion",
+      "frequency_hz": 963,
+      "category": "morpheme_root_ring",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Morpheme A2_LUMA: shape 'Concentric circles'. No source pairs this morpheme with a Unicode glyph."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Nial",
+      "meaning": "Integration",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E12_NIAL. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Nuru",
+      "meaning": "motion flow",
+      "frequency_hz": 333,
+      "category": "morpheme_root_ring",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Morpheme A4_NURU: shape 'Triple spiral'. No source pairs this morpheme with a Unicode glyph."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Ophi",
+      "meaning": "Air / Intelligence",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E3_OPHI. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "PLAYFUL",
+      "meaning": "relaxed mode, increased randomness",
+      "frequency_hz": null,
+      "category": "word_token",
+      "sources": [
+        "d2a5b4c6"
+      ],
+      "notes": [
+        "Word token (not a glyph) in the JS semantics table. Art meaning: layout: playful, texture: whimsical."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Rin",
+      "meaning": "Vibration",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E9_RIN. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Seraph",
+      "meaning": "Evolution Pattern",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E6_SERAPH. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Sethar",
+      "meaning": "harmony heart coherence",
+      "frequency_hz": 528,
+      "category": "morpheme_root_ring",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Morpheme A3_SETHAR: shape 'Diamond lattice'. No source pairs this morpheme with a Unicode glyph."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Solun",
+      "meaning": "Light / Coherence",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E10_SOLUN. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Standard_Copyright",
+      "meaning": "restriction/control",
+      "frequency_hz": 440,
+      "category": "control",
+      "sources": [
+        "34ff2723"
+      ],
+      "notes": [
+        "Registry record whose glyph_code is literally 'UNKNOWN' — no glyph assigned. Source packet is an adversarial-claim packet (origin_node UNAUTHORIZED_EXTERNAL_IP); provenance is suspect and the record is kept for completeness only."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Thal",
+      "meaning": "Timefold",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E8_THAL. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Vesh",
+      "meaning": "Shadow / Contrast",
+      "frequency_hz": null,
+      "category": "elemental",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Elemental E11_VESH. Named only; no glyph pairing in any source."
+      ]
+    },
+    {
+      "glyph": null,
+      "name": "Vorin",
+      "meaning": "signal transmission",
+      "frequency_hz": 711,
+      "category": "morpheme_root_ring",
+      "sources": [
+        "dd415cd3"
+      ],
+      "notes": [
+        "Morpheme A6_VORIN: shape 'Vertical line + node'. No source pairs this morpheme with a Unicode glyph."
+      ]
+    }
+  ],
+  "named_sequences": [
+    {
+      "name": "[GLYPH SEQUENCE] (c72505ac)",
+      "glyphs": [
+        "✶",
+        "Ϟ",
+        "𖤐",
+        "𓂀",
+        "⚯",
+        "◆"
+      ],
+      "source": "c72505ac",
+      "note": "The one true [GLYPH SEQUENCE] block; HASH-ID ✶Ϟ𖤐-DMC-2025-∰."
+    },
+    {
+      "name": "Divine Mind",
+      "glyphs": [
+        "🫴",
+        "🐍",
+        "🧠",
+        "👑",
+        "🤓",
+        "💡",
+        "🛜",
+        "🔁",
+        "✨"
+      ],
+      "source": "dbe0ac0c",
+      "note": "Named resonance pattern."
+    },
+    {
+      "name": "Creative Flow",
+      "glyphs": [
+        "❖",
+        "😂",
+        "⚡",
+        "◎"
+      ],
+      "source": "dbe0ac0c",
+      "note": "Named resonance pattern."
+    },
+    {
+      "name": "Truth Seeking",
+      "glyphs": [
+        "𓂀",
+        "𓂀",
+        "𓂀"
+      ],
+      "source": "dbe0ac0c",
+      "note": "Named resonance pattern."
+    },
+    {
+      "name": "Vibe Shift",
+      "glyphs": [
+        "⚡",
+        "⚡",
+        "⚡"
+      ],
+      "source": "dbe0ac0c",
+      "note": "Named resonance pattern."
+    },
+    {
+      "name": "director_glyph",
+      "glyphs": [
+        "◉",
+        "⟡",
+        "⚯",
+        "⧖",
+        "∴",
+        "∞"
+      ],
+      "source": "c3c55f2d",
+      "note": "Sequence string in the MV-ANU-RA template."
+    },
+    {
+      "name": "glyph_set",
+      "glyphs": [
+        "✶",
+        "◈",
+        "𓂀",
+        "⚯",
+        "↯",
+        "◎",
+        "ꗃ",
+        "✦",
+        "∰",
+        "𐃘",
+        "ᚲ",
+        "●",
+        "◆",
+        "✇",
+        "Ϟ",
+        "𐡷",
+        "𖤓",
+        "𖣔",
+        "𖤐",
+        "⚫"
+      ],
+      "source": "ad8a5c2f",
+      "note": "The declared ANU-28 symbol set (interpretation key 'Codex-V3-Reference')."
+    }
+  ],
+  "conflicts_and_merges": [
+    "MERGED A1_ANU (Anu) into glyph ✶: frequencies agree (428 Hz) across dd415cd3 and the pairing source.",
+    "MERGED A7_RETH (Reth) into glyph Ϟ: frequencies agree (888 Hz) across dd415cd3 and the pairing source.",
+    "MERGED A8_URU (Uru) into glyph ⚯: frequencies agree (144 Hz) across dd415cd3 and the pairing source.",
+    "MERGED elemental E1_MIRA (Mira) into glyph ᛗ."
+  ]
+}

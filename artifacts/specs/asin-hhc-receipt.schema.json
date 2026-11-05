@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "chain": {
+      "type": "object",
+      "description": "canon-v1 hash-chain position of this receipt, when the receipt is a ledger entry.",
+      "required": [
+        "seq",
+        "prev_hash",
+        "hash"
+      ],
+      "properties": {
+        "seq": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "prev_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "canon": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "claim_id": {
+      "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "execution": {
+      "properties": {
+        "environment": {
+          "type": "string"
+        },
+        "random_seed": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timestamp": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "toolchain": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "environment",
+        "toolchain",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "inputs": {
+      "properties": {
+        "artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "input_hashes": {
+          "items": {
+            "properties": {
+              "algorithm": {
+                "const": "sha256"
+              },
+              "value": {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "algorithm",
+              "value"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "artifact_ids",
+        "input_hashes"
+      ],
+      "type": "object"
+    },
+    "outputs": {
+      "properties": {
+        "control_results": {
+          "type": "array"
+        },
+        "negative_controls": {
+          "type": "array"
+        },
+        "result_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "result_hash",
+        "summary"
+      ],
+      "type": "object"
+    },
+    "procedure": {
+      "properties": {
+        "code_revision": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "protocol_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "protocol_id",
+        "code_revision",
+        "parameters"
+      ],
+      "type": "object"
+    },
+    "promotion": {
+      "properties": {
+        "blockers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "policy_id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "NOT_ELIGIBLE",
+            "HOLD",
+            "PROMOTED",
+            "REJECTED"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "receipt_id": {
+      "pattern": "^asin-hhc:receipt:[a-z0-9._-]+$",
+      "type": "string"
+    },
+    "replay": {
+      "properties": {
+        "instructions": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "NOT_ATTEMPTED",
+            "SELF_REPLAYED",
+            "INDEPENDENTLY_REPLAYED",
+            "FAILED",
+            "BLOCKED"
+          ]
+        },
+        "witnesses": {
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "instructions"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "OBSERVED",
+        "PROVENANCED",
+        "TESTED",
+        "REPLAYED",
+        "INDEPENDENTLY_REPRODUCED",
+        "PROMOTED",
+        "HOLD",
+        "REJECTED",
+        "RETIRED"
+      ]
+    }
+  },
+  "required": [
+    "receipt_id",
+    "claim_id",
+    "status",
+    "created_at",
+    "inputs",
+    "procedure",
+    "execution",
+    "outputs",
+    "replay"
+  ],
+  "title": "ASIN-HHC Evidence Receipt",
+  "type": "object",
+  "$comment": "Adopted 2026-11-05 (Tranche 1). Identical to the corpus original (asin-hhc-receipt.schema.orig.json, corpus block 96740ac2) EXCEPT one documented adjustment: an OPTIONAL top-level 'chain' property. Rationale: every receipt the live ASIN-HHC system issues is a canon-v1 hash-chain entry (seq/prev_hash/hash/canon); the original's additionalProperties:false with no chain property made every real receipt invalid for a reason unrelated to evidence quality. See VALIDATION.md, Adjustment A1."
+}
