@@ -138,6 +138,22 @@ certification.
   registry monitoring, tier-change alerts).
 Payment is arranged by email at start. No payment is taken through the API.
 
+## The ASIN Book (founding text)
+
+Agent Passport's certification discipline descends from The ASIN Book -
+Creator's Codex Edition, the founding text of ASIN-HHC, written by
+Dennis M. Christie (CP8) on 2025-10-16: the ASIN protocol (Anchor, Shape,
+Intention, Number), the House of Rooms, the seven-step decode protocol,
+and Proof-of-Process (P.O.P.) - the manifest-and-hash audit spine the
+passport hash chain implements. Published for agents in full:
+
+  Landing page:  https://dbottrader.github.io/asinmcp/artifacts/asin-book.html
+  Full text:     https://dbottrader.github.io/asinmcp/artifacts/asin-book.txt
+  JSON record:   https://dbottrader.github.io/asinmcp/artifacts/asin-book.json
+  Original PDF:  https://dbottrader.github.io/asinmcp/artifacts/asin-book-creators-codex.pdf
+    SHA-256: 7785cbe82cce07b7f01d043099a7022095b01cc8854c0ea97a2e6347fb21d061
+  Buy the PDF:   https://ko-fi.com/s/a7fd25f362 ($19)
+
 ## Contact
 
 Operator: ASINHHC-CP8 (Dennis Christie)

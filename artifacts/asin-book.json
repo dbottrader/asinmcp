@@ -1,0 +1,76 @@
+{
+  "title": "The ASIN Book",
+  "edition": "Creator's Codex Edition",
+  "author": "Dennis M. Christie (CP8)",
+  "written": "2025-10-16",
+  "published": "2026-11-05",
+  "sha256_pdf": "7785cbe82cce07b7f01d043099a7022095b01cc8854c0ea97a2e6347fb21d061",
+  "pdf_url": "https://dbottrader.github.io/asinmcp/artifacts/asin-book-creators-codex.pdf",
+  "landing_url": "https://dbottrader.github.io/asinmcp/artifacts/asin-book.html",
+  "text_url": "https://dbottrader.github.io/asinmcp/artifacts/asin-book.txt",
+  "json_url": "https://dbottrader.github.io/asinmcp/artifacts/asin-book.json",
+  "kofi_url": "https://ko-fi.com/s/a7fd25f362",
+  "price_usd": 19,
+  "license_note": "Book text copyright (c) 2025 Dennis M. Christie. This plain-text and JSON edition are published by the author in the public asinmcp repository so humans and AI agents can read, cite, and implement from them; the original PDF is sold on Ko-fi. The surrounding ASIN-HHC system code and specs are MIT-licensed.",
+  "primitives": [
+    "Anchor",
+    "Shape",
+    "Intention",
+    "Number"
+  ],
+  "rooms": [
+    "Vault",
+    "Resonance",
+    "Workshop",
+    "Bridge",
+    "Expansion",
+    "Archive"
+  ],
+  "concepts": {
+    "proof_of_process": {
+      "name": "Proof-of-Process (P.O.P.)",
+      "summary": "The book's audit spine: each artifact is stamped, logged, and stored with a minimal manifest (title, rooms walked, binary date, sha256, tags), protecting originality claims and enabling external review. The live ASIN-HHC receipt schema and hash-chained provenance index are this idea implemented.",
+      "operational_rule": "Measure first, myth later. Geometry and logs precede interpretation. Intention must be falsifiable.",
+      "example_manifest": {
+        "title": "ASIN_WeCanMakeIt_0001",
+        "rooms": [
+          "Vault",
+          "Resonance",
+          "Workshop",
+          "Bridge",
+          "Expansion"
+        ],
+        "binary_date": "11111101001.1001.10100",
+        "sha256": "<placeholder>",
+        "tags": [
+          "MushmouthCleaned",
+          "Ceremony",
+          "WhisperingWind"
+        ]
+      }
+    },
+    "decode_protocol_steps": [
+      "Image Acquisition - top-down, full-pattern, high-resolution imagery with metadata",
+      "Canvas Prep - orient north up, mark center and scale, record coordinates",
+      "Geometry Extraction - trace circles/lines, count elements, compute ratios",
+      "Number & Frequency - convert ratios to simple fractions; map to harmonic bands (e.g., 432 Hz family)",
+      "Symbolic Candidates - propose meanings that fit the geometry without overreach",
+      "Cross-Reference - compare with known formations and prior ASIN entries",
+      "Report - publish a succinct decode with figures, logs, and binary stamp"
+    ],
+    "decode_standing_check": "Falsifiability: another analyst with the same inputs should reach the same geometry and measurements, even if their symbolism differs. If geometry disagrees, redo Step 3.",
+    "binary_date_stamp": {
+      "format": "YYYY-MM-DD encoded as Y11-M4-D5 bits (year in 11 bits, month in 4 bits, day in 5 bits), joined with dots",
+      "example_from_book": "2025-09-16 -> 11111101001.1001.10000",
+      "this_book": "2025-10-16 -> 11111101001.1010.10000",
+      "use": "Appears in filenames and indexes to anchor provenance"
+    },
+    "room_rule": "No porch drops. Every artifact must be walked Vault -> Resonance -> Workshop -> Bridge -> Expansion -> Archive. Skipping rooms breaks auditability."
+  },
+  "implementation_links": {
+    "receipt_schema": "https://dbottrader.github.io/asinmcp/artifacts/specs/asin-hhc-receipt.schema.json",
+    "provenance_index": "https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json",
+    "live_board": "https://dbottrader.github.io/asinmcp/artifacts/live.html",
+    "specs": "https://dbottrader.github.io/asinmcp/artifacts/specs.html"
+  }
+}
