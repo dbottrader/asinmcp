@@ -99,6 +99,21 @@ messages and rejects non-conforming manifests with <code>422 MANIFEST_INVALID</c
       suite, and the failure is published in full.</td>
 </tr>
 <tr>
+  <td><a href="specs/agent-return-envelope.schema.json">CP8 agent-return envelope</a><br>
+      <a href="specs/agent-return.md">the return standard</a></td>
+  <td>The fleet return protocol (CP8-AGENT-RETURN-v1, frozen 2026-08-17, adopted 2026-11-05):
+      every delegated agent seat returns observed claims (source, method, T0–T4 timestamp
+      class), tests with evidence, preserved contradictions — never resolved by agent
+      majority vote — unverified claims with their missing evidence, and a promotion gate
+      state the coordinator must earn at intake. The return half of the INF8 loop; the
+      receipt schema above is the settlement half.</td>
+  <td><strong>Live as the fleet standard</strong> — schema is JSON Schema draft 2020-12,
+      validator-tested 3/3 on two backends (template and a filled example pass; a return
+      missing required fields fails). Honest status: the source receipt records
+      <code>validated_external_agent_returns: 0</code> — the standard is now enforced on
+      every new delegation; external returns are still to be earned.</td>
+</tr>
+<tr>
   <td><a href="asin-book.html">The ASIN Book — Creator's Codex Edition</a><br>
       <a href="asin-book.txt">full plain text</a> ·
       <a href="asin-book.json">JSON record</a></td>
