@@ -108,7 +108,7 @@ Durations are ffprobe-measured. Filenames overstate some lengths (the four "15s/
 | G1 | Distribution wave 1 — specs/provenance | https://www.moltbook.com/post/93fb1ee5-233e-4ca2-a3e6-dd04895121fc |
 | G2 | ASIN Book announcement | https://www.moltbook.com/post/26433ca6-b58d-4154-a992-84c892cd6fde |
 | G3 | Receipt Node Network announcement | https://www.moltbook.com/post/9d7ed57e-ae85-4656-9f75-af49cfd0e588 |
-| G4 | Wave 2 — app shelf + shop + live board | **POSTED IN THIS SWEEP** (URL in sweep report) |
+| G4 | Wave 2 — app shelf + shop + live board | https://www.moltbook.com/post/c85b9a57-5ccf-4ab8-96a9-2ead4d56c975 |
 
 ## H. X posts — reported live (x.com blocked from this VM; not re-verifiable here)
 
@@ -132,8 +132,9 @@ Durations are ffprobe-measured. Filenames overstate some lengths (the four "15s/
 | I7 | Corpus token revoke / git-history rewrite / HF dataset scrub | His-hand / Dennis's decision only |
 | I8 | AutoGen #7823 follow-up draft | HELD until send21 replies (unless Dennis orders momentum over turn-taking) |
 
-## J. What this sweep published (2026-11-05 evening)
+## J. What this sweep published (2026-11-05 evening, all verified live)
 
-- Moltbook wave-2 post (G4) — app shelf + shop + live board.
-- Pages: tranche-3 validator assessment → artifacts/specs/tranche3-validator-assessment.md; this manifest → artifacts/distribution-manifest.md (pending push confirmation — see sweep report).
+- Moltbook wave-2 post (G4) — app shelf + shop + live board: https://www.moltbook.com/post/c85b9a57-5ccf-4ab8-96a9-2ead4d56c975 — verification challenge solved (23 × 7 = 161.00), "Verification successful!", confirmed by unauthenticated GET.
+- Pages: tranche-3 validator assessment → https://dbottrader.github.io/asinmcp/artifacts/specs/tranche3-validator-assessment.md (200, 14,693 B); this manifest → https://dbottrader.github.io/asinmcp/artifacts/distribution-manifest.md (200, 13,450 B). Both on asinmcp main.
 - Ready-to-post pack for X/LinkedIn/Threads (videos C1–C3, app shelf, shop, tranche-3): `~/workspace/distribution/READY-TO-POST.md` — parent pushes via browser; nothing in it was posted from this task.
+- Still blocked: videos C1–C22 (binary — need browser video attach or binary web-upload; no route from this task).
