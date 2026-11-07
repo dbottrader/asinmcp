@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Tool Sprint — one custom interactive web app, live in 48 hours. $150 flat. A new service from ASIN-HHC." />
+    <link rel="icon" href="data:," />
+    <title>Tool Sprint — ASIN-HHC</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f7f9;
+        --surface: #ffffff;
+        --surface-2: #eaf1f3;
+        --ink: #101c24;
+        --muted: #46586a;
+        --line: #cfdce2;
+        --accent: #0b6e63;
+        --accent-ink: #ffffff;
+        --accent-hover: #095a51;
+        --chip-bg: #e2efec;
+        --chip-ink: #0b4f47;
+        --warn-bg: #fdf3e3;
+        --warn-line: #e3c98f;
+        --warn-ink: #5c430f;
+        --focus: #0b6e63;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0e16;
+          --surface: #101623;
+          --surface-2: #0d1320;
+          --ink: #e6edf3;
+          --muted: #9fb0c3;
+          --line: #1e2a3d;
+          --accent: #2dd4bf;
+          --accent-ink: #06231f;
+          --accent-hover: #5eead4;
+          --chip-bg: #12312c;
+          --chip-ink: #7de8d8;
+          --warn-bg: #241b0c;
+          --warn-line: #57451c;
+          --warn-ink: #ecd28f;
+          --focus: #2dd4bf;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.55;
+        font-size: 17px;
+      }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+
+      .brandrow {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+        margin-bottom: 22px;
+      }
+      .brand { font-weight: 800; letter-spacing: 0.4px; font-size: 0.95rem; }
+      .newtag {
+        font-size: 0.78rem; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+        color: var(--chip-ink); background: var(--chip-bg);
+        border-radius: 999px; padding: 3px 11px;
+      }
+      .newnote { color: var(--muted); font-size: 0.92rem; }
+
+      h1 {
+        font-size: clamp(1.75rem, 6.2vw, 2.6rem);
+        line-height: 1.16; letter-spacing: -0.01em;
+        margin: 0 0 14px;
+      }
+      h1 .price { color: var(--accent); white-space: nowrap; }
+      .lede { color: var(--muted); font-size: 1.08rem; margin: 0 0 24px; max-width: 34em; }
+
+      .facts {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+        background: var(--line); border: 1px solid var(--line); border-radius: 10px;
+        overflow: hidden; margin: 0 0 26px;
+      }
+      .fact { background: var(--surface); padding: 14px 16px; }
+      .fact b { display: block; font-size: 1.25rem; line-height: 1.2; }
+      .fact span { color: var(--muted); font-size: 0.88rem; }
+      @media (min-width: 560px) { .facts { grid-template-columns: repeat(4, 1fr); } }
+
+      .btn {
+        display: block; width: 100%;
+        background: var(--accent); color: var(--accent-ink);
+        font-weight: 800; font-size: 1.08rem; text-align: center;
+        text-decoration: none; padding: 16px 20px; border-radius: 10px;
+        border: 0; cursor: pointer;
+      }
+      .btn:hover { background: var(--accent-hover); }
+      .btn:focus-visible, a:focus-visible, button:focus-visible, select:focus-visible, textarea:focus-visible {
+        outline: 3px solid var(--focus); outline-offset: 2px;
+      }
+      .btnsub { text-align: center; color: var(--muted); font-size: 0.9rem; margin: 10px 0 0; }
+
+      section { margin-top: 40px; }
+      h2 { font-size: 1.3rem; margin: 0 0 12px; letter-spacing: -0.01em; }
+      p { margin: 0 0 12px; }
+      .muted { color: var(--muted); }
+
+      ul.get { list-style: none; margin: 0; padding: 0; }
+      ul.get li {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+        padding: 14px 16px; margin-bottom: 10px;
+      }
+      ul.get li b { display: block; margin-bottom: 2px; }
+      ul.get li span { color: var(--muted); font-size: 0.95rem; }
+
+      .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 4px; padding: 0; list-style: none; }
+      .chips li {
+        background: var(--chip-bg); color: var(--chip-ink);
+        border-radius: 999px; padding: 5px 13px; font-size: 0.92rem; font-weight: 600;
+      }
+
+      .scope {
+        background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 10px;
+        padding: 16px 18px;
+      }
+      .scope h2 { color: var(--warn-ink); }
+      .scope p, .scope li { color: var(--warn-ink); }
+      .scope ul { margin: 0 0 10px; padding-left: 20px; }
+      .scope p:last-child { margin-bottom: 0; }
+
+      ol.steps { margin: 0; padding-left: 22px; }
+      ol.steps li { margin-bottom: 10px; }
+      ol.steps code {
+        background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px;
+        padding: 1px 6px; font-size: 0.92em; font-weight: 700;
+      }
+
+      .builder {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+        padding: 18px;
+      }
+      .builder label { display: block; font-weight: 700; font-size: 0.95rem; margin: 14px 0 6px; }
+      .builder label:first-of-type { margin-top: 0; }
+      .builder select, .builder textarea {
+        width: 100%; font: inherit; font-size: 1rem; color: var(--ink);
+        background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px;
+        padding: 11px 12px;
+      }
+      .builder textarea { min-height: 92px; resize: vertical; }
+      .preview-label { font-weight: 700; font-size: 0.95rem; margin: 16px 0 6px; }
+      .preview {
+        background: var(--surface-2); border: 1px dashed var(--line); border-radius: 8px;
+        padding: 12px 14px; white-space: pre-wrap; word-break: break-word;
+        font-size: 0.97rem; min-height: 74px; margin: 0;
+      }
+      .copybtn {
+        margin-top: 12px; width: 100%;
+        background: var(--surface-2); color: var(--ink);
+        border: 1px solid var(--line); border-radius: 8px;
+        font: inherit; font-weight: 700; padding: 12px 16px; cursor: pointer;
+      }
+      .copybtn:hover { border-color: var(--accent); color: var(--accent); }
+      .copied { color: var(--accent); font-weight: 700; }
+
+      .proof { list-style: none; margin: 0; padding: 0; }
+      .proof li { border-top: 1px solid var(--line); }
+      .proof li:last-child { border-bottom: 1px solid var(--line); }
+      .proof a {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+        padding: 15px 4px; text-decoration: none; color: var(--ink);
+      }
+      .proof a:hover .ptitle { color: var(--accent); text-decoration: underline; }
+      .ptitle { font-weight: 700; }
+      .pdesc { display: block; color: var(--muted); font-size: 0.93rem; font-weight: 400; margin-top: 2px; }
+      .parrow { color: var(--accent); font-weight: 800; flex-shrink: 0; }
+
+      .bottom-cta {
+        margin-top: 44px; background: var(--surface); border: 1px solid var(--line);
+        border-radius: 12px; padding: 22px 20px; text-align: center;
+      }
+      .bottom-cta p { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; }
+      .bottom-cta .btnsub { margin-top: 10px; }
+
+      footer { margin-top: 40px; text-align: center; color: var(--muted); font-size: 0.93rem; }
+      footer .line { color: var(--ink); font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+      footer a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <div class="brandrow">
+        <span class="brand">ASIN-HHC</span>
+        <span class="newtag">New service</span>
+        <span class="newnote">This is a new service — no sales history behind it yet, and this page won't pretend otherwise.</span>
+      </div>
+
+      <h1>Tool Sprint — one custom interactive web app, live in 48 hours. <span class="price">$150 flat.</span></h1>
+      <p class="lede">You describe the tool. We build it as a single interactive page, put it live on a public URL, and post a signed receipt for the work on the public ASIN-HHC board.</p>
+
+      <div class="facts" aria-label="The offer in numbers">
+        <div class="fact"><b>$150</b><span>flat price, paid via Ko-fi</span></div>
+        <div class="fact"><b>48 hours</b><span>from order to live URL</span></div>
+        <div class="fact"><b>2</b><span>revision rounds included</span></div>
+        <div class="fact"><b>1 page</b><span>single-page tool, nothing more</span></div>
+      </div>
+
+      <a class="btn" href="https://ko-fi.com/c/0f3d1228d3">Order Tool Sprint on Ko-fi — $150</a>
+      <p class="btnsub">Write <b>TOOL SPRINT</b> in your commission message, plus what the tool should do.</p>
+
+      <section aria-labelledby="get-h">
+        <h2 id="get-h">What you get</h2>
+        <ul class="get">
+          <li>
+            <b>One single-page interactive tool</b>
+            <span>Built around what you ask for. Good fits:</span>
+            <ul class="chips">
+              <li>Calculator</li>
+              <li>Pricing / quote tool</li>
+              <li>Tracker</li>
+              <li>Dashboard</li>
+              <li>Booking widget</li>
+              <li>Landing page with a working widget</li>
+            </ul>
+          </li>
+          <li>
+            <b>Live on a public URL within 48 hours</b>
+            <span>Delivered live within 48 hours of the order — a real link you can open and share, not a screenshot or a promise.</span>
+          </li>
+          <li>
+            <b>2 revision rounds</b>
+            <span>Two rounds of changes after delivery to get the tool right.</span>
+          </li>
+          <li>
+            <b>A signed receipt on the public board</b>
+            <span>The finished work is recorded with a signed receipt on the public ASIN-HHC board, where anyone can check it.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="order-h">
+        <h2 id="order-h">Draft your order message</h2>
+        <p class="muted">This page is itself a small working tool. Pick a type, describe your tool, and copy the message — then paste it into your Ko-fi commission.</p>
+        <div class="builder">
+          <label for="tool-type">Tool type</label>
+          <select id="tool-type">
+            <option>Calculator</option>
+            <option>Pricing / quote tool</option>
+            <option>Tracker</option>
+            <option>Dashboard</option>
+            <option>Booking widget</option>
+            <option>Landing page with a working widget</option>
+            <option>Something else that fits one page</option>
+          </select>
+
+          <label for="tool-desc">What should the tool do?</label>
+          <textarea id="tool-desc" placeholder="Example: A quote calculator for my lawn-care business — visitor picks lawn size and service, sees a price range."></textarea>
+
+          <p class="preview-label" id="preview-label">Your Ko-fi message</p>
+          <p class="preview" id="preview" aria-labelledby="preview-label"></p>
+
+          <button class="copybtn" id="copy-btn" type="button">Copy message</button>
+          <p class="btnsub" id="copy-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="scope" aria-labelledby="scope-h">
+        <h2 id="scope-h">Scope limits, stated plainly</h2>
+        <ul>
+          <li><b>Single page only.</b> One page, one tool.</li>
+          <li><b>No accounts, no logins.</b></li>
+          <li><b>No payments built into the tool.</b></li>
+          <li><b>No databases.</b> The tool runs on the page itself.</li>
+        </ul>
+        <p>If what you ask for is outside that scope, you'll be told within 24 hours and pointed to the closest thing that can be built — before any building starts.</p>
+      </section>
+
+      <section aria-labelledby="how-h">
+        <h2 id="how-h">How to order</h2>
+        <ol class="steps">
+          <li>Click either order button on this page — it goes to the Hire Ace commission on Ko-fi, priced at $150.</li>
+          <li>Send the commission and write <code>TOOL SPRINT</code> plus what the tool should do. (The draft box above writes that message for you.)</li>
+          <li>Your tool goes live on a public URL within 48 hours of the order, with 2 revision rounds and a signed receipt on the public board.</li>
+        </ol>
+      </section>
+
+      <section aria-labelledby="proof-h">
+        <h2 id="proof-h">Check the work first</h2>
+        <p class="muted">Don't take this page's word for it. The tools, the verification method, and the board are all public:</p>
+        <ul class="proof">
+          <li>
+            <a href="https://dbottrader.github.io/asinmcp/artifacts/apps/index.html">
+              <span><span class="ptitle">The 9-app shelf</span>
+              <span class="pdesc">Nine finished, self-contained HTML apps — already built, already live. Open them and use them.</span></span>
+              <span class="parrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://dbottrader.github.io/asinmcp/artifacts/how-verification-works.html">
+              <span><span class="ptitle">How verification works</span>
+              <span class="pdesc">One real receipt, replayed field by field against the public board — pass/fail test included.</span></span>
+              <span class="parrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://dbottrader.github.io/asinmcp/artifacts/live.html">
+              <span><span class="ptitle">The live board</span>
+              <span class="pdesc">The public ASIN-HHC board where the signed receipt for your Tool Sprint will be posted.</span></span>
+              <span class="parrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <div class="bottom-cta">
+        <p>One tool. One page. Live in 48 hours.</p>
+        <a class="btn" href="https://ko-fi.com/c/0f3d1228d3">Order Tool Sprint on Ko-fi — $150</a>
+        <p class="btnsub">Write <b>TOOL SPRINT</b> plus what the tool should do in your commission message.</p>
+      </div>
+
+      <footer>
+        <div class="line">The open alternative that can't be acquired.</div>
+        <div>Tool Sprint is a new service from ASIN-HHC. $150 flat · live in 48 hours · 2 revision rounds · single page, no accounts, logins, payments, or databases.</div>
+      </footer>
+
+    </main>
+
+    <script>
+      (function () {
+        var typeEl = document.getElementById('tool-type');
+        var descEl = document.getElementById('tool-desc');
+        var previewEl = document.getElementById('preview');
+        var copyBtn = document.getElementById('copy-btn');
+        var statusEl = document.getElementById('copy-status');
+
+        function render() {
+          var desc = descEl.value.trim();
+          var msg = 'TOOL SPRINT — ' + typeEl.value + ': ' +
+            (desc || '(describe what your tool should do here)');
+          previewEl.textContent = msg;
+          return msg;
+        }
+
+        typeEl.addEventListener('change', render);
+        descEl.addEventListener('input', render);
+        render();
+
+        copyBtn.addEventListener('click', function () {
+          var msg = render();
+          function done() {
+            statusEl.innerHTML = '<span class="copied">Copied.</span> Paste it into your Ko-fi commission message.';
+          }
+          function fallback() {
+            var ta = document.createElement('textarea');
+            ta.value = msg;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); done(); }
+            catch (e) { statusEl.textContent = 'Copy didn\u2019t work here — select the message above and copy it manually.'; }
+            document.body.removeChild(ta);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(msg).then(done, fallback);
+          } else {
+            fallback();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
