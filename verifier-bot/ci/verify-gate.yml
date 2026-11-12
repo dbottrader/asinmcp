@@ -1,0 +1,39 @@
+# ASIN-HHC Verifier Bot — refusal-aware gate CI.
+#
+# Drop-in GitHub Actions workflow: place at .github/workflows/verify-gate.yml
+# in a repo that contains gate.py + test_gate.py AND the two read-only
+# dependencies the gate imports/signs through:
+#   - asinmcp's vendored pure-Python Ed25519 at ~/workspace/asinmcp
+#     (in a repo layout: adjust gate.py's _ED_PATH, or vendor ed25519.py
+#     alongside and point the path at it), and
+#   - the Agent Vault CLI at ~/workspace/agent-vault/vault.py
+#     (used only by the vault-signer test case and the demo; the path is
+#     expanded from $HOME, so check both out under the runner's home or
+#     adapt the paths).
+# NOT pushed anywhere by the build — wiring it into a live repo is a
+# separate, human-approved step.
+#
+# The suite is stdlib-only, no network, deterministic. Runtime is a few
+# minutes: the vendored Ed25519 is pure Python and the vault seals with
+# 200k PBKDF2 iterations per invocation.
+
+name: verify-gate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  adversarial-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run the adversarial gate suite
+        run: python3 test_gate.py
+      - name: Run the end-to-end demo (ephemeral vault)
+        run: python3 demo_gate.py > demo-output.txt
+      - name: Show demo outcome summary
+        run: grep -E "^(1|2|3a|3b|4)\.|Chain verify" demo-output.txt

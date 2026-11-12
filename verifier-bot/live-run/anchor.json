@@ -1,0 +1,16 @@
+{
+ "gate_receipt_hash": "7d91fa1a841e20d65fbf01666513830826ff878a5a1ab9d69a471a836af4eecd",
+ "verification_id": "live-2026-11-11-mesh-ledger-003",
+ "outcome": "REFUSED",
+ "reason": "NO_INDEPENDENT_WITNESS",
+ "mesh_anchor_seq": 548,
+ "mesh_anchor_receipt": "9569d174bbe9e8ee65972664c325a54f21c2cfedfbfe9ada9d75477fc9470768",
+ "readback": {
+  "entry_hash_matches_anchor_receipt": true,
+  "payload_gate_hash_matches": true,
+  "kind": "verification_gate_receipt",
+  "gate_receipt_signature_valid": true,
+  "gate_ledger_chain_ok": true
+ },
+ "anchored_at": "2026-11-12T03:19:18Z"
+}
