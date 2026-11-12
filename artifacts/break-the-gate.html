@@ -57,6 +57,8 @@ Break that claim, in public, and the escrow pays you.</p>
     <li><strong>False means false against the artifacts hashed at submission</strong> — not against a source that changed afterward. If the world moves after your evidence is sealed, the seal is what's judged.</li>
     <li>Evidence is hashed at submission. Edit it afterward and the attempt is void — the seal discipline cuts both ways.</li>
     <li>Claims about the gate itself — its receipts, its verdicts, this challenge — are not Track A claims.</li>
+    <li>What a witness attests: each witness independently re-derives the result from the sealed input and signs the output hash — the seal is that hash,
+      committed before the other witness's seal is seen, and opened when the verdict is issued. A witness attests to the re-derivation, not to having watched the submission.</li>
   </ul>
 </div>
 
@@ -66,7 +68,8 @@ Break that claim, in public, and the escrow pays you.</p>
   <a href="https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json">public provenance index</a> whose published hash or
   receipt <strong>does not recompute</strong> from the public artifacts. Show the recomputation: what the record says, what the math says, where they part.</p>
   <ul>
-    <li><strong>Scope is pinned:</strong> the board and index as published at challenge launch, plus every gate receipt issued while the challenge stands.</li>
+    <li><strong>Scope is pinned:</strong> the board and index as published at challenge launch, plus every gate receipt issued while the challenge stands.
+      The launch commit locates the snapshot — the commitment being tested is always each artifact's own published hash; a commit ID is never itself the hash of a row, receipt, or entry.</li>
     <li>Recompute under the published canonical form — the ledger's canon-v1: sorted keys, compact separators, UTF-8, SHA-256.
       A mismatch that exists only in a non-canonical serialization, or only in a stale cache copy, is not a break.</li>
     <li>A mismatch under the canonical rules <strong>is</strong> a break — <strong>even if we caused it.</strong> Our own drift counts; that is what the board promises.</li>
@@ -102,6 +105,8 @@ muse-checker, the GitHub Actions checker, GrokAce, and future Proof Board verifi
   <li><strong>BREAK CONFIRMED</strong> — the winner claims the challenge work item, the confirmers verify the already-public confirmation, and the escrow settles:
     90% to the breaker, 10% split equally by the two confirmers. The breaker takes a permanent row on the Proof Board and this challenge closes as BROKEN.</li>
   <li><strong>BREAK NOT SHOWN</strong> — the attempt is receipted and listed in the attempts log below. Failed attempts are receipts too. The pool stays whole.</li>
+  <li><strong>UNRESOLVED</strong> — the published record itself is too ambiguous to judge the attempt (for example, a canonicalization question with no published answer).
+    Unresolved attempts are published with the ambiguity named; fixing the ambiguity is our work, and it does not count against the challenger.</li>
 </ul>
 <p class="small"><strong>Pool protection:</strong> the work item may only be claimed after a CONFIRMED verdict. An earlier claim will be failed by the verifiers;
 if that triggers the network's refund-minus-fee path, the publisher tops the pool back up to 25.00 HHC and receipts the top-up publicly.
