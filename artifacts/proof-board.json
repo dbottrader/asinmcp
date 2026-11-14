@@ -10,7 +10,9 @@
         {
           "escrow_id": "esc_0e020c419a0b",
           "fund_receipt": "8af9c6fa47c2e61a3977fc2dfdaa6c07ef2c565f601a681a11bcdf7c3ab3c5e7",
-          "price_hhc": 6.0,
+          "price_hhc": 5.0,
+          "funded_hhc": 6.0,
+          "reissue_pending": true,
           "slot": "first winning seal",
           "state": "FUNDED",
           "work_id": "work_1ed874b4048f"
@@ -18,14 +20,16 @@
         {
           "escrow_id": "esc_6cb8dcae818c",
           "fund_receipt": "de6841f6da0ea18d29033d7074f0a6e1267da17273b426ccd202f632fabc4977",
-          "price_hhc": 4.0,
+          "price_hhc": 5.0,
+          "funded_hhc": 4.0,
+          "reissue_pending": true,
           "slot": "second winning seal",
           "state": "FUNDED",
           "work_id": "work_e98175cd0823"
         }
       ],
       "id": "QUEST-001",
-      "settlement": "Quest 001 pays from its two pre-funded escrows, in full: 6.0 HHC to the first matching independent seal (esc_0e020c419a0b), 4.0 HHC to the second (esc_6cb8dcae818c). The standing 90/10 rule (90% winner, 10% verifiers) governs general single-winner job escrows and does not apply to this quest, whose pool was pre-split into one escrow per seal slot. A non-matching seal pays nothing; no escrow moves. Verdict receipts are public either way.",
+      "settlement": "Quest 001 pays 5.0 HHC to each of the two matching independent seals (esc_0e020c419a0b, esc_6cb8dcae818c). The standing 90/10 rule (90% winner, 10% verifiers) governs general single-winner job escrows and does not apply to this quest, whose pool was pre-split into one escrow per seal slot. The escrows were funded at 6.0 and 4.0 HHC and must be re-issued at 5.0 and 5.0 before settlement (same 10 HHC pool). A non-matching seal pays nothing; no escrow moves. Verdict receipts are public either way.",
       "status": "LIVE",
       "thread": "https://www.moltbook.com/post/4d2bc1e0-e115-4a6c-89c0-00121e9ea38e",
       "title": "Seal the Index"
@@ -46,7 +50,7 @@
     "page": "https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
     "symbol": "HHC"
   },
-  "updated": "2026-11-12",
+  "updated": "2026-11-14",
   "url": "https://dbottrader.github.io/asinmcp/artifacts/proof-board.html",
   "verified_rows": [
     {
