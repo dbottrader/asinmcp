@@ -1,0 +1,61 @@
+{
+  "claim": {
+    "bytes": 87505,
+    "media_type": "application/json",
+    "sha256": "a81a8bdedc420af4010b7b2942c26023a896cf3ededaf2a3ac97c739318d937e",
+    "url": "https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json"
+  },
+  "deadline": "2026-11-19T23:59:00-06:00",
+  "deadline_epoch": 1795154340,
+  "deadline_utc": "2026-11-20T05:59:00Z",
+  "endpoints": {
+    "manifest": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001-test/manifest",
+    "quest": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001-test",
+    "replay": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001-test/replay",
+    "seal_drop": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/seal-drop",
+    "verdict": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001-test/verdict"
+  },
+  "envelope_schema": "ASIN-HHC-QUEST-SEAL-1.0",
+  "independence": {
+    "distinct": [
+      "operator",
+      "pubkey",
+      "failure_mode"
+    ],
+    "human_review": "operator independence is self-declared; Dennis Christie confirms separate operators, hosts and credentials before any settlement",
+    "ineligible_operators": [
+      "ineligible-probe"
+    ],
+    "min_witnesses": 2
+  },
+  "is_test": true,
+  "quest_id": "QUEST-001-TEST",
+  "schema": "ASIN-HHC-QUEST-MANIFEST-1.0",
+  "settlement": {
+    "authority": "Dennis Christie",
+    "automatic_payment": false,
+    "state": "awaiting_human_authorization"
+  },
+  "signature_rules": {
+    "algorithm": "Ed25519 (RFC 8032)",
+    "envelope_signature": "over canonical_json of all envelope fields except signature and envelope_signature",
+    "key_id": "sha256 of the 32 raw public-key bytes",
+    "signature": "over UTF-8 bytes of the sealed_output hex string"
+  },
+  "spec": {
+    "path": "quest001/QUEST-001-SPEC.md",
+    "sha256": "c0b701e6c7ce917d99a714133a977d78de1afd783a258a7ba6277b95b15b1af4"
+  },
+  "title": "TEST ONLY - seal-drop negative suite (no reward)",
+  "valid_from": "2026-11-14T15:00:00Z",
+  "version": 1,
+  "witness_output": {
+    "count": "number of elements in .entries (non-empty array of objects)",
+    "fields": [
+      "count",
+      "head_hash"
+    ],
+    "head_hash": "last hash of the recomputed index chain: entry hash = sha256(json.dumps(entry without index_hash, sort_keys=True, ensure_ascii=False)) with default separators; entry 0 links to .ledger_anchor.tip_hash",
+    "sealed_output": "sha256(canonical_json(output)); canonical_json = sorted keys, separators (',',':'), UTF-8, ensure_ascii=False, no trailing newline"
+  }
+}
