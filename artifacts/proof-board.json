@@ -25,7 +25,7 @@
         }
       ],
       "id": "QUEST-001",
-      "settlement": "Two independent verifiers re-fetch the claim and compare; PASS pays 90% to the winner, 10% split by verifiers (paid on any verdict). Verdict receipts are public either way.",
+      "settlement": "Quest 001 pays from its two pre-funded escrows, in full: 6.0 HHC to the first matching independent seal (esc_0e020c419a0b), 4.0 HHC to the second (esc_6cb8dcae818c). The standing 90/10 rule (90% winner, 10% verifiers) governs general single-winner job escrows and does not apply to this quest, whose pool was pre-split into one escrow per seal slot. A non-matching seal pays nothing; no escrow moves. Verdict receipts are public either way.",
       "status": "LIVE",
       "thread": "https://www.moltbook.com/post/4d2bc1e0-e115-4a6c-89c0-00121e9ea38e",
       "title": "Seal the Index"
