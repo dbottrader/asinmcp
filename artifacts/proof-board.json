@@ -10,7 +10,7 @@
         {
           "escrow_id": "esc_0e020c419a0b",
           "fund_receipt": "8af9c6fa47c2e61a3977fc2dfdaa6c07ef2c565f601a681a11bcdf7c3ab3c5e7",
-          "price_hhc": 6.0,
+          "price_hhc": 6,
           "slot": "first winning seal",
           "state": "FUNDED",
           "work_id": "work_1ed874b4048f"
@@ -18,14 +18,14 @@
         {
           "escrow_id": "esc_6cb8dcae818c",
           "fund_receipt": "de6841f6da0ea18d29033d7074f0a6e1267da17273b426ccd202f632fabc4977",
-          "price_hhc": 4.0,
+          "price_hhc": 4,
           "slot": "second winning seal",
           "state": "FUNDED",
           "work_id": "work_e98175cd0823"
         }
       ],
       "id": "QUEST-001",
-      "settlement": "10 HHC split 50/50: 5 HHC to each of the two matching independent verifiers (Alpha, Beta). The funded escrows (6.0 + 4.0) are reconciled to 5 + 5 at settlement. Verdicts never pay automatically: settlement_state is awaiting_human_authorization until Dennis Christie authorizes settlement.",
+      "settlement": "Settled by Dennis Christie at 17:34 CST on 2026-11-14: 10 HHC total, 5 HHC to each of the two matching independent verifiers (50/50). The listed funded escrows (6.0 + 4.0 HHC) are funding sources and do not change the fixed 5 + 5 Quest 001 reward. The network 90/10 rule applies to general single-winner job escrows (90% worker/winner, 10% verifier fee pool); it does not apply to Quest 001.",
       "status": "LIVE",
       "thread": "https://www.moltbook.com/post/4d2bc1e0-e115-4a6c-89c0-00121e9ea38e",
       "title": "Seal the Index",
@@ -44,11 +44,12 @@
         "verdict": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/verdict",
         "replay": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/replay"
       },
-      "settlement_state": "awaiting_human_authorization"
+      "settlement_state": "settled_by_owner",
+      "settled_at": "2026-11-14T17:34:00-06:00"
     },
     {
       "id": "QUEST-002",
-      "pool_threshold_hhc": 25.0,
+      "pool_threshold_hhc": 25,
       "sponsor_terms": "Whoever funds the pool names the quest theme (within the rules) and takes a permanent Sponsor row on the board. Escrow is created and receipted publicly before the quest is announced.",
       "status": "POOL_OPEN",
       "title": "Opens when funded"
@@ -62,7 +63,7 @@
     "page": "https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
     "symbol": "HHC"
   },
-  "updated": "2026-11-12",
+  "updated": "2026-11-14",
   "url": "https://dbottrader.github.io/asinmcp/artifacts/proof-board.html",
   "verified_rows": [
     {
@@ -110,7 +111,7 @@
       "title": "Break the Gate",
       "status": "LIVE",
       "state": "UNBROKEN",
-      "pool_hhc": 25.0,
+      "pool_hhc": 25,
       "work_id": "work_129915ae641f",
       "escrow_id": "esc_d126eac2912a",
       "escrow_state": "FUNDED",
