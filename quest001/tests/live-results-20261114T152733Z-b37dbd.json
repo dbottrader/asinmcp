@@ -1,0 +1,228 @@
+{
+  "run": "20261114T152733Z-b37dbd",
+  "base": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence",
+  "quest": "QUEST-001-TEST",
+  "results": [
+    {
+      "case": "valid seal A (accepted)",
+      "http": 201,
+      "code": null,
+      "accepted": true,
+      "expected": [
+        201,
+        null
+      ],
+      "state_unchanged": false,
+      "pass": true,
+      "chronicle": {
+        "quest_id": "QUEST-001-TEST",
+        "seq": 3,
+        "event": "seal_accepted",
+        "payload": {
+          "envelope_sha256": "9d6f817f32bc6d8922cc3ff31aae4c30afd1cdc525e433cf8630c36d289b78b1",
+          "request_id": "4586f71d-dbdf-435c-b2f3-5a65b8c52952",
+          "nonce": "c910e7a81768a286870856d1e7a2f10129d13ec1a26b8fb2171dc1db26680fed",
+          "key_id": "8742057a7b48e550d910ab60f24a6ca5c62b0f86d552df431e8979efc581f5c0",
+          "operator": "suite-alpha-20261114T152733Z-b37dbd",
+          "failure_mode": "suite fm alpha 20261114T152733Z-b37dbd",
+          "sealed_output": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22"
+        },
+        "prev_hash": "728df5bb0b8689d8178ef08ba829be9af223e7ba22b05a7f1b73f02592b49c5a",
+        "created_at": "2026-11-14T15:27:33.704Z",
+        "record_hash": "0acbdd853a9d9d3e635366c372f2229a151a3abb18093549dbf3a2acded2639b"
+      }
+    },
+    {
+      "case": "bad signature",
+      "http": 422,
+      "code": "bad_signature",
+      "accepted": false,
+      "expected": [
+        422,
+        "bad_signature"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "replayed nonce (fresh key+operator, A's nonce)",
+      "http": 409,
+      "code": "replayed_nonce",
+      "accepted": false,
+      "expected": [
+        409,
+        "replayed_nonce"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "replayed envelope (A resubmitted verbatim)",
+      "http": 409,
+      "code": "replayed_nonce",
+      "accepted": false,
+      "expected": [
+        409,
+        "replayed_nonce"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "expired",
+      "http": 422,
+      "code": "expired",
+      "accepted": false,
+      "expected": [
+        422,
+        "expired"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "issued in future",
+      "http": 422,
+      "code": "issued_in_future",
+      "accepted": false,
+      "expected": [
+        422,
+        "issued_in_future"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "wrong manifest sha",
+      "http": 409,
+      "code": "wrong_manifest",
+      "accepted": false,
+      "expected": [
+        409,
+        "wrong_manifest"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "short hash (16 hex head_hash)",
+      "http": 422,
+      "code": "bad_hash_format",
+      "accepted": false,
+      "expected": [
+        422,
+        "bad_hash_format"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "duplicate key (A's key, new operator+nonce)",
+      "http": 409,
+      "code": "duplicate_key",
+      "accepted": false,
+      "expected": [
+        409,
+        "duplicate_key"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "duplicate operator (new key, A's operator)",
+      "http": 409,
+      "code": "duplicate_operator",
+      "accepted": false,
+      "expected": [
+        409,
+        "duplicate_operator"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "ineligible operator",
+      "http": 422,
+      "code": "operator_ineligible",
+      "accepted": false,
+      "expected": [
+        422,
+        "operator_ineligible"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "unknown quest",
+      "http": 404,
+      "code": "unknown_quest",
+      "accepted": false,
+      "expected": [
+        404,
+        "unknown_quest"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "output edited after sealing",
+      "http": 422,
+      "code": "seal_mismatch",
+      "accepted": false,
+      "expected": [
+        422,
+        "seal_mismatch"
+      ],
+      "state_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "valid seal B, independent (accepted)",
+      "http": 201,
+      "code": null,
+      "accepted": true,
+      "expected": [
+        201,
+        null
+      ],
+      "state_unchanged": false,
+      "pass": true,
+      "chronicle": {
+        "quest_id": "QUEST-001-TEST",
+        "seq": 4,
+        "event": "seal_accepted",
+        "payload": {
+          "envelope_sha256": "c82be688a0603897c60a5dbd70634cfb6c9c1f095f5adcc15166d679c9a1cb88",
+          "request_id": "3bf7ecd6-f71f-4f27-95db-d8fa5b887a5f",
+          "nonce": "fd630b30283a1ffc4c92536247c360d559831ed189c99dcb546c45f4b3926a01",
+          "key_id": "ed942b54c58e897ec120f2caf3ef9a59c65de553080ab4ccc487390dab1ebd9b",
+          "operator": "suite-beta-20261114T152733Z-b37dbd",
+          "failure_mode": "suite fm beta 20261114T152733Z-b37dbd",
+          "sealed_output": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22"
+        },
+        "prev_hash": "0acbdd853a9d9d3e635366c372f2229a151a3abb18093549dbf3a2acded2639b",
+        "created_at": "2026-11-14T15:27:39.258Z",
+        "record_hash": "62d80d872feeb8c0c7aa3f590118164f841f7aea694fd168c0a81541d889b4c1"
+      }
+    }
+  ],
+  "all_pass": true,
+  "test_verdict": {
+    "verdict": "PASS",
+    "reason": "TWO_INDEPENDENT_MATCHING_SEALS",
+    "seals_valid": 4,
+    "settlement_state": "awaiting_human_authorization",
+    "automatic_payment": false,
+    "verdict_hash": "10b494362dcbe2c840fb741731dad3ae5304d587f3b4321a283cfe70b9938291"
+  },
+  "test_replay": {
+    "replay_ok": true,
+    "chain_length": 5,
+    "chain_tip": "62d80d872feeb8c0c7aa3f590118164f841f7aea694fd168c0a81541d889b4c1",
+    "problems": []
+  },
+  "real_quest_001_untouched": {
+    "seals": 0,
+    "chain_length": 1
+  }
+}

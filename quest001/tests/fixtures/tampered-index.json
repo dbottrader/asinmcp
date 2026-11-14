@@ -1,0 +1,32 @@
+{
+ "index": "fixture",
+ "ledger_anchor": {
+  "tip_hash": "8a9911160014b6c8a19fbdc45d1e084e58cdae82424cd8f5bcdd20dbbd69f95b"
+ },
+ "entry_count": 2,
+ "head_hash": "e19939803e5ce93bbf6f203dd9cc8119b900a434be61777c58b93630b44e9d9d",
+ "entries": [
+  {
+   "name": "alpha",
+   "kind": "doc",
+   "n": 1,
+   "tags": [
+    "x",
+    "y"
+   ],
+   "url": null,
+   "index": 0,
+   "prev_index_hash": "8a9911160014b6c8a19fbdc45d1e084e58cdae82424cd8f5bcdd20dbbd69f95b",
+   "index_hash": "fc50bd8b4a3913ba05ba065a9f65fa64268982e61bb4abf727b2f604ee168b29"
+  },
+  {
+   "name": "beta",
+   "kind": "doc",
+   "n": 999,
+   "ok": true,
+   "index": 1,
+   "prev_index_hash": "fc50bd8b4a3913ba05ba065a9f65fa64268982e61bb4abf727b2f604ee168b29",
+   "index_hash": "e19939803e5ce93bbf6f203dd9cc8119b900a434be61777c58b93630b44e9d9d"
+  }
+ ]
+}

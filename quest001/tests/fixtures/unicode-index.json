@@ -1,0 +1,24 @@
+{
+ "index": "fixture",
+ "ledger_anchor": {
+  "tip_hash": "8a9911160014b6c8a19fbdc45d1e084e58cdae82424cd8f5bcdd20dbbd69f95b"
+ },
+ "entry_count": 2,
+ "head_hash": "6ca62434744e39a399801b386646f10a5f9672e6bca057144e1453617808291d",
+ "entries": [
+  {
+   "name": "café — “quoted” \"x\" a/b ✓ 漢字 😀",
+   "kind": "doc",
+   "index": 0,
+   "prev_index_hash": "8a9911160014b6c8a19fbdc45d1e084e58cdae82424cd8f5bcdd20dbbd69f95b",
+   "index_hash": "969486bfb28d5cb9dac5197c9ab9fe768492749a12a7e840bbadb3742b578cf5"
+  },
+  {
+   "name": "line\nbreak\ttab",
+   "kind": "doc",
+   "index": 1,
+   "prev_index_hash": "969486bfb28d5cb9dac5197c9ab9fe768492749a12a7e840bbadb3742b578cf5",
+   "index_hash": "6ca62434744e39a399801b386646f10a5f9672e6bca057144e1453617808291d"
+  }
+ ]
+}

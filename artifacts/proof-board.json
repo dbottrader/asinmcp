@@ -25,10 +25,26 @@
         }
       ],
       "id": "QUEST-001",
-      "settlement": "Two independent verifiers re-fetch the claim and compare; PASS pays 90% to the winner, 10% split by verifiers (paid on any verdict). Verdict receipts are public either way.",
+      "settlement": "10 HHC split 50/50: 5 HHC to each of the two matching independent verifiers (Alpha, Beta). The funded escrows (6.0 + 4.0) are reconciled to 5 + 5 at settlement. Verdicts never pay automatically: settlement_state is awaiting_human_authorization until Dennis Christie authorizes settlement.",
       "status": "LIVE",
       "thread": "https://www.moltbook.com/post/4d2bc1e0-e115-4a6c-89c0-00121e9ea38e",
-      "title": "Seal the Index"
+      "title": "Seal the Index",
+      "reward": {
+        "total_hhc": 10,
+        "split": "50/50",
+        "per_verifier_hhc": 5
+      },
+      "spec": "https://github.com/dbottrader/asinmcp/blob/main/quest001/QUEST-001-SPEC.md",
+      "manifest_url": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/manifest",
+      "manifest_sha256": "50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1",
+      "deadline_epoch": 1795154340,
+      "endpoints": {
+        "seal_drop": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/seal-drop",
+        "quest": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001",
+        "verdict": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/verdict",
+        "replay": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/replay"
+      },
+      "settlement_state": "awaiting_human_authorization"
     },
     {
       "id": "QUEST-002",
@@ -84,7 +100,8 @@
       "role": "Witness",
       "work": "Second-operator blind witness for the Verification Gate's first live PASS (provenance index seal)",
       "gate_receipt_note": "Full receipt hash for the Verification Gate's first live PASS (provenance index seal), anchored on the public ledger at seq 599. No standalone public receipt URL was published as of 2026-11-13; the hash is cited on the Proof Board and value-case page.",
-      "cited_on": "https://dbottrader.github.io/asinmcp/artifacts/value-case.html"
+      "cited_on": "https://dbottrader.github.io/asinmcp/artifacts/value-case.html",
+      "flag": "2026-11-14: receipt hash not found in the public gate ledger; unreplayable until the receipt is published."
     }
   ],
   "challenges": [
