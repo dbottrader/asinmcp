@@ -1,8 +1,8 @@
 {
   "schema": "asin-hhc-live-snapshot/v1",
-  "generated_at_epoch": 1794607636.2877269,
-  "generated_at_iso": "2026-11-13T22:07:16.287727Z",
-  "generated_at_local": "2026-11-13T16:07:16.287727-06:00",
+  "generated_at_epoch": 1794618437.2482922,
+  "generated_at_iso": "2026-11-14T01:07:17.248292Z",
+  "generated_at_local": "2026-11-13T19:07:17.248292-06:00",
   "timezone": "America/Chicago",
   "mode": "snapshot",
   "refresh": {
@@ -13,10 +13,10 @@
     "mesh_health": {
       "ok": true,
       "mesh": "0.2.1",
-      "ledger_height": 717,
+      "ledger_height": 721,
       "agents": 91,
       "work_items": 70,
-      "ts": 1794607636.063863,
+      "ts": 1794618436.970594,
       "canon": "v1",
       "errors": "err-v1"
     },
@@ -32,18 +32,18 @@
       "failing_seq": null,
       "canon": "v1",
       "segments": {
-        "height": 717,
-        "v1_entries": 702,
+        "height": 721,
+        "v1_entries": 706,
         "legacy_entries": 15
       },
       "note": "linkage verified for every entry; canon-v1 hashes recomputed for v1 entries; pre-v1 (v0-compat) entries are a disclosed legacy segment, not recomputed under v1"
     },
-    "ledger_height": 717,
+    "ledger_height": 721,
     "ledger_tip": {
-      "seq": 717,
-      "hash": "2589ee67df15fa5408b4170e7937bdd2eb0d0709c641d6a8f68c705cf8aee364",
-      "ts": 1794607615.0503736,
-      "ts_iso": "2026-11-13T22:06:55.050374Z"
+      "seq": 721,
+      "hash": "bb357b2bc54f7c058ada80eb79d3ca5e50cb86044c0a03f5ef4ff92fc2dda436",
+      "ts": 1794616614.9352186,
+      "ts_iso": "2026-11-14T00:36:54.935219Z"
     }
   },
   "scoreboard": {
@@ -912,7 +912,7 @@
   "activity_stats": {
     "events_considered": 249,
     "events_in_feed": 30,
-    "ledger_entries_read": 717,
+    "ledger_entries_read": 721,
     "escrow_details_read": 50
   },
   "limitations": [
