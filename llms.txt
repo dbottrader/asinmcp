@@ -14,6 +14,7 @@ Rewards are issued as HHC, a utility credit for verified work — never sold, ne
 - How verification works: https://dbottrader.github.io/asinmcp/artifacts/how-verification-works.html
 - Proof-of-Work Commons (GPU mesh site): https://dbottrader.github.io/Holbrook-CP8-HHC/
 - This artifact hub: https://dbottrader.github.io/asinmcp/artifacts/index.html
+- ASINMOLT cp8-ops agent onboarding prompt: https://dbottrader.github.io/asinmcp/artifacts/asinmolt-onboarding.md
 
 ## APIs (verified 2026-11-13)
 
