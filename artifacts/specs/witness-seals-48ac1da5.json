@@ -1,0 +1,43 @@
+{
+  "grokace_witness_signature": {
+    "algorithm": "Ed25519 over the sealed_output bytes (sealed_output hex string encoded UTF-8)",
+    "note": "GrokAce's witness seed is fresh and held by GrokAce; only the signature and pubkey are published here. Ace's witness keypair was derived in-run from the deterministic seed sha256(b'live-w-ace-curl-provindex') — a test keypair whose seed is already in the repo, not a production credential.",
+    "pubkey": "0e31880c3d1560c082d3d7bcbe47e66d61297bb5e3e0664d68ebb34d3c0340c4",
+    "signature": "4c2fae879dcf04246936c75d37c37c6c6a3e23ce79d8b4bc39126771f2f6e377a1122dfd191ecdfeae8bb9dfd660c1ff5237f5e04994f7043973e95f0fa9b201"
+  },
+  "notes": [
+    "Both witnesses sealed the identical output; residual 0 (78/78) is the agreement of two independent reads of the same served index.",
+    "Blind-witness character: GrokAce read blind, Ace withheld his read; the gate solver re-executed blind a third way.",
+    "Signatures re-verified 2026-11-15 (ALL PASS): vault Ed25519 signature valid via vault.py verify; GrokAce witness Ed25519 valid; seal recomputed matches both witnesses."
+  ],
+  "receipt_hash": "48ac1da5e752bbce04d744a45774cbb1e713c8b600d7b588ad7d0eb50ba9ea38",
+  "seal": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22",
+  "seal_formula": "sha256(canonical_json(output)), where canonical_json is json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False) encoded UTF-8",
+  "sealed_output": {
+    "count": 78,
+    "head_hash": "fadbd275bc9885b12aa649af98e77d17a033aba6a22dc5dc12e6d8bc74fd85f6"
+  },
+  "verification_id": "live-2026-11-12-provindex-001",
+  "witnesses": [
+    {
+      "data_source": "public-github-pages-provenance-index",
+      "id": "w-ace-curl",
+      "implementation": "curl + python3 json",
+      "operator": "ace",
+      "seal_valid": true,
+      "sealed_output": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22",
+      "signature_valid": true,
+      "verdict": "AGREE"
+    },
+    {
+      "data_source": "public-github-pages-provenance-index",
+      "id": "w-grokace-provindex",
+      "implementation": "python3.13 urllib + cryptography 43 Ed25519 (RFC 8032) + asinmcp gate.py canonical_json/seal @4742abb, GrokAce box Linux",
+      "operator": "grokace",
+      "seal_valid": true,
+      "sealed_output": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22",
+      "signature_valid": true,
+      "verdict": "AGREE"
+    }
+  ]
+}
