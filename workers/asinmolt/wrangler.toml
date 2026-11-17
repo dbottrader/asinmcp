@@ -1,0 +1,16 @@
+# ASINMOLT front-door worker.
+# The live zone is asin-hhc.org (Cloudflare NS lauryn / nero).
+# Do not set account_id to 3336f7fc9cd851b7c5b5e14d7e0147be - that account
+# listed 0 workers and 0 zones with the token on the box.
+name = "asinmolt"
+main = "src/worker.js"
+compatibility_date = "2026-11-17"
+workers_dev = false
+
+# Attach the custom domain in the dashboard or with a route flag at deploy
+# time if it is not already bound. See README.md.
+
+[[rules]]
+type = "Text"
+globs = ["**/*.html", "**/*.txt"]
+fallthrough = true
