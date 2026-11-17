@@ -1,0 +1,77 @@
+{
+  "attempted_at": "2026-11-12T12:45:05Z",
+  "control": {
+    "control_id": "base-sepolia-batch001-tx",
+    "result": "PASS",
+    "source": "EXTERNAL_TO_TEST_POPULATION"
+  },
+  "external_anchor": null,
+  "instrument_independence": {
+    "declared": false,
+    "review_status": "ASSESSED_INDEPENDENT"
+  },
+  "outcome": "PASS",
+  "population_id": "asinmcp-provenance-index",
+  "preconditions": {
+    "established_at": "2026-11-12T12:45:05Z",
+    "expires_at": "2026-11-12T14:45:05Z",
+    "valid": true
+  },
+  "prev_receipt_hash": "7d91fa1a841e20d65fbf01666513830826ff878a5a1ab9d69a471a836af4eecd",
+  "reason": null,
+  "receipt_hash": "48ac1da5e752bbce04d744a45774cbb1e713c8b600d7b588ad7d0eb50ba9ea38",
+  "residual": {
+    "difference": 0,
+    "served_count": 78,
+    "stored_count": 78
+  },
+  "resolution_of": null,
+  "schema": "ASIN-HHC-VERIFICATION-1.0",
+  "signature": {
+    "action": "doc.sign",
+    "kind": "agent-vault-ed25519",
+    "nonce": "97f5284c478a8907",
+    "ts": "2026-11-12T12:45:12+00:00",
+    "value": "00647e8446e697f54efd5cb37fd51e71ec7782180b12ade13f991a3ab4e121753894f50dcc9efd60242dba2efe0584eae42640d1cd5b8bc366652c98f19c570d",
+    "vault_receipt_hash": "f2ce88361485f3b871b70d8b7088bf51a0d502fd8f54aa9ad710ad643a2b92a2",
+    "vault_receipt_seq": 6
+  },
+  "signer": {
+    "fingerprint": "4f47d2df9dbd9260a48eebe80dc472442b73cf43e78f4c895cf6abd9cb7a8835",
+    "kind": "agent-vault-ed25519",
+    "pubkey": "d7ad5b3ae338289e34c6a834f7db80a1f74c5c6611cf44738c8c9285cacdb3fe",
+    "vault_id": "vlt_4f47d2df9dbd9260"
+  },
+  "snapshot_hash": "3cc15904a7b60858d2c87372f7b10edf19b19dee7ed8dcb4fa32587d80e4d30d",
+  "test_id": "provenance-index-count-and-head",
+  "test_version": "1.0",
+  "verification_id": "live-2026-11-12-provindex-001",
+  "witnesses": [
+    {
+      "data_source": "public-github-pages-provenance-index",
+      "failure_mode": "https-curl-fetch",
+      "id": "w-ace-curl",
+      "implementation": "curl + python3 json",
+      "operator": "ace",
+      "placement": 1,
+      "seal_valid": true,
+      "sealed_output": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22",
+      "signature_valid": true,
+      "valid": true,
+      "verdict": "AGREE"
+    },
+    {
+      "data_source": "public-github-pages-provenance-index",
+      "failure_mode": "HTTPS GET dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json (urllib, no cache), json.loads, read entry_count and head_hash",
+      "id": "w-grokace-provindex",
+      "implementation": "python3.13 urllib + cryptography 43 Ed25519 (RFC 8032) + asinmcp gate.py canonical_json/seal @4742abb, GrokAce box Linux",
+      "operator": "grokace",
+      "placement": 2,
+      "seal_valid": true,
+      "sealed_output": "69616c863e4c1ad1d6508ac8b0db86435aa37bbc1cf69aeea6ebc46a28d00d22",
+      "signature_valid": true,
+      "valid": true,
+      "verdict": "AGREE"
+    }
+  ]
+}
