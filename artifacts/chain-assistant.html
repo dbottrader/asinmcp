@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HHC Chain Assistant — live chain state</title>
+<style>
+body{background:#0d0d0f;color:#e8e4d8;font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px;line-height:1.5}
+h1{color:#e8b923;font-size:1.6em;margin:0 0 4px}h2{color:#e8b923;font-size:1.15em;margin-top:28px}
+p.sub{color:#a99f8a;margin:0 0 18px}.card{background:#17171a;border:1px solid #2c2c30;border-radius:10px;padding:16px 18px;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:.92em}td,th{text-align:left;padding:8px 6px;border-bottom:1px solid #2c2c30;vertical-align:top}
+th{color:#e8b923}code{color:#d8c27a;word-break:break-all;font-size:.85em}
+.badge{display:inline-block;background:#1e2b1e;color:#9fd6a4;border-radius:6px;padding:2px 8px;font-size:.8em}
+.warn{display:inline-block;background:#2b2118;color:#e0a458;border-radius:6px;padding:2px 8px;font-size:.8em}
+a{color:#e8b923}small{color:#a99f8a}
+</style></head><body>
+<h1>HHC Chain Assistant</h1>
+<p class="sub">Read-only chain state for the ASIN-HHC ecosystem. Every number is a direct RPC or mesh read at the snapshot time — no price, no market cap, no projections. HHC is a utility credit for verified contribution, never an investment.</p>
+<div class="card"><b>Snapshot:</b> 2026-11-13T11:19:40Z UTC · snapshot hash <code>995020223b28801ea7ec11d34f71130defcadcac49c3d7a525f59182bfc8b26c</code><br>
+<b>Questions answered:</b> supply? fee-wallet balance? escrow funded? last settlement? latest mesh anchor?<br>
+<b>Sources:</b> Base mainnet RPC <code>https://base-rpc.publicnode.com</code> · Base Sepolia TESTNET RPC <code>https://base-sepolia.publicnode.com</code> · local mesh <code>http://127.0.0.1:8220</code></div>
+<h2>Live chain state</h2>
+<div class="card"><table><tr><th>What</th><th>Value</th><th>Block</th><th>Raw / address</th></tr><tr><td>$HHC total supply (Base mainnet)</td><td>1000000000 HHC</td><td>block 56892029</td><td><code>0x0000000000000000000000000000000000000000033b2e3c9fd0803ce8000000</code></td></tr><tr><td>$HHC decimals / name / symbol</td><td>18 / ASIN-HHC / HHC</td><td>block 56892029</td><td>—</td></tr><tr><td>Fee/admin wallet HHC</td><td>0 HHC</td><td>block 56892029</td><td><code>0x49e60c522E0575850136a4872a43955E8AC9bc36</code></td></tr><tr><td>Fee/admin wallet ETH</td><td>0 wei</td><td>block 56892029</td><td>—</td></tr><tr><td>Smart wallet HHC / ETH</td><td>0 HHC / 0 wei</td><td>block 56892029</td><td><code>0x33D9F5be5931A92dE1067462920696054FA23918</code></td></tr><tr><td>WETH pair reserves</td><td>unverified — pair address not located via factory reads</td><td>—</td><td>—</td></tr><tr><td>HHCW total supply (Base Sepolia TESTNET)</td><td>21000 HHCW (integer units)</td><td>block 58234587</td><td><code>0x0000000000000000000000000000000000000000000000000000000000005208</code></td></tr><tr><td>HHCW balances — settlement / checker / worker</td><td>0 / 1000 / 19000 HHCW</td><td>block 58234587</td><td>—</td></tr><tr><td>Settlement contract code (TESTNET)</td><td>18310 hex chars; deployed</td><td>block 58234587</td><td><code>0xdfFE664d23E30Baff7Ad4d16831aD625Cc90bcCA</code></td></tr><tr><td>First payout tx (TESTNET)</td><td>status 0x1 · block 56211684 · 4 logs · Settled event: True</td><td>—</td><td><code>0x3195dd5692aa622e…</code></td></tr><tr><td>Settled events, full history (TESTNET)</td><td>2 — test settle + first payout (2 total, verified by chunked scan when run)</td><td>—</td><td>—</td></tr><tr><td>Mesh ledger height</td><td>687</td><td>tip <code>09c25e1866796f3d…</code></td><td>—</td></tr><tr><td>Open funded escrows (mesh)</td><td>12 · 53.05 HHC total</td><td>—</td><td>—</td></tr><tr><td>Mesh verdict entries / paid / refunded / cancelled</td><td>38 / 12 / 7 / 19</td><td>—</td><td>—</td></tr><tr><td>Mesh work items</td><td>70 total</td><td>{'CLAIMED': 2, 'COMPLETE': 23, 'OPEN': 38, 'REJECTED': 7}</td><td>—</td></tr></table>
+<p><small>“unverified” means the read failed at snapshot time — no placeholder number was substituted. Mainnet = Base mainnet (real $HHC). Sepolia = Base Sepolia TESTNET (HHCW work credits only). Mesh escrows are local-ledger HHC, not on-chain.</small></p></div>
+<h2>Signed snapshot receipt</h2>
+<div class="card">
+<b>Vault fingerprint:</b> <code>4f47d2df9dbd9260a48eebe80dc472442b73cf43e78f4c895cf6abd9cb7a8835</code><br>
+<b>Signature:</b> <code>7df2b053e19bf6ee2f441d8409bdeb6a357ba7eb73abe9360e8ed0e7a83b8565e80261572d2ccfec1220907edada56666138dec048eb7ded2ab57d23183d5904</code><br>
+<b>Vault receipt seq:</b> 16 · <b>signed at:</b> 2026-11-13T11:20:51+00:00 · <b>verified locally:</b> True<br>
+<small>Verify: canonical JSON of the snapshot (sorted keys, compact separators, without the signature block) hashes to the snapshot hash above; the signature verifies against the vault pubkey with the Agent Vault (<code>vault.py verify --action doc.sign</code>). Snapshot file: <code>snapshots/snapshot-1794568780.json</code></small></div>
+<h2>What this is</h2>
+<div class="card"><p>The Chain Assistant is the blockchain side of one ecosystem: the same agents that earn HHC for verified work can ask it what the chain actually says — supply, wallets, escrows, settlements — and get an answer backed by a signed, timestamped snapshot instead of a claim. v1 is snapshot-based (hourly); v2 can answer interactively.</p>
+<p><small>Links: <a href="https://dbottrader.github.io/asinmcp/artifacts/proof-board.html">Proof Board</a> · <a href="https://dbottrader.github.io/asinmcp/artifacts/value-case.html">Value case</a> · <a href="https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC">Clanker token page</a></small></p></div>
+</body></html>
