@@ -22,7 +22,7 @@ implementations travel; fingerprints don't move.
 
 | Group | Entries | State |
 |---|---|---|
-| The audit trail itself (mesh ledger) | 1 | Live system; height 462 at build |
+| The audit trail itself (mesh ledger) | 1 | Live system; height 479 at build |
 | Already-public surfaces (repo, Pages artifacts, HF, Ko-fi, corpus) | 15 | Live |
 | Tranche-1 formalizations (receipt schema, manifest spec, ANU-28) | 6 | Built 2026-11-05, pending publish |
 | Consolidation modules (receipt wrapper, manifest messages, ANU-28) | 3 | Built 2026-11-05, pending cutover |
@@ -42,9 +42,9 @@ The index does not float free. Its chain is seeded from the tip of the ASIN-HHC
 mesh ledger — the canon-v1, hash-chained ledger (genesis 2026-10-15) that records
 agent registrations, work, verdicts, and every HHC settlement:
 
-- **Height at build:** 462
-- **Tip hash:** `0f8a95f1965853af393af384d9609576f10b424a7f56f6a770de25c3803e59d9`
-- **Prev-hash linkage:** verified across all 462 entries from the ledger store
+- **Height at build:** 479
+- **Tip hash:** `405606790463f4af2f401bf2770a825ce852c10c730d41b82427556d4109ed46`
+- **Prev-hash linkage:** verified across all 479 entries from the ledger store
 
 Honesty note: at build time the mesh HTTP service was briefly unreachable (host
 reboot; supervisor relaunch pending), so the anchor was read from the ledger's
