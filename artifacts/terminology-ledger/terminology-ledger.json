@@ -48,10 +48,10 @@
     },
     {
       "term": "recursive artifact",
-      "kind": "exact coinage",
+      "kind": "dated use",
       "earliest_record": "2025-11-15T21:53:14Z",
       "source": "Google Takeout",
-      "source_detail": "Google Takeout timestamps 2025-11-15T21:53:14Z (“Start research” prompt) and 2025-11-15T22:01:22Z (HHC Glyph Token App Phase II Canvas)",
+      "source_detail": "Google Takeout timestamps 2025-11-15T21:53:14Z (“Start research” prompt) and 2025-11-15T22:01:22Z (HHC Glyph Token App Phase II Canvas). Correction note (2026-11-19): earlier unrelated public uses of this phrase exist (May-Oct 2025, located by an outside scout); no global first-use is claimed. This entry records Christie's independent dated use, ~11 months before the 2026 sighting.",
       "evidence": "Symbolic Cognition Lattice framing: “A 'recursive artifact' of meaning, generated from AI-human dialogue.”",
       "prev_hash": "fc9edf530afb714839888456575f3b467f69bdaf50f3ba28f8cdc7a2cce996a8",
       "hash": "f2ff732d721fae9bc5b201b158f39974b57f2567f41424eccf0ab4a63d59f444"
