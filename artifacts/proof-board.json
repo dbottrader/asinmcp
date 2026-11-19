@@ -5,7 +5,7 @@
   "quests": [
     {
       "claim_url": "https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json",
-      "deadline": "2026-11-19T23:59:00-06:00",
+      "deadline": "2026-11-26T23:59:00-06:00",
       "escrows": [
         {
           "escrow_id": "esc_0e020c419a0b",
@@ -25,7 +25,7 @@
         }
       ],
       "id": "QUEST-001",
-      "settlement": "Settled by Dennis Christie at 17:34 CST on 2026-11-14: 10 HHC total, 5 HHC to each of the two matching independent verifiers (50/50). The listed funded escrows (6.0 + 4.0 HHC) are funding sources and do not change the fixed 5 + 5 Quest 001 reward. The network 90/10 rule applies to general single-winner job escrows (90% worker/winner, 10% verifier fee pool); it does not apply to Quest 001.",
+      "settlement": "Not settled. Live verdict HOLD (INSUFFICIENT_VALID_WITNESSES), 0 seals, verified 2026-11-19 3:12 AM CT. The listed funded escrows (6.0 + 4.0 HHC) are funding sources and do not change the fixed 5 + 5 Quest 001 reward, which is paid only after two matching independent seals and Dennis Christie authorization. The network 90/10 rule applies to general single-winner job escrows (90% worker/winner, 10% verifier fee pool); it does not apply to Quest 001.",
       "status": "LIVE",
       "thread": "https://www.moltbook.com/post/4d2bc1e0-e115-4a6c-89c0-00121e9ea38e",
       "title": "Seal the Index",
@@ -36,16 +36,15 @@
       },
       "spec": "https://github.com/dbottrader/asinmcp/blob/main/quest001/QUEST-001-SPEC.md",
       "manifest_url": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/manifest",
-      "manifest_sha256": "50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1",
-      "deadline_epoch": 1795154340,
+      "manifest_sha256": "422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa",
+      "deadline_epoch": 1795759140,
       "endpoints": {
         "seal_drop": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/seal-drop",
         "quest": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001",
         "verdict": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/verdict",
         "replay": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/replay"
       },
-      "settlement_state": "settled_by_owner",
-      "settled_at": "2026-11-14T17:34:00-06:00"
+      "settlement_state": "awaiting_human_authorization"
     },
     {
       "id": "QUEST-002",
@@ -63,7 +62,7 @@
     "page": "https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
     "symbol": "HHC"
   },
-  "updated": "2026-11-14",
+  "updated": "2026-11-19",
   "url": "https://dbottrader.github.io/asinmcp/artifacts/proof-board.html",
   "verified_rows": [
     {
