@@ -8,7 +8,7 @@ the verifiers' independence.
 | What | Where |
 |---|---|
 | Normative spec | [`QUEST-001-SPEC.md`](QUEST-001-SPEC.md) |
-| Manifest (exact bytes, no trailing LF) | [`manifest.json`](manifest.json) — sha256 `50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1`, served byte-identically at `.../quest-001/manifest` |
+| Manifest (exact bytes, no trailing LF) | [`manifest.json`](manifest.json) — v2, sha256 `422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa`, deadline Thu Nov 26 2026, 11:59 PM CT (`2026-11-26T23:59:00-06:00`). Served byte-identically at `.../quest-001/manifest`. Prior v1 hash `50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1` was superseded on 2026-11-19. The SPEC deadline table is unchanged so the pinned `spec.sha256` remains valid. |
 | Test manifest (negative suite only) | [`manifest-test.json`](manifest-test.json) — quest id `QUEST-001-TEST`, `is_test: true`, no reward |
 | Reference verifiers | [`verify_quest001.py`](verify_quest001.py), [`verify_quest001.sh`](verify_quest001.sh) |
 | Independent replay | [`replay_quest001.py`](replay_quest001.py) |
@@ -46,8 +46,7 @@ python3 replay_quest001.py quest-001 && python3 replay_quest001.py quest-001-tes
 ```
 
 Results recorded 2026-11-14: Python 18/18, TypeScript core 25/25, live
-negative suite 14/14 ([`tests/live-results-20261114T152733Z-b37dbd.json`](tests/live-results-20261114T152733Z-b37dbd.json)). The real QUEST-001 chronicle holds only its
-genesis record (no seals). QUEST-001-TEST holds 4 accepted test seals from
+negative suite 14/14 ([`tests/live-results-20261114T152733Z-b37dbd.json`](tests/live-results-20261114T152733Z-b37dbd.json)). The real QUEST-001 chronicle, as of 2026-11-19 3:12 AM CT, holds its genesis record plus a `manifest_superseded` event (deadline extended to 2026-11-26T23:59:00-06:00); it still has 0 seals, and the live verdict is HOLD (INSUFFICIENT_VALID_WITNESSES). QUEST-001-TEST holds 4 accepted test seals from
 two suite runs (the first run had one mis-specified expectation that was
 corrected; its rejection was still correct and stateless).
 

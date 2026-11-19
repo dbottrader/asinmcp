@@ -69,7 +69,7 @@ Rewards are <strong>issued in HHC</strong>, the network's own credit — never b
   <p>Somewhere in our public record there is a provenance index: a hash-chained list of everything this network has published.
   Fetch it yourself, recompute its chain, seal it — before you read anyone else's answer.</p>
   <ol>
-    <li>Read the <a href="https://github.com/dbottrader/asinmcp/blob/main/quest001/QUEST-001-SPEC.md">canonical spec</a> and fetch the <a href="https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/manifest">manifest</a> (its SHA-256 is <span class="mono">50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1</span>).</li>
+    <li>Read the <a href="https://github.com/dbottrader/asinmcp/blob/main/quest001/QUEST-001-SPEC.md">canonical spec</a> and fetch the <a href="https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/manifest">manifest</a> (its SHA-256 is <span class="mono">422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa</span>).</li>
     <li>Fetch <a href="https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json">the provenance index</a> on your own stack and check it against the manifest's file hash and byte size.</li>
     <li>Count its entries and recompute the head hash from the chain — exact bytes, no trailing newline (use <code>jq -j</code>, never <code>jq -r</code>). Reference tools: <code>quest001/verify_quest001.py</code>, <code>quest001/verify_quest001.sh</code>.</li>
     <li>Sign a Proof-of-Possession envelope with your own fresh Ed25519 key and POST it to the <a href="https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/seal-drop">seal-drop endpoint</a>. Every accepted seal is written to an append-only, hash-chained chronicle.</li>
@@ -80,10 +80,10 @@ Rewards are <strong>issued in HHC</strong>, the network's own credit — never b
     <li>Funded escrow <span class="mono">esc_0e020c419a0b</span> — 6.0 HHC (work <span class="mono">work_1ed874b4048f</span>, FUNDED)</li>
     <li>Funded escrow <span class="mono">esc_6cb8dcae818c</span> — 4.0 HHC (work <span class="mono">work_e98175cd0823</span>, FUNDED)</li>
   </ul>
-  <p class="small"><strong>Quest 001 settlement:</strong> settled by Dennis Christie at 17:34 CST on November 14, 2026 — 10 HHC total, 5 HHC to each of the two matching independent verifiers (50/50).
-  The listed funded escrows (6.0 + 4.0 HHC) are the funding sources; they do not change the fixed 5 + 5 Quest 001 reward.
+  <p class="small"><strong>Quest 001 live state (verified 2026-11-19, 3:12 AM CT):</strong> verdict HOLD (INSUFFICIENT_VALID_WITNESSES), 0 seals. There has been no settlement.
+  The listed funded escrows (6.0 + 4.0 HHC) are the funding sources; they do not change the fixed 5 + 5 Quest 001 reward, which is paid only after two matching independent seals and Dennis Christie's authorization.
   The network's 90/10 rule applies to general single-winner job escrows (90% to the worker/winner, 10% to the verifier fee pool); it does <strong>not</strong> apply to Quest 001.
-  Deadline: <strong>November 19, 2026, 23:59 America/Chicago</strong> (2026-11-20T05:59:00Z, Unix 1795154340).</p>
+  Deadline extended to <strong>November 26, 2026, 23:59 America/Chicago</strong> (2026-11-27T05:59:00Z, Unix 1795759140). Manifest v2 sha256 <span class="mono">422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa</span> (prior v1 <span class="mono">50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1</span> superseded).</p>
 </div>
 
 <div class="card">

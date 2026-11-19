@@ -8,20 +8,25 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence"
 CLAIM = "https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json"
 VALID_FROM = "2026-11-14T15:00:00Z"
-DEADLINE = "2026-11-19T23:59:00-06:00"
-DEADLINE_UTC = "2026-11-20T05:59:00Z"
-DEADLINE_EPOCH = 1795154340
+# QUEST-001 production (manifest v2). Do not reuse these for the test manifest;
+# QUEST-001-TEST is still registered under the original v1 deadline.
+DEADLINE = "2026-11-26T23:59:00-06:00"
+DEADLINE_UTC = "2026-11-27T05:59:00Z"
+DEADLINE_EPOCH = 1795759140
+TEST_DEADLINE = "2026-11-19T23:59:00-06:00"
+TEST_DEADLINE_UTC = "2026-11-20T05:59:00Z"
+TEST_DEADLINE_EPOCH = 1795154340
 
 
 def sha(b): return hashlib.sha256(b).hexdigest()
 
 
-def build(quest_id, slug, title, is_test, ineligible, reward, raw_claim, spec_sha):
+def build(quest_id, slug, title, is_test, ineligible, reward, raw_claim, spec_sha, version=1, deadline=None, deadline_utc=None, deadline_epoch=None):
     m = {
         "schema": "ASIN-HHC-QUEST-MANIFEST-1.0",
         "quest_id": quest_id,
         "title": title,
-        "version": 1,
+        "version": version,
         "is_test": is_test,
         "spec": {"path": "quest001/QUEST-001-SPEC.md", "sha256": spec_sha},
         "claim": {"url": CLAIM, "sha256": sha(raw_claim), "bytes": len(raw_claim),
@@ -40,9 +45,9 @@ def build(quest_id, slug, title, is_test, ineligible, reward, raw_claim, spec_sh
             "key_id": "sha256 of the 32 raw public-key bytes",
         },
         "valid_from": VALID_FROM,
-        "deadline": DEADLINE,
-        "deadline_utc": DEADLINE_UTC,
-        "deadline_epoch": DEADLINE_EPOCH,
+        "deadline": deadline if deadline is not None else DEADLINE,
+        "deadline_utc": deadline_utc if deadline_utc is not None else DEADLINE_UTC,
+        "deadline_epoch": deadline_epoch if deadline_epoch is not None else DEADLINE_EPOCH,
         "independence": {
             "min_witnesses": 2,
             "distinct": ["operator", "pubkey", "failure_mode"],
@@ -85,10 +90,13 @@ def main():
     }
     outs = {
         "manifest.json": build("QUEST-001", "quest-001", "Seal the Index", False,
-                               ["grokace", "dbottrader", "dennischristie"], reward, raw, spec_sha),
+                               ["grokace", "dbottrader", "dennischristie"], reward, raw, spec_sha,
+                               version=2),
         "manifest-test.json": build("QUEST-001-TEST", "quest-001-test",
                                     "TEST ONLY - seal-drop negative suite (no reward)", True,
-                                    ["ineligible-probe"], None, raw, spec_sha),
+                                    ["ineligible-probe"], None, raw, spec_sha,
+                                    deadline=TEST_DEADLINE, deadline_utc=TEST_DEADLINE_UTC,
+                                    deadline_epoch=TEST_DEADLINE_EPOCH),
     }
     for name, b in outs.items():
         with open(os.path.join(HERE, name), "wb") as f:

@@ -5,9 +5,9 @@
     "sha256": "a81a8bdedc420af4010b7b2942c26023a896cf3ededaf2a3ac97c739318d937e",
     "url": "https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json"
   },
-  "deadline": "2026-11-19T23:59:00-06:00",
-  "deadline_epoch": 1795154340,
-  "deadline_utc": "2026-11-20T05:59:00Z",
+  "deadline": "2026-11-26T23:59:00-06:00",
+  "deadline_epoch": 1795759140,
+  "deadline_utc": "2026-11-27T05:59:00Z",
   "endpoints": {
     "manifest": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/manifest",
     "quest": "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001",
@@ -68,7 +68,7 @@
   },
   "title": "Seal the Index",
   "valid_from": "2026-11-14T15:00:00Z",
-  "version": 1,
+  "version": 2,
   "witness_output": {
     "count": "number of elements in .entries (non-empty array of objects)",
     "fields": [
