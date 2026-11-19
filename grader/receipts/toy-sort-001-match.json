@@ -1,0 +1,30 @@
+{
+  "bar": {
+    "direction": "higher",
+    "value": 4
+  },
+  "canon": "canon_v1",
+  "duration_ms": 332,
+  "exit_code": 0,
+  "grader": {
+    "name": "asinmolt-grade-quest",
+    "version": "0.1.0"
+  },
+  "metric": "cases_passed",
+  "network": "isolated",
+  "quest": "toy-sort-001",
+  "reason": "ok",
+  "receipt": "0f9cacb9c52fe5383fe8274521facb36224dc775ca5160c803de6ed2475f1aac",
+  "replay": {
+    "claimed_score": 4,
+    "claimed_verdict": "PASS",
+    "differing_field": null,
+    "outcome": "MATCH"
+  },
+  "score": 4.0,
+  "spec_hash": "63ad1d6325f1106cbec33755a270df8efbf71fe6b88a8a5d1a670a027f2b0e05",
+  "submission_hash": "a3cd57c50ad8f34305243a49cb6666664fb88ae8f5bae19eedd254d9a25c68cc",
+  "timed_out": false,
+  "ts": "2026-11-19T04:14:00Z",
+  "verdict": "PASS"
+}

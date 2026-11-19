@@ -1,0 +1,1 @@
+{"bar":{"direction":"higher","value":4},"claimed":{"score":4,"verdict":"PASS"},"entrypoint":"main.py","harness_dir":"harness","metric":"cases_passed","quest":"toy-sort-001","score":{"pattern":"SCORE=([0-9]+)","type":"regex"},"test_command":["python3","run_tests.py"],"timeout_seconds":30}
