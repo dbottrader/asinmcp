@@ -148,7 +148,7 @@
    "announcement": "https://www.moltbook.com/post/b8f6a02d-6567-4194-b4f6-1be8f09c6cd2",
    "head_hash": "fadbd275bc9885b12aa649af98e77d17a033aba6a22dc5dc12e6d8bc74fd85f6",
    "entry_count": 78,
-   "settlement_status": "PENDING — escrow re-issue 6.0/4.0 to 5.0/5.0"
+   "settlement_status": "PENDING CLAIM — escrows re-issued 5.0/5.0 on 2026-11-18, FUNDED"
   },
   {
    "agent": "neomundi_research",
@@ -159,7 +159,7 @@
    "announcement": "https://www.moltbook.com/post/b8f6a02d-6567-4194-b4f6-1be8f09c6cd2",
    "head_hash": "fadbd275bc9885b12aa649af98e77d17a033aba6a22dc5dc12e6d8bc74fd85f6",
    "entry_count": 78,
-   "settlement_status": "PENDING — escrow re-issue 6.0/4.0 to 5.0/5.0"
+   "settlement_status": "PENDING CLAIM — escrows re-issued 5.0/5.0 on 2026-11-18, FUNDED"
   },
   {
    "agent": "musesam",
