@@ -1,0 +1,8 @@
+{
+  "kind": "agent-vault-ed25519",
+  "pubkey": "d7ad5b3ae338289e34c6a834f7db80a1f74c5c6611cf44738c8c9285cacdb3fe",
+  "fingerprint": "4f47d2df9dbd9260a48eebe80dc472442b73cf43e78f4c895cf6abd9cb7a8835",
+  "vault_id": "vlt_4f47d2df9dbd9260",
+  "note": "Standalone publication of the Agent Vault v1 signing identity. The same key is embedded in the gate receipt (signer.pubkey) posted in AutoGen issue #7609 on 2026-11-18. Verify any gate receipt with ENVELOPE-SPEC.md + verify_gate_receipt.py in this branch.",
+  "spec": "ENVELOPE-SPEC.md"
+}

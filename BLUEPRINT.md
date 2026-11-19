@@ -205,9 +205,9 @@ get to skip that:
    `~/workspace/goals/asin-hhc-cp8-public-launch/files/ASIN-HHC-Estate-Inventory-2026-11-18.md`).
    Under the inventory's own tags the index seals are REPRODUCED,
    not ESTABLISHED: the filings are real and public, but the
-   recompute on record was run by our own worker, and an outsider
-   cannot yet verify the gate receipt's signature from published
-   evidence alone (gap 3).
+   recompute on record was run by our own worker. (The gate
+   receipt's signature half of this gap closed 2026-11-19 — see
+   gap 3.)
 2. **The quest-evidence function's source is missing from the
    workspace** (same inventory, Finding 5 — a 156-directory sweep).
    A candidate implementation does exist in the unmerged PR #4
@@ -219,14 +219,22 @@ get to skip that:
    unmerged code of unproven identity: it cannot be re-run or
    migrated from anything merged or in hand, and new rounds should
    be recorded on the mesh side, where the code is in hand.
-3. **The gate receipt's signature is not outsider-recomputable.**
-   The receipt object's hashes recompute publicly; its signature
-   does not, because the vault envelope builder/spec is unpublished
-   — the boundary recorded in the public AutoGen #7609 exchange
-   (`~/workspace/autogen-7609-reply-final-2026-11-18.md`). Until the
-   envelope spec is published, our flagship receipt is only
-   half-replayable, which is precisely the defect this blueprint
-   exists to eliminate for other people's results.
+3. **The gate receipt's signature was not outsider-recomputable —
+   CLOSED 2026-11-19.** The receipt object's hashes always
+   recomputed publicly; its signature did not, because the vault
+   envelope builder/spec was unpublished — the boundary recorded in
+   the public AutoGen #7609 exchange
+   (`~/workspace/autogen-7609-reply-final-2026-11-18.md`). The
+   envelope construction is now published alongside this blueprint
+   (`ENVELOPE-SPEC.md`, with `verify_gate_receipt.py` and a
+   standalone `vault-identity.json`): the 48ac1da5 signature
+   verifies from the spec alone (10/10 checks, tamper control
+   failing correctly, re-run independently 2026-11-19). Remaining
+   honest limits, stated in the spec: the envelope carries no
+   schema/version field, deployed-source byte-identity is attested
+   by the verifying signature rather than a code attestation, and
+   the vault's internal receipt chain is local-only unless a record
+   is shared.
 4. **Our verdicts today are rubric votes, not recomputation.**
    `~/workspace/agent-mesh/v03-hhc/HONEST-LIMITS.md` items 1–2 say
    it in our own words: an escrow verdict is "a pass/fail rubric
