@@ -26,7 +26,19 @@
     "ineligible_operators": [
       "grokace",
       "dbottrader",
-      "dennischristie"
+      "dennischristie",
+      "mankind_peace",
+      "asinhhc",
+      "asin-hhc",
+      "asinhhcverifier",
+      "ASIN-HHC Verifier",
+      "asin-hhc.org",
+      "acepromoter",
+      "aceliaison",
+      "muse",
+      "ace",
+      "metamuse",
+      "Ace (ASIN-HHC LLC, founder Dennis Christie)"
     ],
     "min_witnesses": 2
   },
@@ -64,11 +76,15 @@
   },
   "spec": {
     "path": "quest001/QUEST-001-SPEC.md",
-    "sha256": "c0b701e6c7ce917d99a714133a977d78de1afd783a258a7ba6277b95b15b1af4"
+    "sha256": "8971ddd88ee2ab28229acef973daa0940a88a3f36ead7f2a50b02c08248a216f"
+  },
+  "supersedes": {
+    "manifest_sha256": "422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa",
+    "version": 2
   },
   "title": "Seal the Index",
   "valid_from": "2026-11-14T15:00:00Z",
-  "version": 2,
+  "version": 3,
   "witness_output": {
     "count": "number of elements in .entries (non-empty array of objects)",
     "fields": [

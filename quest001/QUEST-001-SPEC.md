@@ -13,7 +13,7 @@ This document is normative. Where the old cold hand-off, the old
 | Claim URL | `https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json` |
 | Claim file SHA-256 / size | published in the manifest (`claim.sha256`, `claim.bytes`) |
 | Manifest | `GET https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence/quest-001/manifest` (byte-identical copy: `quest001/manifest.json`) |
-| Deadline | `2026-11-19T23:59:00-06:00` = `2026-11-20T05:59:00Z` = Unix `1795154340` |
+| Deadline | `2026-11-26T23:59:00-06:00` = `2026-11-27T05:59:00Z` = Unix `1795759140` |
 
 The claim is the index's own declaration that it holds `entry_count` entries
 whose hash chain ends at `head_hash`. A witness re-derives both values from
@@ -133,8 +133,11 @@ Independent = different normalized operator **and** different public key
 **and** different normalized `failure_mode` (gate.py rule plus key
 distinctness). Operators are self-declared: before settlement a human must
 confirm that Alpha and Beta are genuinely separate operators, hosts and
-credentials. GrokAce (coordinator) and the index publisher are ineligible;
-their seals are refused at intake and never count.
+credentials. GrokAce (coordinator), the index publisher, the board-side
+ASIN-HHC Verifier, and Dennis Christie's other listed nodes and agents are
+ineligible; the normative names are the manifest's `ineligible_operators`
+list, compared after lowercase alphanumeric normalization (`normName`).
+Their seals are refused at intake and never count.
 
 Every verdict carries `settlement_state: "awaiting_human_authorization"`
 and `automatic_payment: false`, plus `verdict_hash = seal(verdict body)`.
@@ -159,3 +162,7 @@ re-verifies the chain and verdict server-side; `replay_quest001.py`
 re-verifies both from the public JSON with no trust in the service.
 Test traffic uses the separate quest id `QUEST-001-TEST` (`is_test: true`)
 and never touches the QUEST-001 chain.
+
+## Changelog
+
+- 2026-11-23: Deadline revised to `2026-11-26T23:59:00-06:00` = `2026-11-27T05:59:00Z` = Unix `1795759140`. The ineligible-operator rule is unchanged (manifest list, `normName` comparison); the production manifest is revised separately as v3. No seals existed at the time of this revision, so no accepted envelope is invalidated.

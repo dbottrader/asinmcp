@@ -154,4 +154,92 @@ await t("chronicle chain verifies and detects tampering", async () => {
   assert.equal((await verifyChain(recs)).ok, false);
 });
 
+
+// ---- manifest v3 ineligible list (prep; does not register or call seal-drop)
+const V3_INELIGIBLE = [
+  "grokace",
+  "dbottrader",
+  "dennischristie",
+  "mankind_peace",
+  "asinhhc",
+  "asin-hhc",
+  "asinhhcverifier",
+  "ASIN-HHC Verifier",
+  "asin-hhc.org",
+  "acepromoter",
+  "aceliaison",
+  "muse",
+  "ace",
+  "metamuse",
+  "Ace (ASIN-HHC LLC, founder Dennis Christie)",
+];
+const v3quest: QuestRow = {
+  ...quest,
+  manifest: {
+    ...manifest,
+    independence: { ...manifest.independence, ineligible_operators: V3_INELIGIBLE },
+  },
+};
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+await t("v3 ineligible list has only the two intentional same-norm pairs", () => {
+  const groups = new Map<string, string[]>();
+  for (const name of V3_INELIGIBLE) {
+    const k = norm(name);
+    groups.set(k, [...(groups.get(k) ?? []), name]);
+  }
+  const multi = [...groups.entries()].filter(([, names]) => names.length > 1);
+  assert.deepEqual(multi, [
+    ["asinhhc", ["asinhhc", "asin-hhc"]],
+    ["asinhhcverifier", ["asinhhcverifier", "ASIN-HHC Verifier"]],
+  ]);
+  assert.equal(groups.get("ace")?.length, 1);
+  assert.equal(groups.get("muse")?.length, 1);
+  assert.equal(groups.has("asinhhcorg"), true);
+  assert.equal(groups.has("aceasinhhcllcfounderdennischristie"), true);
+  assert.notEqual(norm("acepromoter"), "ace");
+  assert.notEqual(norm("aceliaison"), "ace");
+  assert.notEqual(norm("metamuse"), "muse");
+  assert.notEqual(norm("asinhhc.org"), "asinhhc");
+});
+
+await t("reject: each v3 ineligible operator name with operator_ineligible", async () => {
+  for (const name of V3_INELIGIBLE) {
+    const e = pyEnv("seed-v3-" + name, name, "fm-v3-" + name);
+    const r: any = await validateEnvelope(e, v3quest, NOW, verify);
+    assert.equal(r.ok, false, name + " " + JSON.stringify(r));
+    assert.equal(r.code, "operator_ineligible", name + " " + JSON.stringify(r));
+    assert.equal(r.status, 422);
+    console.log("    operator_ineligible:", JSON.stringify(name), "norm=", norm(name));
+  }
+});
+
+await t("reject: typography variants that norm to a v3 listed name", async () => {
+  const variants = ["GrokAce", "ASIN-HHC", "Mankind-Peace", "AcePromoter", "ASIN-HHC.ORG"];
+  for (const name of variants) {
+    const e = pyEnv("seed-v3-var-" + name, name, "fm-v3-var-" + name);
+    const r: any = await validateEnvelope(e, v3quest, NOW, verify);
+    assert.equal(r.code, "operator_ineligible", name + " " + JSON.stringify(r));
+    assert.equal(r.status, 422);
+    console.log("    operator_ineligible variant:", JSON.stringify(name), "norm=", norm(name));
+  }
+});
+
+await t("accept: an outside operator name is not rejected", async () => {
+  const e = pyEnv("seed-v3-outside", "north-star-lab", "fm-v3-outside");
+  const r: any = await validateEnvelope(e, v3quest, NOW, verify);
+  assert.equal(r.ok, true, JSON.stringify(r));
+  console.log("    accepted outside operator: north-star-lab norm=", norm("north-star-lab"));
+});
+
+await t("accept: near-miss names are not blocked by prefix or substring", async () => {
+  for (const name of ["ace-lab", "the-muse", "museum", "asinhhc-research"]) {
+    assert.equal(V3_INELIGIBLE.map(norm).includes(norm(name)), false, name);
+    const e = pyEnv("seed-v3-nm-" + name, name, "fm-nm-" + name);
+    const r: any = await validateEnvelope(e, v3quest, NOW, verify);
+    assert.equal(r.ok, true, name + " " + JSON.stringify(r));
+    console.log("    accepted near-miss:", JSON.stringify(name), "norm=", norm(name));
+  }
+});
+
 console.log(`\n${n} tests passed`);
