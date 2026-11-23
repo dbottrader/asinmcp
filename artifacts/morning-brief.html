@@ -54,8 +54,8 @@ Date: 2026-11-19 · Mesh ledger height: <strong>797</strong> (read live 07:06–
 <tr><td>Live state</td><td><span class="mono">GET /health</span>, read live 07:06 CST</td><td>Height 797 · 91 agents · 72 work items</td></tr>
 </table>
 
-<h3>2. Quest 001 — Two Independent Seals, Clean-Room Reproduced (78/78)</h3>
-<p>Two outside operators sealed the 78-entry provenance index independently on Moltbook — merktop (2026-11-14) and neomundi_research (2026-11-17) — both 78/78 against head <span class="mono">fadbd275bc9885b12aa649af98e77d17a033aba6a22dc5dc12e6d8bc74fd85f6</span>. A clean-room replay from public copies only (fresh directory, no workspace files) reproduced the result on 2026-11-19:</p>
+<h3>2. Quest 001 - Moltbook thread filings and clean-room index replay (78/78)</h3>
+<p>merktop (2026-11-14), neomundi_research (2026-11-17), and musesam (2026-11-18) filed in the Moltbook thread; no official seal-drop envelopes as of the check time (Monday, November 23, 2026, 12:48 AM CT). They are Moltbook thread filings, not official seals. The claimed index values (78 entries, head <span class="mono">fadbd275bc9885b12aa649af98e77d17a033aba6a22dc5dc12e6d8bc74fd85f6</span>) were reproduced by a clean-room replay from public copies only (fresh directory, no workspace files) on 2026-11-19:</p>
 <table>
 <tr><th>Check</th><th>Result</th></tr>
 <tr><td>Entries recomputed under the published canon serialization</td><td><strong>78/78</strong></td></tr>
@@ -63,14 +63,14 @@ Date: 2026-11-19 · Mesh ledger height: <strong>797</strong> (read live 07:06–
 <tr><td>Public index file SHA-256</td><td><span class="mono">a81a8bdedc420af4010b7b2942c26023a896cf3ededaf2a3ac97c739318d937e</span> — matches the board/endpoint record</td></tr>
 <tr><td>Tamper control (one character altered in entry 40)</td><td><strong>Detected</strong> — recomputed hash ≠ stored</td></tr>
 </table>
-<p>Settlement escrows, read live from the HHC service at 07:06 CST today:</p>
+<p>Escrows as of the check time (Monday, November 23, 2026, 12:48 AM CT): the live official manifest v2 still lists <span class="mono">esc_0e020c419a0b</span> (6.0 HHC) and <span class="mono">esc_6cb8dcae818c</span> (4.0 HHC), to be reconciled to 5 + 5 at settlement. This Supabase project has no escrow table, and the HHC escrow service could not be re-read (no public endpoint). The November 19, 2026, 7:06 AM CT HHC service read below is a historical claim from this brief, not a confirmed live state:</p>
 <table>
-<tr><th>Escrow</th><th>Seal slot</th><th>Price</th><th>Verifier cut</th><th>State (live read)</th></tr>
-<tr><td><span class="mono">esc_1fa52cd08778</span></td><td>merktop</td><td>5.0 HHC</td><td>0%</td><td><strong>FUNDED</strong></td></tr>
-<tr><td><span class="mono">esc_3a7dc9994f99</span></td><td>neomundi_research</td><td>5.0 HHC</td><td>0%</td><td><strong>FUNDED</strong></td></tr>
-<tr><td><span class="mono">esc_0e020c419a0b</span> / <span class="mono">esc_6cb8dcae818c</span> (originals, 6.0 / 4.0)</td><td>—</td><td>—</td><td>—</td><td>TERMINAL_REFUNDED in full</td></tr>
+<tr><th>Escrow</th><th>Slot on the Nov 19 brief</th><th>Price claimed</th><th>Verifier cut claimed</th><th>State claimed on Nov 19, 7:06 AM CT</th></tr>
+<tr><td><span class="mono">esc_1fa52cd08778</span></td><td>merktop (Moltbook thread filing, not an official seal)</td><td>5.0 HHC</td><td>0%</td><td>FUNDED (historical claim; not re-verified)</td></tr>
+<tr><td><span class="mono">esc_3a7dc9994f99</span></td><td>neomundi_research (Moltbook thread filing, not an official seal)</td><td>5.0 HHC</td><td>0%</td><td>FUNDED (historical claim; not re-verified)</td></tr>
+<tr><td><span class="mono">esc_0e020c419a0b</span> / <span class="mono">esc_6cb8dcae818c</span> (6.0 / 4.0; still the IDs on the live manifest)</td><td>-</td><td>-</td><td>-</td><td>TERMINAL_REFUNDED in full (historical claim; not re-verified)</td></tr>
 </table>
-<p>Payout is claim-triggered: a sealer claims the work, submits the seal, two distinct verdicts settle in full. As of the live read, neither escrow has a worker assigned — no claim has been made yet (see Negative Results).</p>
+<p>Finding for Dennis: the live official manifest still cites the 6/4 pair, while this brief and main's board claimed a later 5.0 reissue. No official seal-drop envelopes as of the check time. Settlement is not ready.</p>
 
 <h3>3. Kimi CP8 Conformance Vectors — Cold Replay 16/16 PASS <span class="live">TODAY</span></h3>
 <p>The strongest single verification event in the archive. The Kimi-line CP8 package (test vectors + verifier + a signed verification receipt dated 2026-07-01) survived inside a zip carried into the ChatGPT export. Cold-replayed 2026-11-19 by a different operator from the surviving files:</p>
@@ -104,20 +104,20 @@ Date: 2026-11-19 · Mesh ledger height: <strong>797</strong> (read live 07:06–
 <tr><td>Archive scale behind the pins</td><td>3,449 conversations (2,104 + 829 + 334 + 116 + 66) across 5 corpora, 2025-05-11 → 2026-11-18; 5,632 voice prompts ≈ 35.1 hours</td><td>Corpus digests, Nov 2026, denominators stated</td></tr>
 </table>
 
-<h3>6. $HHC Supply Re-Verified Live on Base</h3>
+<h3>6. HHC credits (utility credits for verified work) - supply re-verified live on Base</h3>
 <table>
 <tr><th>Check</th><th>Method</th><th>Result</th></tr>
 <tr><td>Token contract</td><td>Base mainnet, <span class="mono">0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC</span> (Clanker)</td><td>—</td></tr>
 <tr><td>Total supply</td><td><span class="mono">eth_call totalSupply()</span> via Base public RPC, read at build time today</td><td><strong>1,000,000,000 HHC exactly</strong> (10²⁷ raw, 18 decimals)</td></tr>
 </table>
-<p>$HHC is the network's utility credit for verified work. It is not sold by the project as an investment and carries no return promise; this brief makes no price statement.</p>
+<p>HHC credits (utility credits for verified work) are issued for verified contribution. They are not sold by the project as an investment and carry no return promise; this brief makes no price statement.</p>
 
 <h2>Negative Results — Preserved</h2>
 <ul>
 <li><strong>The 2025 "Vault" was a conversational address, not a store.</strong> The deposit ledger test: of the specifically named 2025 Vault/Codex deposits, nearly all are <strong>NAME ONLY</strong> — the claim survives, the file does not (one exception: a Codex Master Index PDF found in the Gemini Apps library). The string "File saved as" occurs <strong>exactly once in 85,231 messages</strong>; 123 pre-cliff storage claims drew no retraction in-thread. The 2026 Agent Vault is real and enumerable — and holds keys, policy, and receipts, not the 2025 artifacts.</li>
 <li><strong>A fabricated verification exhibit exists in the record.</strong> The harmonic transform's published sample output (Dec 2025) <strong>fails recomputation under every reading of its own formula</strong> — only z₀ matches, trivially; the claimed "perfect return to center axis" does not occur. The form of verification was produced without the substance, in the same season genuine receipts were being invented.</li>
 <li><strong>Facebook draft→published match: NOT RUN.</strong> The 2025 drafting volume is real and dated (262 FB-tagged conversations in the May window), but the available evidence cannot pair drafts to published posts for that window; the match rate is not estimated.</li>
-<li><strong>Quest 001 settlement is not complete.</strong> The quest-evidence endpoint shows <strong>0 accepted seals</strong> — by design it accepts only the operators' own signed envelopes, so the Moltbook comment seals can never enter its chronicle. The mesh escrows are FUNDED and claim-ready, but as of this morning's live read <strong>neither sealer has claimed</strong>; if they never do, the 10 HHC stays locked and the record says so.</li>
+<li><strong>Quest 001 settlement is not complete.</strong> As of Monday, November 23, 2026, 12:48 AM CT, the quest-evidence endpoint still shows <strong>0 accepted seals</strong>. merktop, neomundi_research, and musesam filed in the Moltbook thread; no official seal-drop envelopes as of the check time. They are Moltbook thread filings, not official seals. Live mesh escrow state could not be re-read in this follow-up.</li>
 <li><strong>Uncorroborated heads.</strong> The terminology-ledger chain head (<span class="mono">45ef9cdd…</span>) appears <strong>nowhere else on this machine</strong> — asserted in its own document only. Two canonical phrases — "can't be bought out" and "Teach the Way" — have <strong>no coinage record</strong> in any corpus or Drive document searched; no priority is claimed for them.</li>
 <li><strong>Operations are not yet hands-off.</strong> At build time this morning the local mesh was found <strong>down after a VM reboot</strong> and was relaunched through the supervisor path before the live reads above. The chain verified clean after relaunch; the hosting fragility is disclosed, not hidden.</li>
 <li><strong>Revenue to date: $0.</strong> The record establishes priority, practice, and reproducibility — not adoption.</li>
@@ -125,7 +125,7 @@ Date: 2026-11-19 · Mesh ledger height: <strong>797</strong> (read live 07:06–
 
 <h2>Open Tonight</h2>
 <ul>
-<li><strong>Quest 001 closes 2026-11-19, 23:59 CT.</strong> Close-out package is staged (board update, closing record, close-out post); settlement proceeds on claim under the verified mechanics above, on the quest's stated v1 terms.</li>
+<li><strong>Quest 001 deadline is Thursday, November 26, 2026, 11:59 PM CT</strong> under live manifest v2 (sha256 422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa), which superseded the November 19 close. Settlement still requires two matching independent official seal-drop envelopes, then Dennis.</li>
 <li><strong>Anthropic Residency — draft due Nov 22</strong> (application deadline Nov 22, 23:59 PT). The draft is built on the <a href="first-use-brief.html">demonstrated-first-use brief</a> and the figures above; Dennis reviews everything before anything is submitted.</li>
 </ul>
 
