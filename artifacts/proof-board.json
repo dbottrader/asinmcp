@@ -92,6 +92,14 @@
    "title": "Opens when funded"
   }
  ],
+ "token": {
+  "chain": "Base mainnet",
+  "contract": "0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
+  "fee_wallet": "0x49e60c522E0575850136a4872a43955E8AC9bc36",
+  "name": "ASIN-HHC",
+  "page": "https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
+  "symbol": "HHC"
+ },
  "updated": "2026-11-23",
  "url": "https://dbottrader.github.io/asinmcp/artifacts/proof-board.html",
  "verified_rows": [
@@ -207,15 +215,5 @@
   "value_case": "https://dbottrader.github.io/asinmcp/artifacts/value-case.html",
   "live_snapshot": "https://dbottrader.github.io/asinmcp/artifacts/live.html",
   "token_page": "https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC"
- },
- "hhc_credits": {
-  "description": "HHC credits (utility credits for verified work)",
-  "chain_reference": "Base mainnet",
-  "contract_reference": "0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
-  "fee_wallet_reference": "0x49e60c522E0575850136a4872a43955E8AC9bc36",
-  "name": "ASIN-HHC",
-  "page": "https://www.clanker.world/clanker/0xA858098fC91AF7bFdd9549973f2209DAD4BFCCcC",
-  "symbol": "HHC",
-  "note": "Listed as a public reference only. These are utility credits for verified work, not described here as a token sale or investment."
  }
 }
