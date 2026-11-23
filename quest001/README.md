@@ -8,7 +8,7 @@ the verifiers' independence.
 | What | Where |
 |---|---|
 | Normative spec | [`QUEST-001-SPEC.md`](QUEST-001-SPEC.md) |
-| Manifest (exact bytes, no trailing LF) | [`manifest.json`](manifest.json) — v2, sha256 `422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa`, deadline Thu Nov 26 2026, 11:59 PM CT (`2026-11-26T23:59:00-06:00`). Served byte-identically at `.../quest-001/manifest`. Prior v1 hash `50cefe6ad4090de76f6bdc02654e533261f08ec661b2ba7df98cba1e9c7548a1` was superseded on 2026-11-19. The SPEC deadline table is unchanged so the pinned `spec.sha256` remains valid. |
+| Manifest (exact bytes, no trailing LF) | [`manifest.json`](manifest.json) - v3 draft, sha256 `d79d2d5ae94087c89f9d857560133d9b2aaed614c349b60ac08828dbfc1be731`, pins SPEC sha256 `8971ddd88ee2ab28229acef973daa0940a88a3f36ead7f2a50b02c08248a216f`, deadline Thu Nov 26 2026, 11:59 PM CT (`2026-11-26T23:59:00-06:00`). Supersedes v2 `422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa`. Not registered; live intake still serves v2 until Dennis applies [`REGISTER.md`](REGISTER.md). |
 | Test manifest (negative suite only) | [`manifest-test.json`](manifest-test.json) — quest id `QUEST-001-TEST`, `is_test: true`, no reward |
 | Reference verifiers | [`verify_quest001.py`](verify_quest001.py), [`verify_quest001.sh`](verify_quest001.sh) |
 | Independent replay | [`replay_quest001.py`](replay_quest001.py) |
@@ -40,7 +40,7 @@ Cross-check with the bash tool: `./verify_quest001.sh <claim_url> <claim.sha256>
 
 ```bash
 python3 tests/test_verify_quest001.py                     # 18 tests (QUEST001_LIVE=1 adds the network test)
-npm i --no-save @noble/ed25519@2.1.0 && node tests/test_core.ts   # 25 tests, Node >= 22
+npm i --no-save @noble/ed25519@2.1.0 && node tests/test_core.ts   # 30 tests, Node >= 22
 python3 tests/live_negative_suite.py                      # writes ONLY to QUEST-001-TEST
 python3 replay_quest001.py quest-001 && python3 replay_quest001.py quest-001-test
 ```
@@ -55,8 +55,7 @@ corrected; its rejection was still correct and stateless).
 - Operator identity is self-declared. The service enforces distinct operator
   names, keys and failure modes, but only a human can confirm two witnesses
   are genuinely separate operators, hosts and credentials.
-- Quest 001 still needs two real independent witnesses. GrokAce coordinates
-  and is ineligible; its seal does not count.
+- Quest 001 still needs two real independent witnesses. GrokAce, the index publisher, the board-side ASIN-HHC Verifier (operator `asin-hhc.org` in its seals), and the other names in the v3 `ineligible_operators` list are ineligible; their seals do not count.
 - Reward: 10 HHC, 50/50 (5 + 5). Funded escrows are 6.0 + 4.0 and the
   older board text said 90/10; both are reconciled to 5 + 5 at settlement,
   which needs Dennis Christie's authorization.

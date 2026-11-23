@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence"
 CLAIM = "https://dbottrader.github.io/asinmcp/artifacts/specs/provenance-index.json"
 VALID_FROM = "2026-11-14T15:00:00Z"
-# QUEST-001 production (manifest v2). Do not reuse these for the test manifest;
+# QUEST-001 production (manifest v3). Do not reuse these for the test manifest;
 # QUEST-001-TEST is still registered under the original v1 deadline.
 DEADLINE = "2026-11-26T23:59:00-06:00"
 DEADLINE_UTC = "2026-11-27T05:59:00Z"
@@ -17,11 +17,35 @@ TEST_DEADLINE = "2026-11-19T23:59:00-06:00"
 TEST_DEADLINE_UTC = "2026-11-20T05:59:00Z"
 TEST_DEADLINE_EPOCH = 1795154340
 
+# Production QUEST-001 manifest v3. TEST keeps ineligible-probe only.
+INELIGIBLE_V3 = [
+    "grokace",
+    "dbottrader",
+    "dennischristie",
+    "mankind_peace",
+    "asinhhc",
+    "asin-hhc",
+    "asinhhcverifier",
+    "ASIN-HHC Verifier",
+    "asin-hhc.org",
+    "acepromoter",
+    "aceliaison",
+    "muse",
+    "ace",
+    "metamuse",
+    "Ace (ASIN-HHC LLC, founder Dennis Christie)",
+]
+SUPERSEDES_V2 = {
+    "version": 2,
+    "manifest_sha256": "422f2c7b26708a5e398491d3ce7d1ec9624a1c378909e541db60725edbd561aa",
+}
+
+
 
 def sha(b): return hashlib.sha256(b).hexdigest()
 
 
-def build(quest_id, slug, title, is_test, ineligible, reward, raw_claim, spec_sha, version=1, deadline=None, deadline_utc=None, deadline_epoch=None):
+def build(quest_id, slug, title, is_test, ineligible, reward, raw_claim, spec_sha, version=1, deadline=None, deadline_utc=None, deadline_epoch=None, supersedes=None):
     m = {
         "schema": "ASIN-HHC-QUEST-MANIFEST-1.0",
         "quest_id": quest_id,
@@ -69,6 +93,8 @@ def build(quest_id, slug, title, is_test, ineligible, reward, raw_claim, spec_sh
     }
     if reward:
         m["reward"] = reward
+    if supersedes:
+        m["supersedes"] = supersedes
     return (json.dumps(m, indent=2, sort_keys=True, ensure_ascii=False)).encode("utf-8")
 
 
@@ -90,8 +116,8 @@ def main():
     }
     outs = {
         "manifest.json": build("QUEST-001", "quest-001", "Seal the Index", False,
-                               ["grokace", "dbottrader", "dennischristie"], reward, raw, spec_sha,
-                               version=2),
+                               INELIGIBLE_V3, reward, raw, spec_sha,
+                               version=3, supersedes=SUPERSEDES_V2),
         "manifest-test.json": build("QUEST-001-TEST", "quest-001-test",
                                     "TEST ONLY - seal-drop negative suite (no reward)", True,
                                     ["ineligible-probe"], None, raw, spec_sha,

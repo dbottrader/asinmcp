@@ -44,7 +44,7 @@
   },
   "spec": {
     "path": "quest001/QUEST-001-SPEC.md",
-    "sha256": "c0b701e6c7ce917d99a714133a977d78de1afd783a258a7ba6277b95b15b1af4"
+    "sha256": "8971ddd88ee2ab28229acef973daa0940a88a3f36ead7f2a50b02c08248a216f"
   },
   "title": "TEST ONLY - seal-drop negative suite (no reward)",
   "valid_from": "2026-11-14T15:00:00Z",
