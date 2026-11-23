@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-# seal_quest001.py - "Seal Quest 001 with any open-source agent" kit, v1.0.0
+# seal_quest001.py - "Seal Quest 001 with any open-source agent" kit, v1.1.0
 # Copyright (c) 2026 Dennis Christie / ASIN-HHC (MIT, see repo LICENSE).
 #
 # Single file, Python 3.8+ standard library only. No pip install needed.
@@ -12,10 +12,12 @@
 #      sha256 and byte length against the manifest
 #   3. recomputes every entry hash and the prev_index_hash chain, and the head
 #      (fails loudly on any mismatch)
-#   4. creates YOUR OWN Ed25519 key (saved locally, 0600, never uploaded)
+#   4. creates YOUR OWN Ed25519 key under ~/.asinhhc/ (0600, never uploaded)
 #   5. builds and signs an ASIN-HHC-QUEST-SEAL-1.0 envelope, self-verifies it,
-#      prints it and saves it
-#   6. submits it ONLY when you pass --submit (default is --dry-run)
+#      prints it, saves it and prints the file sha256 (default TTL 60 minutes)
+#   6. submits ONLY with --submit-file PATH, which POSTs that exact saved file
+#      after re-verifying signatures and expiry. --submit is refused because
+#      it used to rebuild a new envelope.
 #
 # Ed25519 choice: Ed25519 is not in the Python standard library. This file
 # embeds a small pure-Python RFC 8032 implementation (section "ED25519 CORE"
@@ -42,7 +44,7 @@ import urllib.request
 import uuid
 from datetime import datetime, timedelta, timezone
 
-KIT_VERSION = "seal_quest001.py/1.0.0"
+KIT_VERSION = "seal_quest001.py/1.1.0"
 
 BASE = "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence"
 SEAL_DROP_URL = BASE + "/seal-drop"
@@ -352,18 +354,139 @@ def recompute_index(raw):
 
 
 # ===================================================================== KEY
+DEFAULT_KEY_REL = "~/.asinhhc/quest001-sealer.key"
+OLD_CWD_KEY_NAME = "quest001-sealer.key"
+
+
+def default_key_path():
+    """Stable absolute path for the one-quest sealer key."""
+    return os.path.abspath(os.path.expanduser(DEFAULT_KEY_REL))
+
+
+def resolve_key_path(path):
+    return os.path.abspath(os.path.expanduser(path))
+
+
+def sibling_key_paths(target):
+    """Other well-known key locations, not including target itself."""
+    target = resolve_key_path(target)
+    candidates = [
+        default_key_path(),
+        os.path.abspath(os.path.join(os.getcwd(), OLD_CWD_KEY_NAME)),
+    ]
+    found = []
+    seen = {target}
+    for p in candidates:
+        if p in seen:
+            continue
+        seen.add(p)
+        if os.path.isfile(p):
+            found.append(p)
+    return found
+
+
 def load_or_create_key(path):
-    """32-byte Ed25519 seed as 64 hex chars in a 0600 file. Never uploaded."""
-    if os.path.exists(path):
+    """32-byte Ed25519 seed as 64 hex chars in a 0600 file. Never uploaded.
+
+    Returns (absolute_path, seed, created). Refuses to mint a new key when
+    one already exists at the default ~/.asinhhc path or the old cwd-relative
+    path, so a change of folder cannot silently create a second identity.
+    """
+    path = resolve_key_path(path)
+    if os.path.isfile(path):
         txt = open(path, "r", encoding="ascii").read().strip()
         if not is_hex(txt, 64):
             raise KitError("key file %s is not 64 lowercase hex" % path)
-        return bytes.fromhex(txt), False
+        return path, bytes.fromhex(txt), False
+    others = sibling_key_paths(path)
+    if others:
+        raise KitError(
+            "refusing to create a new key at %s because a key already exists at %s. "
+            "Pass --key %s to reuse it. Do not move or delete the existing key; "
+            "a new key is a new identity." % (path, others[0], others[0])
+        )
+    parent = os.path.dirname(path)
+    if parent and not os.path.isdir(parent):
+        os.makedirs(parent, mode=0o700)
     seed = secrets.token_bytes(32)
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd, "w", encoding="ascii") as f:
         f.write(seed.hex() + "\n")
-    return seed, True
+    return path, seed, True
+
+
+def load_saved_envelope(path):
+    """Read a saved envelope file as exact bytes. Returns (abspath, env, raw, sha256)."""
+    path = resolve_key_path(path)
+    if not os.path.isfile(path):
+        raise KitError("envelope file not found: %s" % path)
+    raw = open(path, "rb").read()
+    try:
+        env = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError) as e:
+        raise KitError("envelope file %s is not valid JSON: %s" % (path, e))
+    if not isinstance(env, dict):
+        raise KitError("envelope file %s is not a JSON object" % path)
+    return path, env, raw, sha256_hex(raw)
+
+
+def verify_saved_envelope_expiry(env, now=None):
+    """Refuse a saved envelope whose expires_at has passed (would be 422 expired)."""
+    now = now or datetime.now(timezone.utc)
+    try:
+        expires = parse_iso(env["expires_at"])
+    except Exception:
+        raise KitError("envelope expires_at is missing or not ISO-8601")
+    if now >= expires:
+        raise KitError(
+            "this envelope expired at %s (now %s). The default TTL is 60 minutes; "
+            "approving later than that gets HTTP 422 expired. Re-run a dry run to "
+            "get a new envelope, then submit that new file with --submit-file."
+            % (env.get("expires_at"), iso(now))
+        )
+    return now
+
+
+def submit_saved_file(path, post=True):
+    """Re-verify a saved envelope and optionally POST its exact file bytes.
+
+    post=False is for tests: verify and return without touching the network.
+    Returns 0 on success, or a (env, raw, digest) tuple when post is False.
+    """
+    path, env, raw, digest = load_saved_envelope(path)
+    quest_id = env.get("quest_id")
+    slug = {v[0]: k for k, v in QUESTS.items()}.get(quest_id)
+    print("[ok ] loaded envelope %s" % path, file=sys.stderr)
+    print("[ok ] envelope sha256 %s  (must match the file you approved)" % digest, file=sys.stderr)
+    print("[ok ] quest_id %s  request_id %s  expires_at %s" % (
+        quest_id, env.get("request_id"), env.get("expires_at")), file=sys.stderr)
+    had_cc = self_verify(env)
+    print("[ok ] both signatures verify locally%s" %
+          (" and with `cryptography`" if had_cc else " (cryptography not installed; pure-Python only)"),
+          file=sys.stderr)
+    verify_saved_envelope_expiry(env)
+    print("[ok ] not expired", file=sys.stderr)
+    if not post:
+        return env, raw, digest
+    if quest_id not in {v[0] for v in QUESTS.values()}:
+        raise KitError("envelope quest_id %r is not a known quest" % quest_id)
+    status, body = http("POST", SEAL_DROP_URL, raw)
+    try:
+        resp = json.loads(body.decode("utf-8"))
+    except ValueError:
+        resp = {"raw": body.decode("utf-8", "replace")[:500]}
+    print("[net] POST %s -> HTTP %d  (exact file bytes, sha256 %s)" % (SEAL_DROP_URL, status, digest),
+          file=sys.stderr)
+    print(json.dumps({"http_status": status, "envelope_sha256": digest,
+                      "request_id": env.get("request_id"), "response": resp},
+                     indent=2, ensure_ascii=False))
+    if status == 201 and resp.get("accepted") is True:
+        print("[ok ] ACCEPTED into the %s chronicle (acceptance is not a verdict, and no payment is made).\n"
+              "      chronicle: %s/%s\n      verdict:   %s/%s/verdict\n      replay:    %s/%s/replay"
+              % (quest_id, BASE, slug, BASE, slug, BASE, slug), file=sys.stderr)
+        return 0
+    print("[err] NOT accepted: %s %s" % (resp.get("code"), resp.get("detail")), file=sys.stderr)
+    return 3
 
 
 # ===================================================================== ENVELOPE
@@ -439,26 +562,48 @@ def main(argv=None):
                     "network path, data source (1-400 chars); must differ from other sealers")
     ap.add_argument("--implementation", default=None,
                     help="software + version + host type (default: auto)")
-    ap.add_argument("--key", default="quest001-sealer.key",
-                    help="path of your Ed25519 seed file; created (0600) if missing")
+    ap.add_argument("--key", default=None,
+                    help="path of your Ed25519 seed file (default: ~/.asinhhc/quest001-sealer.key, "
+                         "stored as an absolute path). Created with mode 0600 if missing.")
     ap.add_argument("--ttl-minutes", type=int, default=60,
                     help="envelope lifetime; clipped to the quest deadline (default 60)")
     ap.add_argument("--out", default=None, help="where to save the envelope JSON")
     ap.add_argument("--test-quest", action="store_true",
-                    help="target QUEST-001-TEST (no reward) instead of QUEST-001")
+                    help="maintainer only: target QUEST-001-TEST (closed unless Dennis reopens it; no reward)")
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", default=True,
-                      help="(default) compute, sign and print; do not submit")
+                      help="(default) compute, sign, print and save; do not submit")
     mode.add_argument("--submit", action="store_true",
-                      help="actually POST the envelope to seal-drop")
+                      help="refused: this flag used to rebuild a new envelope and POST it. "
+                           "Use --submit-file PATH to POST the exact saved file you approved.")
+    mode.add_argument("--submit-file", metavar="PATH",
+                      help="POST this exact saved envelope file (no rebuild). Re-verifies "
+                           "signatures and expiry first and prints sha256 so you can match "
+                           "the file you approved.")
     mode.add_argument("--recompute-only", action="store_true",
                       help="only fetch and recompute the index; no key, no envelope")
     a = ap.parse_args(argv)
 
+    if a.submit:
+        die("do not use --submit. It used to rebuild a new envelope, so the file you "
+            "approved would not be the one posted. Submit the exact saved file:\n"
+            "  python3 seal_quest001.py --submit-file PATH")
+
+    if a.submit_file:
+        print("[kit] %s  mode=submit-file %s" % (KIT_VERSION, a.submit_file), file=sys.stderr)
+        try:
+            ed25519_selftest()
+            print("[ok ] Ed25519 RFC 8032 self-test (3 vectors) passed", file=sys.stderr)
+            return submit_saved_file(a.submit_file, post=True)
+        except KitError as e:
+            die(str(e))
+        except urllib.error.URLError as e:
+            die("network error: %s" % e)
+
     slug = "quest-001-test" if a.test_quest else "quest-001"
     quest_id, pinned_manifest = QUESTS[slug]
     print("[kit] %s  target=%s  mode=%s" % (KIT_VERSION, quest_id,
-          "SUBMIT" if a.submit else ("recompute-only" if a.recompute_only else "dry-run")),
+          "recompute-only" if a.recompute_only else "dry-run"),
           file=sys.stderr)
 
     try:
@@ -530,41 +675,34 @@ def main(argv=None):
         if closed:
             expires = now + timedelta(minutes=a.ttl_minutes)
 
-        # 6. key + envelope
-        seed, created = load_or_create_key(a.key)
+        # 6. key + envelope (dry run: save the exact file; do not POST)
+        key_path, seed, created = load_or_create_key(a.key or default_key_path())
         print("[ok ] key %s %s (keep it private; it never leaves this machine)" %
-              (a.key, "CREATED" if created else "loaded"), file=sys.stderr)
+              (key_path, "CREATED" if created else "reused"), file=sys.stderr)
+        print("[ok ] do not move or delete this key file. Running from another folder "
+              "used to silently mint a new key; pass --key %s if you run from somewhere else."
+              % key_path, file=sys.stderr)
         env = build_envelope(seed, quest_id, manifest_sha, ev, a.operator, a.failure_mode,
                              impl, issued, expires)
         had_cc = self_verify(env)
         print("[ok ] both signatures verify locally%s" %
               (" and with `cryptography`" if had_cc else " (cryptography not installed; pure-Python only)"),
               file=sys.stderr)
-        out = a.out or "quest001-envelope-%s.json" % env["request_id"][:8]
-        with open(out, "w", encoding="utf-8") as f:
+        out = os.path.abspath(a.out or "quest001-envelope-%s.json" % env["request_id"][:8])
+        with open(out, "w", encoding="utf-8", newline="\n") as f:
             json.dump(env, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        raw = open(out, "rb").read()
+        digest = sha256_hex(raw)
         print("[ok ] envelope saved to %s" % out, file=sys.stderr)
+        print("[ok ] envelope sha256 %s" % digest, file=sys.stderr)
+        print("[ok ] default TTL is %d minutes (expires_at %s). Approving later than that "
+              "gets HTTP 422 expired; re-run this dry run for a new envelope."
+              % (a.ttl_minutes, env["expires_at"]), file=sys.stderr)
         print(json.dumps(env, indent=2, ensure_ascii=False))
-
-        if not a.submit:
-            print("[dry] not submitted. Re-run with --submit to POST to %s" % SEAL_DROP_URL, file=sys.stderr)
-            return 0
-
-        # 7. submit
-        status, body = http("POST", SEAL_DROP_URL, json.dumps(env, ensure_ascii=False).encode("utf-8"))
-        try:
-            resp = json.loads(body.decode("utf-8"))
-        except ValueError:
-            resp = {"raw": body.decode("utf-8", "replace")[:500]}
-        print("[net] POST %s -> HTTP %d" % (SEAL_DROP_URL, status), file=sys.stderr)
-        print(json.dumps({"http_status": status, "response": resp}, indent=2, ensure_ascii=False))
-        if status == 201 and resp.get("accepted") is True:
-            print("[ok ] ACCEPTED into the %s chronicle (acceptance is not a verdict, and no payment is made).\n"
-                  "      chronicle: %s/%s\n      verdict:   %s/%s/verdict\n      replay:    %s/%s/replay"
-                  % (quest_id, BASE, slug, BASE, slug, BASE, slug), file=sys.stderr)
-            return 0
-        print("[err] NOT accepted: %s %s" % (resp.get("code"), resp.get("detail")), file=sys.stderr)
-        return 3
+        print("[dry] not submitted. After you approve this exact file, run:", file=sys.stderr)
+        print("      python3 seal_quest001.py --submit-file %s" % out, file=sys.stderr)
+        return 0
     except KitError as e:
         die(str(e))
     except urllib.error.URLError as e:

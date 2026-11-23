@@ -121,6 +121,93 @@ def main():
         for c in ("T5", "T6", "T7", "T8", "T9", "T10"):
             rec(c + "-core-ts", "NOT_RUN", "needs --core-ts, --harness-dir, --manifest-dir and node")
 
+    # T11-T13: --submit-file verifies the exact saved bytes and does not rebuild
+    tdir = tempfile.mkdtemp(prefix="sealkit-r2-")
+    try:
+        good_path = os.path.join(tdir, "good.json")
+        json.dump(real_env, open(good_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        open(good_path, "a", encoding="utf-8").write("\n")
+        raw_before = open(good_path, "rb").read()
+        digest_before = K.sha256_hex(raw_before)
+        rid = real_env["request_id"]
+        env2, raw2, digest2 = K.submit_saved_file(good_path, post=False)
+        same = (digest2 == digest_before and raw2 == raw_before and env2["request_id"] == rid
+                and env2["nonce"] == real_env["nonce"] and env2["issued_at"] == real_env["issued_at"])
+        rec("T11-submit-file-preserves-exact-bytes", "PASS" if same else "FAIL",
+            "sha256 %s request_id %s unchanged; post=False so no network" % (digest2, rid))
+
+        bad = copy.deepcopy(real_env)
+        bad["signature"] = bad["signature"][:-2] + ("00" if bad["signature"][-2:] != "00" else "01")
+        bad_path = os.path.join(tdir, "bad-sig.json")
+        json.dump(bad, open(bad_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        try:
+            K.submit_saved_file(bad_path, post=False)
+            rec("T12-submit-file-rejects-bad-signature", "FAIL", "bad signature was accepted locally")
+        except K.KitError as e:
+            rec("T12-submit-file-rejects-bad-signature", "PASS" if "does not verify" in str(e) else "FAIL", str(e))
+
+        expired = K.build_envelope(seed, "QUEST-001", K.QUESTS["quest-001"][1][0], ev,
+                                   "seal-kit-selftest",
+                                   "kit test runner: python3 urllib, box network, GitHub Pages",
+                                   K.KIT_VERSION + " tests",
+                                   now - timedelta(hours=2), now - timedelta(minutes=5))
+        exp_path = os.path.join(tdir, "expired.json")
+        json.dump(expired, open(exp_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        try:
+            K.submit_saved_file(exp_path, post=False)
+            rec("T13-submit-file-rejects-expired", "FAIL", "expired envelope was accepted locally")
+        except K.KitError as e:
+            rec("T13-submit-file-rejects-expired", "PASS" if "expired" in str(e) and "60 minutes" in str(e) else "FAIL", str(e))
+    finally:
+        shutil.rmtree(tdir, ignore_errors=True)
+
+    # T14: --submit is refused immediately, no rebuild and no POST
+    r = subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "seal_quest001.py"),
+                        "--submit", "--operator", "x", "--failure-mode", "y"],
+                       capture_output=True, text=True)
+    refused = r.returncode != 0 and "--submit-file" in (r.stderr + r.stdout) and "rebuild" in (r.stderr + r.stdout)
+    rec("T14-submit-flag-refused", "PASS" if refused else "FAIL",
+        "exit %s stderr: %s" % (r.returncode, (r.stderr or r.stdout).strip().replace("\n", " | ")))
+
+    # T15-T17: default key is absolute under ~/.asinhhc; reuse vs create; refuse a second key
+    kdir = tempfile.mkdtemp(prefix="sealkit-key-")
+    old_home, old_cwd = os.environ.get("HOME"), os.getcwd()
+    try:
+        home = os.path.join(kdir, "home")
+        cwd = os.path.join(kdir, "cwd")
+        os.makedirs(home)
+        os.makedirs(cwd)
+        os.environ["HOME"] = home
+        os.chdir(cwd)
+        default = K.default_key_path()
+        abs_ok = os.path.isabs(default) and default == os.path.abspath(os.path.join(home, ".asinhhc", "quest001-sealer.key"))
+        rec("T15-key-default-absolute-asinhhc", "PASS" if abs_ok else "FAIL", "default_key_path=%s" % default)
+
+        path1, seed1, created1 = K.load_or_create_key(default)
+        path2, seed2, created2 = K.load_or_create_key(default)
+        reuse_ok = (created1 is True and created2 is False and seed1 == seed2
+                    and path1 == path2 == default and os.path.isfile(default)
+                    and oct(os.stat(default).st_mode & 0o777) in ("0o600", "0o600"))
+        rec("T16-key-create-then-reuse", "PASS" if reuse_ok else "FAIL",
+            "created=%s reused=%s path=%s mode=%s" % (
+                created1, not created2, path1, oct(os.stat(default).st_mode & 0o777)))
+
+        cwd_key = os.path.join(cwd, "quest001-sealer.key")
+        try:
+            K.load_or_create_key(cwd_key)
+            rec("T17-refuse-new-key-when-one-exists-elsewhere", "FAIL",
+                "created %s despite existing default key %s" % (cwd_key, default))
+        except K.KitError as e:
+            rec("T17-refuse-new-key-when-one-exists-elsewhere",
+                "PASS" if "refusing to create" in str(e) and default in str(e) else "FAIL", str(e))
+    finally:
+        os.chdir(old_cwd)
+        if old_home is None:
+            os.environ.pop("HOME", None)
+        else:
+            os.environ["HOME"] = old_home
+        shutil.rmtree(kdir, ignore_errors=True)
+
     # Live checks: QUEST-001-TEST only
     if a.live:
         assert TEST_SLUG == "quest-001-test"
