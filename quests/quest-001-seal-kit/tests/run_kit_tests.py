@@ -134,7 +134,7 @@ def main():
         same = (digest2 == digest_before and raw2 == raw_before and env2["request_id"] == rid
                 and env2["nonce"] == real_env["nonce"] and env2["issued_at"] == real_env["issued_at"])
         rec("T11-submit-file-preserves-exact-bytes", "PASS" if same else "FAIL",
-            "sha256 %s request_id %s unchanged; post=False so no network" % (digest2, rid))
+            "sha256 %s request_id %s unchanged; post=False so no POST (live manifest GET only)" % (digest2, rid))
 
         bad = copy.deepcopy(real_env)
         bad["signature"] = bad["signature"][:-2] + ("00" if bad["signature"][-2:] != "00" else "01")
@@ -169,37 +169,59 @@ def main():
     rec("T14-submit-flag-refused", "PASS" if refused else "FAIL",
         "exit %s stderr: %s" % (r.returncode, (r.stderr or r.stdout).strip().replace("\n", " | ")))
 
-    # T15-T17: default key is absolute under ~/.asinhhc; reuse vs create; refuse a second key
+    # T15-T20: key path + house-operator + submit-file live checks
     kdir = tempfile.mkdtemp(prefix="sealkit-key-")
     old_home, old_cwd = os.environ.get("HOME"), os.getcwd()
     try:
         home = os.path.join(kdir, "home")
         cwd = os.path.join(kdir, "cwd")
+        scriptd = os.path.join(kdir, "script")
         os.makedirs(home)
         os.makedirs(cwd)
+        os.makedirs(scriptd)
         os.environ["HOME"] = home
         os.chdir(cwd)
+        kw = dict(script_directory=scriptd, cwd=cwd, default_directory=os.path.join(home, ".asinhhc"))
         default = K.default_key_path()
         abs_ok = os.path.isabs(default) and default == os.path.abspath(os.path.join(home, ".asinhhc", "quest001-sealer.key"))
         rec("T15-key-default-absolute-asinhhc", "PASS" if abs_ok else "FAIL", "default_key_path=%s" % default)
 
-        path1, seed1, created1 = K.load_or_create_key(default)
-        path2, seed2, created2 = K.load_or_create_key(default)
+        path1, seed1, created1 = K.load_or_create_key(default, **kw)
+        path2, seed2, created2 = K.load_or_create_key(default, **kw)
         reuse_ok = (created1 is True and created2 is False and seed1 == seed2
                     and path1 == path2 == default and os.path.isfile(default)
-                    and oct(os.stat(default).st_mode & 0o777) in ("0o600", "0o600"))
+                    and oct(os.stat(default).st_mode & 0o777) == "0o600")
         rec("T16-key-create-then-reuse", "PASS" if reuse_ok else "FAIL",
             "created=%s reused=%s path=%s mode=%s" % (
                 created1, not created2, path1, oct(os.stat(default).st_mode & 0o777)))
 
         cwd_key = os.path.join(cwd, "quest001-sealer.key")
         try:
-            K.load_or_create_key(cwd_key)
+            K.load_or_create_key(cwd_key, **kw)
             rec("T17-refuse-new-key-when-one-exists-elsewhere", "FAIL",
                 "created %s despite existing default key %s" % (cwd_key, default))
         except K.KitError as e:
             rec("T17-refuse-new-key-when-one-exists-elsewhere",
                 "PASS" if "refusing to create" in str(e) and default in str(e) else "FAIL", str(e))
+
+        # T19: a key in the script dir also blocks minting elsewhere
+        os.remove(default)
+        script_key = os.path.join(scriptd, "quest001-sealer.key")
+        open(script_key, "w").write("ab" * 32 + "\n")
+        os.chmod(script_key, 0o600)
+        try:
+            K.load_or_create_key(default, **kw)
+            rec("T19-refuse-new-key-when-script-dir-has-one", "FAIL",
+                "created default key despite script-dir key %s" % script_key)
+        except K.KitError as e:
+            rec("T19-refuse-new-key-when-script-dir-has-one",
+                "PASS" if "refusing to create" in str(e) and script_key in str(e) else "FAIL", str(e))
+
+        # T20: --key pointing at the existing script-dir key reuses it
+        path3, seed3, created3 = K.load_or_create_key(script_key, **kw)
+        rec("T20-reuse-when-key-points-at-existing",
+            "PASS" if created3 is False and path3 == script_key and seed3 == bytes.fromhex("ab" * 32) else "FAIL",
+            "created=%s path=%s" % (created3, path3))
     finally:
         os.chdir(old_cwd)
         if old_home is None:
@@ -207,6 +229,52 @@ def main():
         else:
             os.environ["HOME"] = old_home
         shutil.rmtree(kdir, ignore_errors=True)
+
+    # T18: house operators refused in the independent role; allowed in house role (no submit path)
+    house_names = list(K.HOUSE_OPERATORS) + ["Ace-Promoter", "ASIN HHC Verifier", "asin.hhc.org", "Mankind Peace"]
+    refused, failed = [], []
+    for name in house_names:
+        try:
+            K.check_operator(name, role=K.ROLE_INDEPENDENT)
+            failed.append(name)
+        except K.KitError:
+            refused.append(name)
+            if not K.is_house_operator(name):
+                failed.append("norm-miss:" + name)
+    house_ok = K.check_operator("AcePromoter", role=K.ROLE_HOUSE) == K.norm_name("AcePromoter")
+    independent_ok = K.check_operator("seal-kit-selftest", role=K.ROLE_INDEPENDENT) == "sealkitselftest"
+    rec("T18-house-operators-independent-role",
+        "PASS" if not failed and len(refused) == len(house_names) and house_ok and independent_ok else "FAIL",
+        "refused %d/%d house names in independent role; house role allows AcePromoter; seal-kit-selftest allowed%s" % (
+            len(refused), len(house_names), ("; leaked: " + ", ".join(failed)) if failed else ""))
+
+    # T21: --submit-file rejects a live-manifest hash mismatch locally (no POST)
+    tdir2 = tempfile.mkdtemp(prefix="sealkit-r3-")
+    try:
+        badm = dict(real_env)
+        badm["manifest_sha256"] = "f" * 64
+        badm = resign(badm, seed)
+        badm_path = os.path.join(tdir2, "wrong-manifest.json")
+        json.dump(badm, open(badm_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        try:
+            K.submit_saved_file(badm_path, post=False)
+            rec("T21-submit-file-rejects-wrong-live-manifest", "FAIL", "wrong manifest hash was accepted locally")
+        except K.KitError as e:
+            rec("T21-submit-file-rejects-wrong-live-manifest",
+                "PASS" if "does not match the live" in str(e) and "manifest_sha256" in str(e) else "FAIL", str(e))
+
+        # T22: now after the live deadline is refused locally (no POST)
+        after = K.parse_iso("2026-11-27T00:00:00-06:00")
+        good_again = os.path.join(tdir2, "still-good.json")
+        json.dump(real_env, open(good_again, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        try:
+            K.submit_saved_file(good_again, post=False, now=after)
+            rec("T22-submit-file-rejects-past-deadline", "FAIL", "post-deadline envelope was accepted locally")
+        except K.KitError as e:
+            rec("T22-submit-file-rejects-past-deadline",
+                "PASS" if "closed" in str(e) and "410 quest_closed" in str(e) else "FAIL", str(e))
+    finally:
+        shutil.rmtree(tdir2, ignore_errors=True)
 
     # Live checks: QUEST-001-TEST only
     if a.live:

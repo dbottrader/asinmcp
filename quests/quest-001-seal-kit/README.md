@@ -20,12 +20,12 @@ python3 seal_quest001.py --operator "you" --failure-mode "your tools and network
 # dry run: saves an envelope file and prints its sha256. Default TTL is 60 minutes.
 # If you approve later than that, the service returns 422 expired; re-run the dry run.
 python3 seal_quest001.py --submit-file /absolute/path/to/quest001-envelope-XXXXXXXX.json
-# submits the exact file you approved (signatures and expiry are re-checked first;
-# the printed sha256 must match what you approved). Do not use --submit; it is refused
-# because it used to rebuild a new envelope.
+# submits the exact file you approved (signatures, live manifest hash, deadline and expiry
+# are re-checked first; the printed sha256 must match what you approved). Do not use --submit;
+# it is refused because it used to rebuild a new envelope.
 ```
 
-The default key path is `~/.asinhhc/quest001-sealer.key` (stored and printed as an absolute path). The script says whether the key is new or reused. Do not move or delete it. Use `--key PATH` to pick a different file; the script refuses to silently create a new key when one already exists at the default path or at the old `./quest001-sealer.key` location.
+The default key path is `~/.asinhhc/quest001-sealer.key` (stored and printed as an absolute path). The script says whether the key is new or reused. Do not move or delete it. Use `--key PATH` to pick a different file. Before minting a new key, the script scans for an existing `quest001-sealer.key` in the default directory, the current directory, the script directory and the `--key` path, and refuses to create a second one unless `--key` points at the file that already exists.
 
 Options: `--key PATH` picks the key file (created with mode 0600 if missing). `--out PATH` saves the envelope. `--ttl-minutes N` sets the envelope lifetime (clipped to the deadline, default 60).
 

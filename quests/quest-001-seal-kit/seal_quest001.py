@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-# seal_quest001.py - "Seal Quest 001 with any open-source agent" kit, v1.1.0
+# seal_quest001.py - "Seal Quest 001 with any open-source agent" kit, v1.2.0
 # Copyright (c) 2026 Dennis Christie / ASIN-HHC (MIT, see repo LICENSE).
 #
 # Single file, Python 3.8+ standard library only. No pip install needed.
@@ -44,7 +44,7 @@ import urllib.request
 import uuid
 from datetime import datetime, timedelta, timezone
 
-KIT_VERSION = "seal_quest001.py/1.1.0"
+KIT_VERSION = "seal_quest001.py/1.2.0"
 
 BASE = "https://ecenvlwyenpakrxfuqup.supabase.co/functions/v1/quest-evidence/api/v1/evidence"
 SEAL_DROP_URL = BASE + "/seal-drop"
@@ -289,6 +289,64 @@ def norm_name(s):
     return "".join(ch for ch in s.lower() if ch in "abcdefghijklmnopqrstuvwxyz0123456789")
 
 
+ROLE_INDEPENDENT = "independent"
+ROLE_HOUSE = "house"
+
+# House operators (ASIN-HHC bots, Dennis, the Verifier, the board site).
+# Comparisons use norm_name, the same rule as core.ts:81-83. A future house
+# tier (pending Dennis) can pass role="house" to allow these names; the
+# independent witness role, which is the only role this kit submits as,
+# always refuses them. There is no house submit path in this version.
+HOUSE_OPERATORS = (
+    "AcePromoter",
+    "AceLiaison",
+    "ASIN-HHC Verifier",
+    "asin-hhc.org",
+    "grokace",
+    "dbottrader",
+    "dennischristie",
+    "mankind_peace",
+    "asinhhc",
+)
+
+
+def house_operators_norm():
+    return frozenset(norm_name(x) for x in HOUSE_OPERATORS)
+
+
+def is_house_operator(name):
+    return norm_name(name) in house_operators_norm()
+
+
+def check_operator(name, role=ROLE_INDEPENDENT, manifest=None):
+    """Refuse house operators in the independent witness role.
+
+    The live manifest's ineligible_operators list is also applied in the
+    independent role. role="house" is accepted so a future house tier can
+    allow these names without changing HOUSE_OPERATORS; this kit does not
+    expose a house submit path.
+    """
+    if role not in (ROLE_INDEPENDENT, ROLE_HOUSE):
+        raise KitError("unknown role %r (expected %s or %s)" % (role, ROLE_INDEPENDENT, ROLE_HOUSE))
+    n = norm_name(name or "")
+    if not n:
+        raise KitError("operator %r is empty after normName (core.ts:81-83)" % name)
+    if role == ROLE_INDEPENDENT and is_house_operator(name):
+        raise KitError(
+            "operator %r is a house operator (normalized %s) and cannot seal in the "
+            "independent witness role. House names include: %s."
+            % (name, n, ", ".join(HOUSE_OPERATORS))
+        )
+    if manifest is not None and role == ROLE_INDEPENDENT:
+        inel = [norm_name(x) for x in manifest.get("independence", {}).get("ineligible_operators", [])]
+        if n in inel:
+            raise KitError(
+                "operator %r is ineligible for this quest (manifest independence.ineligible_operators)."
+                % name
+            )
+    return n
+
+
 # ===================================================================== NETWORK
 def http(method, url, body=None):
     headers = {"User-Agent": KIT_VERSION, "Cache-Control": "no-cache"}
@@ -355,7 +413,8 @@ def recompute_index(raw):
 
 # ===================================================================== KEY
 DEFAULT_KEY_REL = "~/.asinhhc/quest001-sealer.key"
-OLD_CWD_KEY_NAME = "quest001-sealer.key"
+KEY_FILENAME = "quest001-sealer.key"
+OLD_CWD_KEY_NAME = KEY_FILENAME  # alias kept for callers/tests
 
 
 def default_key_path():
@@ -363,21 +422,43 @@ def default_key_path():
     return os.path.abspath(os.path.expanduser(DEFAULT_KEY_REL))
 
 
+def default_key_dir():
+    return os.path.dirname(default_key_path())
+
+
+def script_dir():
+    return os.path.dirname(os.path.abspath(__file__))
+
+
 def resolve_key_path(path):
     return os.path.abspath(os.path.expanduser(path))
 
 
-def sibling_key_paths(target):
-    """Other well-known key locations, not including target itself."""
-    target = resolve_key_path(target)
+def existing_sealer_keys(target=None, extra=None, script_directory=None, cwd=None,
+                         default_directory=None):
+    """quest001-sealer.key files in the default dir, cwd, script dir, and optional --key path.
+
+    `target` (the path we would mint or reuse) is omitted from the result so a
+    caller can ask "is there some other key?".
+    """
+    target = resolve_key_path(target) if target else None
+    default_directory = os.path.abspath(os.path.expanduser(
+        default_directory if default_directory is not None else default_key_dir()))
+    cwd = os.path.abspath(cwd if cwd is not None else os.getcwd())
+    script_directory = os.path.abspath(
+        script_directory if script_directory is not None else script_dir())
     candidates = [
-        default_key_path(),
-        os.path.abspath(os.path.join(os.getcwd(), OLD_CWD_KEY_NAME)),
+        os.path.join(default_directory, KEY_FILENAME),
+        os.path.join(cwd, KEY_FILENAME),
+        os.path.join(script_directory, KEY_FILENAME),
     ]
+    if extra:
+        candidates.append(resolve_key_path(extra))
     found = []
-    seen = {target}
+    seen = set()
     for p in candidates:
-        if p in seen:
+        p = os.path.abspath(p)
+        if p in seen or (target is not None and p == target):
             continue
         seen.add(p)
         if os.path.isfile(p):
@@ -385,12 +466,13 @@ def sibling_key_paths(target):
     return found
 
 
-def load_or_create_key(path):
+def load_or_create_key(path, script_directory=None, cwd=None, default_directory=None):
     """32-byte Ed25519 seed as 64 hex chars in a 0600 file. Never uploaded.
 
-    Returns (absolute_path, seed, created). Refuses to mint a new key when
-    one already exists at the default ~/.asinhhc path or the old cwd-relative
-    path, so a change of folder cannot silently create a second identity.
+    Returns (absolute_path, seed, created). Refuses to mint a new key when a
+    quest001-sealer.key already exists in the default directory, the cwd, the
+    script directory, or a --key path, unless --key (this path) points at that
+    existing file.
     """
     path = resolve_key_path(path)
     if os.path.isfile(path):
@@ -398,7 +480,9 @@ def load_or_create_key(path):
         if not is_hex(txt, 64):
             raise KitError("key file %s is not 64 lowercase hex" % path)
         return path, bytes.fromhex(txt), False
-    others = sibling_key_paths(path)
+    others = existing_sealer_keys(
+        target=path, extra=path, script_directory=script_directory,
+        cwd=cwd, default_directory=default_directory)
     if others:
         raise KitError(
             "refusing to create a new key at %s because a key already exists at %s. "
@@ -430,6 +514,10 @@ def load_saved_envelope(path):
     return path, env, raw, sha256_hex(raw)
 
 
+def quest_slug(quest_id):
+    return {v[0]: k for k, v in QUESTS.items()}.get(quest_id)
+
+
 def verify_saved_envelope_expiry(env, now=None):
     """Refuse a saved envelope whose expires_at has passed (would be 422 expired)."""
     now = now or datetime.now(timezone.utc)
@@ -447,15 +535,56 @@ def verify_saved_envelope_expiry(env, now=None):
     return now
 
 
-def submit_saved_file(path, post=True):
+def verify_saved_envelope_live(env, now=None, manifest_raw=None, fetch_live=True):
+    """Before POST: live manifest hash must match, and now must be before the deadline."""
+    now = now or datetime.now(timezone.utc)
+    quest_id = env.get("quest_id")
+    slug = quest_slug(quest_id)
+    if not slug:
+        raise KitError("envelope quest_id %r is not a known quest" % quest_id)
+    if manifest_raw is None and fetch_live:
+        manifest_raw = fetch("%s/%s/manifest" % (BASE, slug))
+    if manifest_raw is None:
+        raise KitError("no live manifest available to check envelope manifest_sha256 and deadline")
+    if isinstance(manifest_raw, str):
+        manifest_raw = manifest_raw.encode("utf-8")
+    live_sha = sha256_hex(manifest_raw)
+    env_sha = env.get("manifest_sha256")
+    if env_sha != live_sha:
+        raise KitError(
+            "envelope manifest_sha256 %s does not match the live %s manifest sha256 %s. "
+            "The manifest changed after this envelope was built. Re-run the dry run "
+            "against the current manifest, then submit that new file with --submit-file."
+            % (env_sha, quest_id, live_sha)
+        )
+    try:
+        manifest = json.loads(manifest_raw.decode("utf-8"))
+        deadline = parse_iso(manifest["deadline"])
+    except Exception:
+        raise KitError("live manifest is not valid JSON or its deadline is missing")
+    if now >= deadline:
+        raise KitError(
+            "%s is closed (deadline %s, now %s). The service would answer 410 quest_closed. "
+            "No seal can be accepted." % (quest_id, manifest["deadline"], iso(now))
+        )
+    print("[ok ] envelope manifest_sha256 matches the live %s manifest %s" % (quest_id, live_sha),
+          file=sys.stderr)
+    print("[ok ] quest still open (deadline %s)" % manifest["deadline"], file=sys.stderr)
+    return manifest
+
+
+def submit_saved_file(path, post=True, now=None, manifest_raw=None, fetch_live=True,
+                      role=ROLE_INDEPENDENT):
     """Re-verify a saved envelope and optionally POST its exact file bytes.
 
-    post=False is for tests: verify and return without touching the network.
+    Local checks, all before any POST: signatures, house-operator refusal in
+    the independent role, live manifest hash, now < deadline, now < expires_at.
+    post=False is for tests: verify and return without POSTing.
     Returns 0 on success, or a (env, raw, digest) tuple when post is False.
     """
     path, env, raw, digest = load_saved_envelope(path)
     quest_id = env.get("quest_id")
-    slug = {v[0]: k for k, v in QUESTS.items()}.get(quest_id)
+    slug = quest_slug(quest_id)
     print("[ok ] loaded envelope %s" % path, file=sys.stderr)
     print("[ok ] envelope sha256 %s  (must match the file you approved)" % digest, file=sys.stderr)
     print("[ok ] quest_id %s  request_id %s  expires_at %s" % (
@@ -464,7 +593,9 @@ def submit_saved_file(path, post=True):
     print("[ok ] both signatures verify locally%s" %
           (" and with `cryptography`" if had_cc else " (cryptography not installed; pure-Python only)"),
           file=sys.stderr)
-    verify_saved_envelope_expiry(env)
+    check_operator(env.get("operator"), role=role)
+    verify_saved_envelope_live(env, now=now, manifest_raw=manifest_raw, fetch_live=fetch_live)
+    verify_saved_envelope_expiry(env, now=now)
     print("[ok ] not expired", file=sys.stderr)
     if not post:
         return env, raw, digest
@@ -650,11 +781,8 @@ def main(argv=None):
         for name, val, mx in (("operator", a.operator, 80), ("failure-mode", a.failure_mode, 400)):
             if not val.strip() or len(val) > mx or any(ord(c) < 32 or ord(c) == 127 for c in val):
                 raise KitError("--%s must be 1-%d printable characters" % (name, mx))
-        inel = [norm_name(x) for x in manifest.get("independence", {}).get("ineligible_operators", [])]
-        if not norm_name(a.operator) or norm_name(a.operator) in inel:
-            raise KitError("operator %r is ineligible for %s (manifest independence.ineligible_operators). "
-                           "Dennis's agents, the board side and the ASIN-HHC Verifier cannot seal."
-                           % (a.operator, quest_id))
+        # Independent witness role is the only role this kit builds envelopes for.
+        check_operator(a.operator, role=ROLE_INDEPENDENT, manifest=manifest)
         impl = a.implementation or ("%s; Python %s; %s %s" % (
             KIT_VERSION, platform.python_version(), platform.system(), platform.machine()))[:400]
 
