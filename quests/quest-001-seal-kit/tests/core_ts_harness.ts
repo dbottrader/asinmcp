@@ -1,0 +1,13 @@
+import * as ed from "@noble/ed25519";
+import { readFileSync } from "node:fs";
+import { validateEnvelope, hexToBytes } from "./core.ts";
+const verify = async (p: string, m: Uint8Array, s: string) => { try { return await ed.verifyAsync(hexToBytes(s), m, hexToBytes(p)); } catch { return false; } };
+const [envPath, manifestPath, nowArg] = process.argv.slice(2);
+const env = JSON.parse(readFileSync(envPath, "utf8"));
+const mt = readFileSync(manifestPath);
+const m = JSON.parse(mt.toString("utf8"));
+const sha = (await import("node:crypto")).createHash("sha256").update(mt).digest("hex");
+const quest = { quest_id: m.quest_id, manifest: m, manifest_sha256: sha, valid_from: m.valid_from, deadline: m.deadline, is_test: m.is_test };
+const now = nowArg ? Date.parse(nowArg) : Date.now();
+const r: any = await validateEnvelope(env, quest, now, verify);
+console.log(JSON.stringify(r.ok ? { ok: true, operator_norm: r.operator_norm } : r));
